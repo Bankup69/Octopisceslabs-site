@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-10-27 (later)
+- OctoPisces Labs LLC approved by the Nevada Secretary of State. Footer and privacy policy now use the legal name "OctoPisces Labs LLC".
+
 ## 2026-10-27
 - Launched site on GitHub Pages with custom domain octopisceslabs.com.
 - Home page: deep-space pixel theme, purple mecha octopus hero with two Pisces astronaut fish.
