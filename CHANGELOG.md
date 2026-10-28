@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-28
+- Added the Next Set marketing page at /next-set: headline, six-screenshot carousel, eight feature cards, pricing ($69.99/yr with 7-day trial, $12.99/mo) and questions.
+- Added Next Set support and legal pages: /next-set-support, /next-set-delete-account, /next-set-terms, /next-set-privacy, /next-set-health, /next-set-ai. Not linked in the main menu; linked from the Next Set page footer.
+- Home page: "Next Set" added to the menu, and the Arm 01 card links to the Next Set page.
+- Open items in Terms and Privacy (highlighted on the pages): company mailing address, dispute-resolution choice, AI provider data terms, EEA/UK review.
+
 ## 2026-10-27 (later)
 - OctoPisces Labs LLC approved by the Nevada Secretary of State. Footer and privacy policy now use the legal name "OctoPisces Labs LLC".
 
