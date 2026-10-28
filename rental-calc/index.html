@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Rental Property Calculator</title>
+  <meta name="description" content="Evaluate a potential rental property: cash flow, NOI, cash-on-cash return and total ROI.">
+  <meta name="theme-color" content="#1f6f5c">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Rental Calc">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <h1>Rental Property Calculator</h1>
+      <div class="topbar-right">
+        <nav class="tabs" aria-label="Views">
+          <button type="button" class="tab" data-view="calc" aria-pressed="true">Calculator</button>
+          <button type="button" class="tab" data-view="dash" aria-pressed="false">Dashboard <span class="badge" id="saved-count">0</span></button>
+        </nav>
+        <button type="button" id="btn-pro" class="pro-btn">Go Pro</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Calculator -->
+  <section id="view-calc" class="view">
+    <div class="wrap toolbar">
+      <div class="current" id="current-name">New property</div>
+      <div class="actions">
+        <button type="button" id="btn-new">New</button>
+        <button type="button" id="btn-save" class="primary">Save</button>
+        <button type="button" id="btn-delete">Delete</button>
+        <button type="button" id="btn-report">PDF report <span class="lock">PRO</span></button>
+        <button type="button" id="btn-share">Copy link</button>
+      </div>
+    </div>
+
+    <div class="wrap">
+      <div class="strategies" role="radiogroup" aria-label="Strategy" id="strategies">
+        <button type="button" role="radio" data-strategy="rental">Long-term rental</button>
+        <button type="button" role="radio" data-strategy="str">Short-term rental <span class="lock">PRO</span></button>
+        <button type="button" role="radio" data-strategy="brrrr">BRRRR <span class="lock">PRO</span></button>
+        <button type="button" role="radio" data-strategy="flip">Fix &amp; flip <span class="lock">PRO</span></button>
+      </div>
+    </div>
+
+    <main class="wrap layout">
+      <form id="form" class="inputs" autocomplete="off">
+        <input type="hidden" name="strategy" value="rental">
+
+        <fieldset>
+          <legend>Property</legend>
+          <div class="listing span-all">
+            <label>Listing link <input name="listingUrl" type="url" inputmode="url" placeholder="Paste a Zillow, Redfin or Realtor.com link"></label>
+            <div class="listing-actions">
+              <button type="button" id="btn-paste">Paste</button>
+              <a id="listing-open" class="button" target="_blank" rel="noopener" hidden>Open ↗</a>
+            </div>
+          </div>
+          <label>Property name <input name="propertyName" type="text" placeholder="e.g. Fallon Duplex"></label>
+          <label>Address <input name="address" type="text"></label>
+          <label>City, State <input name="cityState" type="text"></label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Purchase &amp; costs</legend>
+          <label>Purchase price <span class="money"><input name="purchasePrice" type="number" min="0" step="1000" inputmode="decimal"></span></label>
+          <label>Up-front repairs <span class="money"><input name="repairsUpfront" type="number" min="0" step="500" inputmode="decimal"></span></label>
+          <label>Closing costs <span class="money"><input name="closingCosts" type="number" min="0" step="500" inputmode="decimal"></span></label>
+          <label data-strategies="rental str brrrr">Land value share <span class="pct"><input name="landPct" type="number" min="0" max="100" step="1" inputmode="decimal"></span></label>
+          <label data-strategies="str">Furnishing &amp; setup <span class="money"><input name="furnishing" type="number" min="0" step="500" inputmode="decimal"></span></label>
+        </fieldset>
+
+        <fieldset data-strategies="brrrr flip">
+          <legend><span data-strategies="brrrr">Rehab &amp; refinance</span><span data-strategies="flip">Rehab &amp; sale</span></legend>
+          <label>After-repair value (ARV) <span class="money"><input name="arv" type="number" min="0" step="1000" inputmode="decimal"></span></label>
+          <label data-strategies="brrrr">Rehab time (months) <input name="rehabMonths" type="number" min="0" max="36" step="1" inputmode="numeric"></label>
+          <label data-strategies="flip">Months until sold <input name="holdMonths" type="number" min="0" max="36" step="1" inputmode="numeric"></label>
+          <label data-strategies="brrrr">Refinance loan-to-value <span class="pct"><input name="refiLtv" type="number" min="0" max="100" step="1" inputmode="decimal"></span></label>
+          <label data-strategies="brrrr">Refinance rate <span class="pct"><input name="refiRate" type="number" min="0" max="30" step="0.125" inputmode="decimal"></span></label>
+          <label data-strategies="brrrr">Refinance term (years) <input name="refiYears" type="number" min="1" max="40" step="1" inputmode="numeric"></label>
+          <label data-strategies="brrrr">Refinance closing costs <span class="money"><input name="refiClosingCosts" type="number" min="0" step="500" inputmode="decimal"></span></label>
+          <label data-strategies="flip">Selling costs <span class="pct"><input name="sellingCostPct" type="number" min="0" max="20" step="0.5" inputmode="decimal"></span><small>Agent commissions + closing, % of sale price</small></label>
+        </fieldset>
+
+        <fieldset class="units-fieldset" data-strategies="rental brrrr">
+          <legend>Units &amp; rent</legend>
+          <p class="hint">Add one row per unit type. For an apartment complex, use the count, e.g. 24 × 1-bed at $950.</p>
+          <div class="units-head" aria-hidden="true"><span>Unit type</span><span># Units</span><span>Rent / unit / mo</span><span></span></div>
+          <div id="units"></div>
+          <div class="units-foot">
+            <button type="button" id="btn-add-unit">+ Add unit type</button>
+            <span id="units-total"></span>
+          </div>
+          <div class="unit-extras">
+            <label>Vacancy / delinquency rate <span class="pct"><input name="vacancyRate" type="number" min="0" max="100" step="0.5" inputmode="decimal"></span></label>
+            <label data-strategies="rental">Rent lost during up-front repairs <span class="money"><input name="repairRentalLoss" type="number" min="0" step="100" inputmode="decimal"></span>
+              <small>When set, this replaces the vacancy allowance for year 1, as in the spreadsheet.</small></label>
+          </div>
+        </fieldset>
+
+        <fieldset data-strategies="str">
+          <legend>Short-term rental income</legend>
+          <label>Number of listings <input name="strListings" type="number" min="1" step="1" inputmode="numeric"></label>
+          <label>Average nightly rate <span class="money"><input name="nightlyRate" type="number" min="0" step="5" inputmode="decimal"></span></label>
+          <label>Occupancy <span class="pct"><input name="occupancy" type="number" min="0" max="100" step="1" inputmode="decimal"></span><small>% of nights booked</small></label>
+          <label>Average stay (nights) <input name="avgStay" type="number" min="1" step="0.5" inputmode="decimal"></label>
+          <label>Cleaning fee charged <span class="money"><input name="cleaningFeeCharged" type="number" min="0" step="5" inputmode="decimal"></span><small>Per booking</small></label>
+          <label>Cleaning cost <span class="money"><input name="cleaningCost" type="number" min="0" step="5" inputmode="decimal"></span><small>Per booking</small></label>
+          <label>Platform fee <span class="pct"><input name="platformFeePct" type="number" min="0" max="30" step="0.5" inputmode="decimal"></span><small>Airbnb/Vrbo host fee</small></label>
+          <label>Supplies &amp; extras <span class="money"><input name="strSupplies" type="number" min="0" step="10" inputmode="decimal"></span><small>Per listing, per month</small></label>
+          <p class="hint span-all" id="str-summary"></p>
+        </fieldset>
+
+        <fieldset>
+          <legend>Purchase financing</legend>
+          <label>Down payment <span class="pct"><input name="downPaymentPct" type="number" min="0" max="100" step="1" inputmode="decimal"></span></label>
+          <label>Interest rate <span class="pct"><input name="interestRate" type="number" min="0" max="30" step="0.125" inputmode="decimal"></span></label>
+          <label>Loan term (years) <input name="loanYears" type="number" min="1" max="40" step="1" inputmode="numeric"></label>
+          <label class="check"><input name="interestOnly" type="checkbox"> Interest-only payments</label>
+          <p class="hint span-all" data-strategies="brrrr">The refinance pays this loan off. Enter hard-money or cash terms here.</p>
+        </fieldset>
+
+        <fieldset>
+          <legend>Annual expenses</legend>
+          <label>Property taxes <span class="money"><input name="propertyTaxes" type="number" min="0" step="100" inputmode="decimal"></span></label>
+          <label>Insurance <span class="money"><input name="insurance" type="number" min="0" step="100" inputmode="decimal"></span></label>
+          <label>Owner-paid utilities <span class="money"><input name="utilities" type="number" min="0" step="100" inputmode="decimal"></span></label>
+          <label data-strategies="rental str brrrr">Maintenance &amp; repairs <span class="pct"><input name="maintenancePct" type="number" min="0" max="100" step="0.5" inputmode="decimal"></span><small>% of gross rent</small></label>
+          <label data-strategies="rental str brrrr">Capital expense reserve <span class="pct"><input name="capexPct" type="number" min="0" max="100" step="0.5" inputmode="decimal"></span><small>% of gross rent</small></label>
+          <label data-strategies="rental str brrrr">Property management <span class="pct"><input name="mgmtPct" type="number" min="0" max="100" step="0.5" inputmode="decimal"></span><small>% of adjusted income</small></label>
+          <label data-strategies="rental str brrrr">Property management (fixed) <span class="money"><input name="mgmtFixed" type="number" min="0" step="100" inputmode="decimal"></span></label>
+          <label data-strategies="rental str brrrr">Mortgage insurance <span class="pct"><input name="mortgageInsPct" type="number" min="0" max="10" step="0.05" inputmode="decimal"></span><small>% of loan amount</small></label>
+          <p class="hint span-all" data-strategies="flip">Taxes, insurance and utilities are counted while you own the property.</p>
+        </fieldset>
+
+        <fieldset data-strategies="rental str brrrr">
+          <legend>Appreciation &amp; long-term</legend>
+          <label data-strategies="rental str">Full value at purchase <span class="money"><input name="fullValue" type="number" min="0" step="1000" inputmode="decimal"></span><small>Leave at 0 to use the purchase price</small></label>
+          <label>Annual appreciation rate <span class="pct"><input name="appreciationRate" type="number" min="-20" max="30" step="0.5" inputmode="decimal"></span></label>
+          <label>Annual rent growth <span class="pct"><input name="rentGrowth" type="number" min="-20" max="30" step="0.5" inputmode="decimal"></span></label>
+          <label>Annual expense growth <span class="pct"><input name="expenseGrowth" type="number" min="-20" max="30" step="0.5" inputmode="decimal"></span></label>
+          <label>Hold period (years) <input name="holdYears" type="number" min="1" max="30" step="1" inputmode="numeric"></label>
+          <label>Selling costs at exit <span class="pct"><input type="number" min="0" max="20" step="0.5" inputmode="decimal" data-mirror="sellingCostPct"></span></label>
+        </fieldset>
+      </form>
+
+      <section class="results" aria-live="polite">
+        <div class="hero" id="hero">
+          <div class="hero-label" id="hero-label">Your cash flow</div>
+          <div class="hero-value"><span id="hero-value">$0</span><small id="hero-unit">/ month</small></div>
+          <div class="hero-sub" id="hero-sub"></div>
+        </div>
+
+        <div class="tiles" id="tiles"></div>
+        <div id="tables"></div>
+
+        <details id="projection-box" data-strategies="rental str brrrr">
+          <summary>Long-term projection <span class="lock">PRO</span></summary>
+          <div id="projection"></div>
+        </details>
+
+        <p class="disclaimer">Estimates only, based on the assumptions you enter. Not financial advice.</p>
+      </section>
+    </main>
+    <button type="button" class="mini-result" id="mini-result" aria-label="Jump to results">
+      <span><small id="mini-label">Cash flow</small><strong id="mini-main">$0/mo</strong></span>
+      <span><small id="mini-label2">Cash-on-cash</small><strong id="mini-second">—</strong></span>
+      <span class="mini-go">Results ↓</span>
+    </button>
+  </section>
+
+  <!-- Dashboard -->
+  <section id="view-dash" class="view" hidden>
+    <main class="wrap dash">
+      <div class="tiles portfolio" id="portfolio"></div>
+      <p class="hint" id="portfolio-note"></p>
+
+      <div class="dash-toolbar">
+        <h2>Saved properties <span class="limit" id="limit-note"></span></h2>
+        <div class="actions">
+          <label class="inline">Sort
+            <select id="sort">
+              <option value="cashflow">Monthly cash flow</option>
+              <option value="coc">Cash-on-cash</option>
+              <option value="roi">Total ROI</option>
+              <option value="cap">Cap rate</option>
+              <option value="price">Price</option>
+              <option value="name">Name</option>
+            </select>
+          </label>
+          <button type="button" id="btn-select-all">Select all</button>
+          <button type="button" id="btn-clear">Clear</button>
+        </div>
+      </div>
+
+      <div id="cards" class="cards"></div>
+      <div id="empty" class="empty" hidden>
+        <p>No saved properties yet.</p>
+        <button type="button" class="primary" data-goto="calc">Analyze a property</button>
+      </div>
+
+      <section id="compare" class="compare" hidden>
+        <h2>Comparison</h2>
+        <p class="hint" id="compare-hint"></p>
+        <div class="table-scroll"><table id="compare-table"></table></div>
+      </section>
+    </main>
+    <div class="compare-bar" id="compare-bar" hidden>
+      <span id="compare-count"></span>
+      <button type="button" class="primary" id="btn-compare">View comparison</button>
+    </div>
+  </section>
+
+  <div id="toast" role="status" hidden></div>
+
+  <script src="config.js"></script>
+  <script src="calc.js"></script>
+  <script src="listing.js"></script>
+  <script src="pro.js"></script>
+  <script src="report.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
