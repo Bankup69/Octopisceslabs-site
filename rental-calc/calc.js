@@ -17,7 +17,7 @@
     strategy: 'rental',
     propertyName: '',
     address: '',
-    cityState: 'Fallon, NV',
+    cityState: '',
     listingUrl: '',
 
     // Cost assumptions
