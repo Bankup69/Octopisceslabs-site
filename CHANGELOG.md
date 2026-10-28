@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-28 (later)
+- New company logo (gold octopus with the two astronaut Pisces). Emblem-only round mark now sits next to OCTOPISCES LABS in the header on every page.
+- Added favicon, iPhone home-screen icon and a link-preview image (og-image) using the new logo. Full logo saved at img/logo-full-900.jpg.
+
 ## 2026-10-28
 - Added the Next Set marketing page at /next-set: headline, six-screenshot carousel, eight feature cards, pricing ($69.99/yr with 7-day trial, $12.99/mo) and questions.
 - Added Next Set support and legal pages: /next-set-support, /next-set-delete-account, /next-set-terms, /next-set-privacy, /next-set-health, /next-set-ai. Not linked in the main menu; linked from the Next Set page footer.
