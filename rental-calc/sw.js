@@ -1,5 +1,5 @@
 // Offline support: serve the app shell from cache, refreshing it in the background.
-const CACHE = 'rental-calc-v3';
+const CACHE = 'rental-calc-v4';
 const SHELL = [
   './', 'index.html', 'privacy.html', 'styles.css', 'config.js', 'calc.js', 'listing.js', 'pro.js', 'report.js',
   'app.js', 'manifest.webmanifest', 'vendor/jspdf.umd.min.js', 'vendor/jspdf.plugin.autotable.min.js',
