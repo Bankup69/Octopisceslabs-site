@@ -343,8 +343,16 @@
 
   // ---- calculator rendering ----------------------------------------------
 
+  // An (i) button that opens the explanation of a result (see help.js).
+  function helpBtn(label) {
+    const help = window.FieldHelp;
+    if (!help || !help.resultHelp(label)) return '';
+    const name = esc(String(label).replace(/\s*\(.*$/, ''));
+    return ` <button type="button" class="help-btn rhelp" data-help="${esc(label)}" aria-label="What is ${name}?" aria-expanded="false">i</button>`;
+  }
+
   function tile(t) {
-    return `<div class="tile ${t.tone || ''}"><div class="tile-label">${esc(t.label)}</div>` +
+    return `<div class="tile ${t.tone || ''}"><div class="tile-label">${esc(t.label)}${helpBtn(t.label)}</div>` +
       `<div class="tile-value">${esc(t.value)}</div>${t.hint ? `<div class="tile-hint">${esc(t.hint)}</div>` : ''}</div>`;
   }
 
@@ -355,7 +363,7 @@
 
   function tableHtml(rows) {
     return rows.map(([label, value, cls]) =>
-      `<tr class="${cls || ''}"><th scope="row">${esc(label)}</th><td>${esc(value)}</td></tr>`).join('');
+      `<tr class="${cls || ''}"><th scope="row">${esc(label)}${helpBtn(label)}</th><td>${esc(value)}</td></tr>`).join('');
   }
 
   const openTables = new Set(['Year 1 breakdown', 'Flip breakdown', 'Buy, rehab & refinance']);
@@ -366,7 +374,7 @@
     const m = describe(input, r);
     const locked = isLocked(input);
 
-    $('hero-label').textContent = m.hero.label;
+    $('hero-label').innerHTML = esc(m.hero.label) + helpBtn(m.hero.label);
     $('hero-value').textContent = m.hero.value;
     $('hero-unit').textContent = m.hero.unit;
     $('hero-sub').textContent = m.hero.sub;
@@ -419,7 +427,7 @@
       return;
     }
     const t = projectionTable(p);
-    box.innerHTML = `<p class="projection-summary">${esc(t.summary)}</p>` +
+    box.innerHTML = `<p class="projection-summary">${esc(t.summary)}${helpBtn('IRR over hold period')}</p>` +
       '<div class="table-scroll"><table class="projection-table"><thead><tr>' +
       t.head.map((h) => `<th scope="col">${esc(h)}</th>`).join('') + '</tr></thead><tbody>' +
       t.body.map((row, k) => `<tr class="${k === t.highlight ? 'hold' : ''}">` +
@@ -690,7 +698,7 @@
         const text = hide(chosen[k]) ? 'PRO' : v === null || v === undefined ? '—' : fmt ? fmt(v) : String(v);
         return `<td class="${target !== null && v === target ? 'best' : ''}">${esc(text)}</td>`;
       }).join('');
-      return `<tr><th scope="row">${esc(label)}</th>${cells}</tr>`;
+      return `<tr><th scope="row">${esc(label)}${helpBtn(label)}</th>${cells}</tr>`;
     }).join('');
     $('compare-table').innerHTML = head + '<tbody>' + body + '</tbody>';
   }

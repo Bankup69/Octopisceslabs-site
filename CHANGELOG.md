@@ -3,6 +3,7 @@
 ## 2026-10-28 (night)
 - Rental Calc: City/State starts blank instead of Fallon, NV, with example placeholders.
 - Rental Calc: every input has an (i) button with plain-English help (what it is, where to find it, typical values), plus a short explanation of each strategy.
+- Rental Calc: every result (cash flow, cap rate, DSCR, cash-on-cash, IRR, breakdown rows, comparison rows) has an (i) button explaining what it means, how it's calculated and what's good.
 
 ## 2026-10-28 (evening)
 - Added the Rental Calc web app at /rental-calc (copied from the Rental-Income-Calculator repo with its scripts/publish-site.sh). Its privacy policy is at /rental-calc/privacy.html.

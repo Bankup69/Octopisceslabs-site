@@ -266,6 +266,28 @@ label.help-open { grid-column: 1 / -1; }
 label.check.help-open { flex-wrap: wrap; }
 .strategy-help { font-size: 13px; color: var(--muted); margin: 8px 2px 0; line-height: 1.45; }
 
+/* Result help: one shared panel (results redraw as you type) */
+.tile-label .help-btn, .breakdown th .help-btn, #compare-table th .help-btn,
+.hero-label .help-btn, .projection-summary .help-btn, summary .help-btn {
+  margin-left: 5px; vertical-align: -3px; width: 16px; height: 16px; font-size: 10px;
+}
+.hero-label .help-btn { text-transform: none; letter-spacing: 0; }
+.help-sheet {
+  position: fixed; z-index: 30; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom));
+  width: min(420px, calc(100vw - 32px)); max-height: 60vh; overflow-y: auto;
+  background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 14px;
+  padding: 16px 18px 14px; box-shadow: 0 12px 40px rgba(0,0,0,.28);
+}
+.help-sheet h3 { margin: 0 28px 8px 0; font-size: 17px; }
+.help-sheet .close { position: absolute; right: 10px; top: 10px; border: 0; }
+.help-sheet p { margin: 0 0 8px; font-size: 14px; line-height: 1.5; }
+.help-sheet p:last-child { margin-bottom: 0; }
+.help-sheet strong { color: var(--accent); }
+@media (max-width: 860px) {
+  .help-sheet { left: 0; right: 0; bottom: 0; width: auto; max-height: 70vh; border-radius: 16px 16px 0 0;
+    padding-bottom: calc(16px + env(safe-area-inset-bottom)); }
+}
+
 /* Units editor */
 .units-fieldset { display: block; }
 .unit-extras { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0 14px; }
@@ -440,7 +462,7 @@ dialog.paywall h2 { margin: 10px 0 4px; font-size: 22px; }
 [hidden] { display: none !important; }
 
 @media print {
-  .topbar, .toolbar, .strategies, .strategy-help, .compare-bar, .mini-result, .gate, .help-btn, .help-panel, #toast { display: none !important; }
+  .topbar, .toolbar, .strategies, .strategy-help, .compare-bar, .mini-result, .gate, .help-btn, .help-panel, .help-sheet, #toast { display: none !important; }
   body { background: #fff; color: #000; }
   .layout { grid-template-columns: 1fr 1fr; }
   .results { position: static; }

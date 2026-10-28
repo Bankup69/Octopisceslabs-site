@@ -220,7 +220,281 @@
     flip: 'Fix & flip: buy a property below value, renovate it, and sell it for a profit. There’s no rent; your return comes from the sale.',
   };
 
-  const api = { HELP, STRATEGY_HELP };
+  // ---- results -------------------------------------------------------------
+
+  // what: what the number means; calc: how it's worked out; good: how to
+  // judge it. Keys are the labels shown on screen.
+  const RESULT_HELP = {
+    'Your cash flow': {
+      what: 'The money left over each month after every expense and the mortgage payment. This is what the property actually puts in (or takes out of) your pocket.',
+      calc: 'Net operating income − mortgage payments.',
+      good: 'Positive is the goal. Many investors look for at least $100–300 per unit per month so one surprise repair doesn’t wipe out the year.',
+    },
+    'Cash flow after refinance': {
+      what: 'Monthly cash flow once the rehab is done and the refinance loan has replaced the purchase loan.',
+      calc: 'Net operating income − the new loan’s payments.',
+      good: 'Positive, even at the higher refinance payment. If it’s negative, try a lower loan-to-value.',
+    },
+    'Projected profit': {
+      what: 'What you’d clear on the flip after paying back the loan and every cost of buying, holding, fixing and selling.',
+      calc: 'Sale price − selling costs − loan payoff − (down payment + rehab + closing + holding costs).',
+      good: 'Many flippers want at least $25k–30k or 10%+ of the sale price, enough to absorb a surprise and still be worth the risk.',
+    },
+    'Cash-on-cash return': {
+      what: 'Your yearly cash flow as a percentage of the cash you put in. Think of it as the interest rate your money earns in this property.',
+      calc: 'Annual cash flow ÷ cash invested.',
+      good: '8–12% or more is generally considered solid. Compare it with what that cash would earn elsewhere (savings accounts and bonds pay roughly 4–5%).',
+    },
+    'Total ROI': {
+      what: 'Your total first-year return on the cash you put in, counting cash flow plus two gains you don’t get in cash until you sell or refinance: loan paydown and appreciation. For flips, it’s profit ÷ cash needed.',
+      calc: '(Cash flow + principal paydown + appreciation) ÷ cash invested.',
+      good: 'Usually 10–20%+. Treat the appreciation part as a bonus, not something to count on.',
+    },
+    'Cap rate': {
+      what: 'Capitalization rate: the yearly return the property would earn if you paid all cash. It ignores financing, which makes it handy for comparing properties and neighborhoods side by side.',
+      calc: 'Net operating income ÷ purchase price (÷ ARV for BRRRR).',
+      good: 'Roughly 5–10% depending on the market. Higher means more income per dollar, but often comes with older properties or riskier areas.',
+    },
+    'DSCR': {
+      what: 'Debt service coverage ratio: how many times the property’s income covers the mortgage. Lenders use it to decide whether to lend on rental income.',
+      calc: 'Net operating income ÷ yearly mortgage payments.',
+      good: '1.25 or more is comfortable, and many “DSCR loans” require 1.20–1.25. Below 1.0 means the rent doesn’t cover the mortgage.',
+    },
+    'Cash invested': {
+      what: 'The cash you need to bring to buy and prepare the property.',
+      calc: 'Down payment + up-front repairs + closing costs (+ furnishing for short-term rentals).',
+      good: 'Also keep reserves on top of this: lenders often want 3–6 months of payments, and it covers surprises.',
+    },
+    '1% rule': {
+      what: 'A quick screening rule: monthly rent should be at least 1% of the purchase price.',
+      calc: 'Monthly rent ÷ purchase price.',
+      good: '1% or more usually means the property can cash flow. It’s hard to hit in expensive markets, so treat it as a first filter, not a verdict.',
+    },
+    'Cash left in deal': {
+      what: 'The cash still tied up in the BRRRR after the refinance pays you back.',
+      calc: 'Total cash put in − cash out at refinance.',
+      good: 'Lower is better. $0 or less means you got all your money back (an “infinite” cash-on-cash return) and can use it for the next deal.',
+    },
+    'Equity after refi': {
+      what: 'Your ownership stake after the refinance: what the property is worth minus what you still owe.',
+      calc: 'After-repair value − refinance loan.',
+    },
+    'Revenue per night booked': {
+      what: 'Average income per booked night, including cleaning fees.',
+      calc: 'Gross booking income ÷ nights booked.',
+    },
+    'ROI': {
+      what: 'The flip’s return on the cash you put in.',
+      calc: 'Profit ÷ total cash needed.',
+      good: '15–25%+ for a typical 4–8 month flip.',
+    },
+    'Annualized ROI': {
+      what: 'The flip’s ROI scaled to a full year, so flips of different lengths can be compared with each other and with rentals.',
+      calc: '(1 + ROI) ^ (12 ÷ months) − 1.',
+    },
+    'Cash needed': {
+      what: 'All the cash the flip needs from you before it sells.',
+      calc: 'Down payment + rehab + closing costs + holding costs.',
+    },
+    '70% rule max offer': {
+      what: 'A flipper’s rule of thumb for the most you should pay, leaving room for holding costs, selling costs and profit.',
+      calc: 'After-repair value × 70% − repairs.',
+      good: 'Green means your purchase price is at or under this number. In hot markets some flippers use 75–80%, which leaves less margin.',
+    },
+    'Holding costs': {
+      what: 'What it costs to own the property before it earns anything: loan payments, taxes, insurance and utilities.',
+      calc: 'Months × (monthly loan payment + taxes, insurance and utilities ÷ 12).',
+    },
+    'Selling costs': {
+      what: 'Agent commissions, closing costs and transfer taxes when you sell.',
+      calc: 'Sale price × selling cost %.',
+    },
+    'Gross rental income': {
+      what: 'All the rent you’d collect in a year if every unit stayed rented every month.',
+      calc: 'Total monthly rent × 12.',
+    },
+    'Booking income': {
+      what: 'A year of short-term rental income: nightly rates plus the cleaning fees guests pay.',
+      calc: 'Nights booked × nightly rate + stays × cleaning fee.',
+    },
+    'Vacancy / loss': {
+      what: 'An allowance for rent you won’t collect because of empty months and unpaid rent.',
+      calc: 'Gross rent × vacancy rate.',
+    },
+    'Rent lost during repairs': {
+      what: 'Rent you miss while the property is being fixed up before the first tenant.',
+    },
+    'Gross adjusted income': {
+      what: 'The rent you realistically expect to collect in a year.',
+      calc: 'Gross income − vacancy − rent lost during repairs.',
+    },
+    'Total expenses': {
+      what: 'Everything it costs to run the property for a year, not counting the mortgage.',
+    },
+    'Expenses (incl. vacancy) as % of gross': {
+      what: 'How much of the gross rent is eaten by expenses and vacancy. Also called the expense ratio.',
+      calc: '(Total expenses + vacancy) ÷ gross rent.',
+      good: 'Usually 35–50% for long-term rentals. The rough “50% rule” assumes half the rent goes to expenses. If yours is much lower, double-check your numbers.',
+    },
+    'Net operating income (NOI)': {
+      what: 'What the property earns after operating expenses but before the mortgage. It’s the core number lenders and appraisers use to value rentals.',
+      calc: 'Gross adjusted income − total expenses.',
+    },
+    'Mortgage payments (P&I)': {
+      what: 'A year of loan payments: principal (paying down what you owe) plus interest. Taxes and insurance are counted separately above.',
+    },
+    'Cash flow': {
+      what: 'What’s left for the year after every expense and the mortgage.',
+      calc: 'Net operating income − mortgage payments.',
+    },
+    'Loan principal paydown': {
+      what: 'The part of this year’s mortgage payments that reduces what you owe. It builds your equity, but you only get it back when you sell or refinance.',
+    },
+    'Total return (cash flow + amortization)': {
+      what: 'Cash flow plus loan paydown for the year. “Amortization” is the loan being paid down.',
+    },
+    'ROI (cash flow + amortization)': {
+      what: 'Cash flow plus loan paydown, as a percentage of cash invested.',
+    },
+    'Appreciation (year 1)': {
+      what: 'How much more the property is expected to be worth after a year, using your appreciation rate. It’s a gain on paper until you sell or refinance.',
+      calc: 'Property value × appreciation rate.',
+    },
+    'Total return (cash flow + amortization + appreciation)': {
+      what: 'Your full first-year gain: cash in hand plus equity from loan paydown and appreciation.',
+    },
+    'Total cash put in': {
+      what: 'All the cash the BRRRR needs before the refinance.',
+      calc: 'Down payment + rehab + closing costs + holding costs during the rehab.',
+    },
+    'Refinance loan': {
+      what: 'The new loan, based on the after-repair value.',
+      calc: 'ARV × refinance loan-to-value.',
+    },
+    'Pays off purchase loan': {
+      what: 'The balance of your purchase loan, paid off by the refinance.',
+    },
+    'Cash out at refinance': {
+      what: 'Cash the refinance hands back to you.',
+      calc: 'Refinance loan − purchase loan payoff − refinance closing costs.',
+    },
+    'After-repair value (sale price)': {
+      what: 'What you expect the renovated property to sell for.',
+    },
+    'Loan payoff at sale': {
+      what: 'What you still owe on the loan when the property sells.',
+    },
+    'Net from sale': {
+      what: 'What reaches you from the sale after selling costs and paying off the loan.',
+    },
+    'Profit': {
+      what: 'What the flip earns after every cost.',
+      calc: 'Net from sale − total cash needed.',
+    },
+    'Profit margin (of sale price)': {
+      what: 'Profit as a share of the sale price, a measure of how much cushion the flip has.',
+      good: '10%+ is a common target.',
+    },
+    'Total cost (price + repairs + closing)': {
+      what: 'Everything the property costs you to acquire and fix up, however it’s paid for.',
+    },
+    'Land value': {
+      what: 'The part of the price that’s for the land. Land can’t be depreciated for taxes.',
+    },
+    'Building value': {
+      what: 'The part of the price that’s for the building. Residential rentals are usually depreciated over 27.5 years, which can lower your taxes; ask a tax professional.',
+    },
+    'Loan amount': {
+      what: 'How much you borrow (the refinance loan for BRRRR).',
+    },
+    'Monthly mortgage payment': {
+      what: 'Monthly principal and interest on the loan. Taxes and insurance are counted separately.',
+    },
+    'Price per unit': {
+      what: 'Purchase price divided by the number of units, a quick way to compare buildings of different sizes.',
+    },
+    'Cash flow per unit / month': {
+      what: 'Monthly cash flow divided by the number of units.',
+      good: 'Many investors look for $100–300+ per unit.',
+    },
+    'Monthly NOI': {
+      what: 'Net operating income for one month: income after operating expenses, before the mortgage.',
+    },
+    'Blended cash-on-cash': {
+      what: 'Cash-on-cash return across all your saved rentals combined.',
+      calc: 'Total yearly cash flow ÷ total cash invested.',
+    },
+    'Monthly rent / revenue': {
+      what: 'Gross monthly rent (or booking revenue for short-term rentals) before vacancy and expenses.',
+    },
+    'IRR over hold period': {
+      what: 'Internal rate of return: your average yearly return over the whole time you own the property, counting every year of cash flow plus what you walk away with when you sell. Unlike the first-year numbers, it rewards getting money back sooner.',
+      good: '10–15%+ is generally considered good for a rental.',
+    },
+    'Equity multiple': {
+      what: 'How many times over you get your cash back by the time you sell.',
+      calc: '(Total cash flow + net from sale) ÷ cash invested.',
+      good: '2.0× means you doubled your money over the hold period.',
+    },
+    'Long-term projection': {
+      what: 'Year-by-year estimate using your rent growth, expense growth and appreciation rates. Rent and NOI are yearly. Total cash flow is the running total. Value is what the property is worth, Loan is what you still owe, and Equity is the difference. The highlighted row is your hold period.',
+      calc: 'The IRR and total profit assume you sell at the end of the hold period, paying selling costs and the remaining loan.',
+    },
+  };
+
+  // Results that mean the same thing, or are explained by a field's help.
+  const RESULT_ALIASES = {
+    'Cash-on-cash': 'Cash-on-cash return',
+    'Cash left in the deal': 'Cash left in deal',
+    'Cash left in deal (BRRRR)': 'Cash left in deal',
+    'Equity after refinance': 'Equity after refi',
+    'Annualized': 'Annualized ROI',
+    'Total cash needed': 'Cash needed',
+    'Max offer by the 70% rule': '70% rule max offer',
+    'Holding costs during rehab': 'Holding costs',
+    'Flip profit': 'Profit',
+    'ARV': 'After-repair value (sale price)',
+    'Expense ratio': 'Expenses (incl. vacancy) as % of gross',
+    'NOI (annual)': 'Net operating income (NOI)',
+    'Mortgage payments after refinance': 'Mortgage payments (P&I)',
+    'Monthly mortgage': 'Monthly mortgage payment',
+    'Monthly cash flow': 'Your cash flow',
+    'Cash flow / month': 'Your cash flow',
+    'Cash flow / year': 'Cash flow',
+    'Cash flow per unit / mo': 'Cash flow per unit / month',
+    'Total return (yr 1)': 'Total return (cash flow + amortization + appreciation)',
+  };
+  const FIELD_ALIASES = {
+    'Property taxes': 'propertyTaxes',
+    'Insurance': 'insurance',
+    'Maintenance & repairs': 'maintenancePct',
+    'Owner-paid utilities': 'utilities',
+    'Property management (variable)': 'mgmtPct',
+    'Property management (fixed)': 'mgmtFixed',
+    'Mortgage insurance': 'mortgageInsPct',
+    'Capital expense reserve': 'capexPct',
+    'Platform fees': 'platformFeePct',
+    'Cleaning': 'cleaningCost',
+    'Supplies & extras': 'strSupplies',
+    'Refinance closing costs': 'refiClosingCosts',
+    'Down payment': 'downPaymentPct',
+    'Rehab': 'repairsUpfront',
+    'Closing costs (purchase)': 'closingCosts',
+    'Purchase price': 'purchasePrice',
+  };
+
+  // Help for a result label. Labels with details in brackets, like
+  // "Holding costs (6 mo: …)", fall back to the part before the bracket.
+  function resultHelp(label) {
+    for (const key of [label, String(label).replace(/\s*\(.*$/, '')]) {
+      const k = RESULT_ALIASES[key] || key;
+      if (RESULT_HELP[k]) return RESULT_HELP[k];
+      if (FIELD_ALIASES[key]) return HELP[FIELD_ALIASES[key]];
+    }
+    return null;
+  }
+
+  const api = { HELP, STRATEGY_HELP, RESULT_HELP, resultHelp };
   if (typeof module !== 'undefined' && module.exports) { module.exports = api; return; }
   root.FieldHelp = api;
 
@@ -321,5 +595,57 @@
     }
   }
 
+  // Results redraw as you type, so their help opens in one shared panel
+  // instead of inside the result itself.
+  function initResultSheet() {
+    const sheet = document.createElement('div');
+    sheet.className = 'help-sheet';
+    sheet.id = 'help-sheet';
+    sheet.setAttribute('role', 'dialog');
+    sheet.setAttribute('aria-labelledby', 'help-sheet-title');
+    sheet.hidden = true;
+    sheet.innerHTML = '<button type="button" class="icon close" aria-label="Close">×</button><h3 id="help-sheet-title"></h3><div class="help-sheet-body"></div>';
+    document.body.appendChild(sheet);
+    let opener = null;
+
+    const close = () => {
+      sheet.hidden = true;
+      if (opener) { opener.setAttribute('aria-expanded', 'false'); opener.focus({ preventScroll: true }); opener = null; }
+    };
+    sheet.querySelector('.close').addEventListener('click', close);
+    document.addEventListener('keydown', (ev) => { if (ev.key === 'Escape' && !sheet.hidden) close(); });
+
+    document.addEventListener('click', (ev) => {
+      const btn = ev.target.closest('.rhelp');
+      if (!btn) {
+        if (!sheet.hidden && !sheet.contains(ev.target)) close();
+        return;
+      }
+      ev.preventDefault();
+      ev.stopPropagation();
+      const label = btn.dataset.help;
+      const entry = resultHelp(label);
+      if (!entry) return;
+      if (opener && opener !== btn) opener.setAttribute('aria-expanded', 'false');
+      opener = btn;
+      btn.setAttribute('aria-expanded', 'true');
+      sheet.querySelector('h3').textContent = label.replace(/\s*\(.*$/, '') || label;
+      const body = sheet.querySelector('.help-sheet-body');
+      body.replaceChildren();
+      [['What it means', entry.what], ['How it’s calculated', entry.calc], ['What’s good', entry.good],
+        ['Where to find it', entry.find], ['Typical', entry.typical], ['Note', entry.note]].forEach(([title, text]) => {
+        if (!text) return;
+        const p = document.createElement('p');
+        const b = document.createElement('strong');
+        b.textContent = title + ': ';
+        p.append(b, text);
+        body.appendChild(p);
+      });
+      sheet.hidden = false;
+      sheet.querySelector('.close').focus({ preventScroll: true });
+    }, true);
+  }
+
   init();
+  initResultSheet();
 })(typeof self !== 'undefined' ? self : this);
