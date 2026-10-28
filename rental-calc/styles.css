@@ -240,6 +240,32 @@ summary { font-weight: 600; padding: 8px 0; cursor: pointer; }
   font-size: 14px;
 }
 
+/* Field help */
+.label-text { display: inline-flex; align-items: center; gap: 6px; }
+legend .help-btn { margin-left: 6px; vertical-align: 1px; }
+.help-btn {
+  flex: none; width: 18px; height: 18px; padding: 0; border-radius: 50%;
+  border: 1.5px solid var(--accent); background: transparent; color: var(--accent);
+  font: italic 700 11px/1 Georgia, "Times New Roman", serif;
+  display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
+}
+.help-btn::before { content: ""; position: absolute; inset: -12px; } /* bigger tap target */
+.help-btn { position: relative; }
+.help-btn[aria-expanded="true"] { background: var(--accent); color: var(--surface); }
+.help-panel {
+  order: 99; width: 100%;
+  margin: 2px 0 0; padding: 9px 11px; border-radius: 8px;
+  background: var(--accent-soft); border: 1px solid var(--border);
+  color: var(--text); font-size: 12.5px; line-height: 1.5; cursor: default;
+}
+.help-panel p { margin: 0 0 5px; }
+.help-panel p:last-child { margin-bottom: 0; }
+.help-panel strong { color: var(--accent); }
+.units-fieldset > .help-panel { margin-bottom: 10px; }
+label.help-open { grid-column: 1 / -1; }
+label.check.help-open { flex-wrap: wrap; }
+.strategy-help { font-size: 13px; color: var(--muted); margin: 8px 2px 0; line-height: 1.45; }
+
 /* Units editor */
 .units-fieldset { display: block; }
 .unit-extras { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0 14px; }
@@ -414,7 +440,7 @@ dialog.paywall h2 { margin: 10px 0 4px; font-size: 22px; }
 [hidden] { display: none !important; }
 
 @media print {
-  .topbar, .toolbar, .strategies, .compare-bar, .mini-result, .gate, #toast { display: none !important; }
+  .topbar, .toolbar, .strategies, .strategy-help, .compare-bar, .mini-result, .gate, .help-btn, .help-panel, #toast { display: none !important; }
   body { background: #fff; color: #000; }
   .layout { grid-template-columns: 1fr 1fr; }
   .results { position: static; }
