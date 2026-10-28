@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-28 (night)
+- Rental Calc: City/State starts blank instead of Fallon, NV, with example placeholders.
+- Rental Calc: every input has an (i) button with plain-English help (what it is, where to find it, typical values), plus a short explanation of each strategy.
+
 ## 2026-10-28 (evening)
 - Added the Rental Calc web app at /rental-calc (copied from the Rental-Income-Calculator repo with its scripts/publish-site.sh). Its privacy policy is at /rental-calc/privacy.html.
 - Arm 03 is now Rental Calc, marked "Live on the web", linking to /rental-calc/.
