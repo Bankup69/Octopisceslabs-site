@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-28 (evening)
+- Added the Rental Calc web app at /rental-calc (copied from the Rental-Income-Calculator repo with its scripts/publish-site.sh). Its privacy policy is at /rental-calc/privacy.html.
+- Arm 03 is now Rental Calc, marked "Live on the web", linking to /rental-calc/.
+
 ## 2026-10-28 (later)
 - New company logo (gold octopus with the two astronaut Pisces). Emblem-only round mark now sits next to OCTOPISCES LABS in the header on every page.
 - Added favicon, iPhone home-screen icon and a link-preview image (og-image) using the new logo. Full logo saved at img/logo-full-900.jpg.
