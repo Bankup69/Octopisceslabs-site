@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-10-28 (evening)
+- Arm 03 is now Rental Calc, marked "Live on the web", with a link that opens the app (https://bankup69.github.io/Rental-Income-Calculator/) in a new tab.
+
 ## 2026-10-28 (later)
 - New company logo (gold octopus with the two astronaut Pisces). Emblem-only round mark now sits next to OCTOPISCES LABS in the header on every page.
 - Added favicon, iPhone home-screen icon and a link-preview image (og-image) using the new logo. Full logo saved at img/logo-full-900.jpg.
