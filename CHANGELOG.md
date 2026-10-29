@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-10-29
+- Next Set Terms and Privacy: company mailing address filled in (740 Joel Way, Fallon, NV 89406).
+
 ## 2026-10-28 (night)
 - Rental Calc: City/State starts blank instead of Fallon, NV, with example placeholders.
 - Rental Calc: every input has an (i) button with plain-English help (what it is, where to find it, typical values), plus a short explanation of each strategy.
