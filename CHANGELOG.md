@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-10-29
+- Next Set page: medals screenshot updated to the new forged gunmetal medals with 3D icons.
 - Next Set Terms and Privacy: company mailing address filled in (740 Joel Way, Fallon, NV 89406).
 
 ## 2026-10-28 (night)
