@@ -91,6 +91,18 @@ kbd{font-family:var(--pixel);font-size:.7rem;color:var(--ink);background:var(--s
 .arm-link:hover{text-decoration:underline}
 .pill{font-family:var(--pixel);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:.35rem .5rem;border-radius:4px;background:var(--space);color:var(--muted);border:1px solid var(--line-2)}
 .pill.live{background:var(--gold);border-color:var(--gold);color:#1A1203}
+.notify{display:grid;gap:.55rem;margin-top:.2rem;padding-top:.8rem;border-top:1px dashed var(--line-2)}
+.arm .notify-txt{margin:0;font-size:.88rem;color:var(--muted)}
+.notify-btn{display:inline-flex;align-items:center;gap:.45rem;justify-self:start;font:600 .92rem/1 var(--body);color:var(--gold);background:transparent;border:1.5px solid var(--gold);border-radius:999px;padding:.5rem .85rem;cursor:pointer}
+.notify-btn:hover{background:rgba(244,178,62,.12)}
+.notify-btn[aria-expanded="true"]{background:var(--gold);color:#1A1203}
+.notify-form{display:flex;flex-wrap:wrap;gap:.5rem}
+.notify-form input{flex:1 1 11rem;min-width:0;font:400 1rem/1.2 var(--body);color:var(--ink);background:var(--space);border:2px solid var(--line-2);border-radius:8px;padding:.65rem .75rem}
+.notify-form input:focus{outline:2px solid var(--gold);outline-offset:1px}
+.notify-form .notify-go{padding:.7rem 1rem}
+.arm .notify-msg{flex-basis:100%;margin:0;font-size:.85rem;color:var(--muted);min-height:1em}
+.arm .notify-msg.ok{color:var(--gold-2)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .arm.open{background:rgba(7,10,31,.4);border-style:dashed;min-height:7rem;align-content:space-between}
 .open-txt{font-family:var(--pixel);font-size:.8rem;letter-spacing:.14em;color:var(--line-2)}
 .about{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:3.5rem;align-items:center}
@@ -161,7 +173,7 @@ footer{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;border
     <div class="arms">
       <article class="arm"><div class="arm-top"><span class="arm-num">ARM 01</span><span class="pill live">In development</span></div><h3>Next Set</h3><p>Strength and running training that adjusts your next workout to what you actually did.</p><a class="arm-link" href="/next-set/">See Next Set &rarr;</a></article>
       <article class="arm"><div class="arm-top"><span class="arm-num">ARM 02</span><span class="pill">On the bench</span></div><h3>Personal finance</h3><p>See where the money goes and how far you are from financial independence.</p></article>
-      <article class="arm"><div class="arm-top"><span class="arm-num">ARM 03</span><span class="pill live">Live on the web</span></div><h3>Rental Calc</h3><p>Run the numbers before you buy: cash flow, cap rate and cash-on-cash for long-term rentals, Airbnb, BRRRR and flips. Paste a Zillow or Redfin link to start.</p><a class="arm-link" href="/rental-calc/">Open Rental Calc &rarr;</a></article>
+      <article class="arm"><div class="arm-top"><span class="arm-num">ARM 03</span><span class="pill live">Live on the web</span></div><h3>Rental Calc</h3><p>Run the numbers before you buy: cash flow, cap rate and cash-on-cash for long-term rentals, Airbnb, BRRRR and flips. Paste a Zillow or Redfin link to start.</p><a class="arm-link" href="/rental-calc/">Open Rental Calc &rarr;</a><div class="notify"><p class="notify-txt">iPhone and Android apps are in the works.</p><button type="button" class="notify-btn" aria-expanded="false" aria-controls="notify-rc"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22Zm7-6V11a7 7 0 0 0-5.5-6.84V3.5a1.5 1.5 0 0 0-3 0v.66A7 7 0 0 0 5 11v5l-2 2v1h18v-1l-2-2Z"/></svg><span>Notify me at launch</span></button><form class="notify-form" id="notify-rc" data-source="octopisceslabs-home" hidden novalidate><label class="sr" for="notify-rc-email">Email</label><input id="notify-rc-email" type="email" name="email" autocomplete="email" inputmode="email" placeholder="you@example.com" required><button type="submit" class="btn primary notify-go">Notify me</button><p class="notify-msg" role="status"></p></form></div></article>
       <article class="arm"><div class="arm-top"><span class="arm-num">ARM 04</span><span class="pill">On the bench</span></div><h3>Games</h3><p>More arcade fights like the one up top. Details when there is something to play.</p></article>
       <article class="arm open"><span class="arm-num">ARM 05</span><span class="open-txt">OPEN SLOT</span></article>
       <article class="arm open"><span class="arm-num">ARM 06</span><span class="open-txt">OPEN SLOT</span></article>
@@ -748,6 +760,29 @@ document.getElementById('copy-email').addEventListener('click',function(){
 });
 
 resize();update(0);requestAnimationFrame(frame);
+})();
+</script>
+<script>
+// "Notify me" for the Rental Calc app launch. Adds the email to the Rental
+// Calc Supabase project's launch list (insert-only; the list can't be read
+// from here).
+(function(){
+  var SB='https://wyyytsftkxxqkrekvtkx.supabase.co',KEY='sb_publishable_VGlh7a6qxGWBRvCHtolKhQ_wyf9AoZO';
+  document.querySelectorAll('.notify-btn').forEach(function(btn){
+    var form=document.getElementById(btn.getAttribute('aria-controls'));if(!form)return;
+    var msg=form.querySelector('.notify-msg'),input=form.querySelector('input');
+    btn.addEventListener('click',function(){var open=form.hidden;form.hidden=!open;btn.setAttribute('aria-expanded',String(open));if(open)input.focus();});
+    form.addEventListener('submit',function(ev){
+      ev.preventDefault();var email=input.value.trim();msg.className='notify-msg';
+      if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){msg.textContent='Enter a valid email address.';return;}
+      var go=form.querySelector('.notify-go');go.disabled=true;msg.textContent='Adding you…';
+      fetch(SB+'/rest/v1/rpc/join_launch_list',{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json'},body:JSON.stringify({p_email:email,p_source:form.dataset.source})})
+        .then(function(r){if(!r.ok)throw new Error(r.status);
+          msg.textContent='You’re on the list! We’ll email you when the apps launch.';msg.className='notify-msg ok';input.value='';input.hidden=true;go.hidden=true;})
+        .catch(function(){msg.textContent='Couldn’t add you right now. Please try again.';})
+        .finally(function(){go.disabled=false;});
+    });
+  });
 })();
 </script>
 </body>
