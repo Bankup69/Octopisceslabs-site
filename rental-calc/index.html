@@ -22,6 +22,7 @@
           <button type="button" class="tab" data-view="calc" aria-pressed="true">Calculator</button>
           <button type="button" class="tab" data-view="dash" aria-pressed="false">Dashboard <span class="badge" id="saved-count">0</span></button>
         </nav>
+        <button type="button" id="btn-account" class="account-btn">Sign in</button>
         <button type="button" id="btn-pro" class="pro-btn">Go Pro</button>
       </div>
     </div>
@@ -41,6 +42,7 @@
     </div>
 
     <div class="wrap">
+      <div class="launch-banner" id="launch-banner" role="region" aria-label="App launch" hidden></div>
       <div class="strategies" role="radiogroup" aria-label="Strategy" id="strategies">
         <button type="button" role="radio" data-strategy="rental">Long-term rental</button>
         <button type="button" role="radio" data-strategy="str">Short-term rental <span class="lock">PRO</span></button>
@@ -222,7 +224,9 @@
   <script src="config.js"></script>
   <script src="calc.js"></script>
   <script src="listing.js"></script>
+  <script src="account.js"></script>
   <script src="pro.js"></script>
+  <script src="launch.js"></script>
   <script src="report.js"></script>
   <script src="help.js"></script>
   <script src="app.js"></script>
