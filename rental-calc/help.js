@@ -214,10 +214,10 @@
   };
 
   const STRATEGY_HELP = {
-    rental: 'Long-term rental: buy a property and rent it to tenants on year-long leases. The classic buy-and-hold investment, and what the original spreadsheet models.',
-    str: 'Short-term rental: rent the property by the night on Airbnb or Vrbo. It can earn more than a long-term rental, but it costs more to run (furnishing, cleaning, platform fees) and is more work. Check local short-term rental rules before you buy.',
-    brrrr: 'BRRRR, short for Buy, Rehab, Rent, Refinance, Repeat. You buy a property that needs work (often with cash or a short-term loan), fix it up, rent it out, then refinance based on its higher value to pull your cash back out for the next deal.',
-    flip: 'Fix & flip: buy a property below value, renovate it, and sell it for a profit. There’s no rent; your return comes from the sale.',
+    rental: 'Long-term rental: buy a property and rent it to tenants on year-long leases. You collect rent every month, the rent pays down your loan, and the property can go up in value.',
+    str: 'Short-term rental: rent the property by the night on Airbnb or Vrbo. It can earn more than a long-term rental, but it costs more to run and takes more work. Check your city’s rules on short-term rentals before you buy.',
+    brrrr: 'BRRRR stands for Buy, Rehab, Rent, Refinance, Repeat. Buy a property that needs work, fix it up and rent it out. Then refinance at its new, higher value to get your cash back for the next deal.',
+    flip: 'Fix and flip: buy a property below its value, fix it up and sell it. You make your money from the sale, not from rent.',
   };
 
   // ---- results -------------------------------------------------------------
