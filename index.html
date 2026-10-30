@@ -156,7 +156,7 @@ footer{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;border
     <p class="hero-lede">An independent app studio. Small, focused apps built from real hobbies.</p>
     <div class="cta"><a class="btn btn-cta primary" href="#apps">See the apps</a><button class="btn btn-cta" type="button" id="play-cta">Play the game</button></div>
     <ul class="howto" aria-label="How to play">
-      <li class="how-item"><kbd>&larr;</kbd><kbd>&rarr;</kbd> or mouse to steer</li>
+      <li class="how-item"><kbd>&larr;</kbd><kbd>&uarr;</kbd><kbd>&darr;</kbd><kbd>&rarr;</kbd> or mouse to fly</li>
       <li class="how-item">Bubbles fire on their own</li>
       <li class="how-item">Dodge the tentacles</li>
       <li class="how-item">Shoot down what it throws</li>
@@ -345,7 +345,7 @@ const ALLPICKS=[];LEVELS.forEach(L=>L.picks.forEach(p=>{if(!ALLPICKS.includes(p)
 let state='idle',prev='play',time=0,octT=0,lvl=0,score=0,hi=0,pal=PALS[0];
 const oct={x:0,y:0,flash:0,glow:0,hp:1,maxHp:1,alive:true,stun:0};
 const fish=[{kind:'white',x:0,y:0,ph:0,bob:2.2,alive:true,ko:null},{kind:'dark',x:0,y:0,ph:1.7,bob:2.2,alive:true,ko:null}];
-let px=0,targetX=null,hoverOct=false;const keys={l:false,r:false};
+let px=0,py=0,targetX=null,targetY=null,hoverOct=false;const keys={l:false,r:false,u:false,d:false};
 let bubbles=[],flying=[],parts=[],slabs=[],enemies=[],ebul=[];const hiddenEls=new Set();
 let fireT=0,throwT=0,stateT=0,inv=0,shake=0,nextFish=0,overT=0,returnT=0,tween=null,tweenK=1;
 let ripMode=false,ripT=0,bannerT=0,partsN=0,partsT=0;
@@ -355,7 +355,9 @@ function pad(n){return String(n).padStart(6,'0');}
 function heroTargets(){const hr=hero.getBoundingClientRect(),side=Math.max(28*S,VW*.13);return{ox:VW/2,oy:hr.top+42*S,fy:hr.top+(VW<700?66:118)*S,fl:side,fr:VW-side};}
 function levelTarget(i){if(i===0)return 0;const sec=document.querySelector(LEVELS[i].sel);const top=sec.getBoundingClientRect().top+scrollY-100*S;return Math.max(0,Math.min(root.scrollHeight-VH,top));}
 function lockScroll(on){root.style.overflow=on?'hidden':'';root.style.overscrollBehavior=on?'none':'';}
-function fishRow(){return VH-26*FS;}
+function fishRow(){return py;}
+function yMin(){return Math.max(80,oct.y+58*S);}
+function yMax(){return VH-26*FS;}
 
 /* ---------- picking pieces off the page ---------- */
 function hasBox(cs){const bg=cs.backgroundColor,clear=bg==='transparent'||/rgba\(.*,\s*0\)$/.test(bg);return !clear||parseFloat(cs.borderTopWidth)>0||parseFloat(cs.borderLeftWidth)>0;}
@@ -542,13 +544,13 @@ function beginLevel(i){
 }
 function startGame(){
   cleanupFlying(false);drawSky();drawAbout(true);score=0;nextFish=0;inv=0;octT=0;parts=[];bubbles=[];enemies=[];ebul=[];returnT=0;
-  fish.forEach(f=>{f.alive=true;f.ko=null;});px=VW/2;targetX=null;keys.l=keys.r=false;
+  fish.forEach(f=>{f.alive=true;f.ko=null;});px=VW/2;py=yMax();targetX=targetY=null;keys.l=keys.r=keys.u=keys.d=false;
   try{document.activeElement.blur();}catch(e){}
   lockScroll(true);beginLevel(0);
 }
 function exitGame(){
   cleanupFlying(true);drawSky();drawAbout(true);lockScroll(false);bubbles=[];parts=[];enemies=[];ebul=[];tween=null;pal=PALS[0];oct.alive=true;oct.stun=0;oct.flash=0;
-  fish.forEach(f=>{f.alive=true;f.ko=null;});keys.l=keys.r=false;targetX=null;returnT=1.2;setState('idle');
+  fish.forEach(f=>{f.alive=true;f.ko=null;});keys.l=keys.r=keys.u=keys.d=false;targetX=targetY=null;returnT=1.2;setState('idle');
 }
 function pause(){if(state==='play'||state==='ready'||state==='travel'){prev=state;setState('paused');}}
 function resume(){if(state==='paused')setState(prev);}
@@ -643,9 +645,10 @@ function update(dt){
   }
   oct.glow+=((((state==='idle'&&hoverOct)||(state==='play'&&(ripMode?ripT<.6:(throwT<.35||flying.some(f=>f.state==='aim')))))?1:0)-oct.glow)*Math.min(1,dt*8);
   if(gaming&&state!=='over'&&state!=='won'){
-    if(keys.l)px-=160*S*dt;if(keys.r)px+=160*S*dt;
-    if(targetX!==null&&!keys.l&&!keys.r)px+=(targetX-px)*Math.min(1,dt*10);
-    px=Math.max(22*FS,Math.min(VW-22*FS,px));
+    const kx=(keys.r?1:0)-(keys.l?1:0),ky=(keys.d?1:0)-(keys.u?1:0),kn=kx&&ky?Math.SQRT1_2:1;
+    px+=kx*kn*160*S*dt;py+=ky*kn*160*S*dt;
+    if(!kx&&!ky){if(targetX!==null)px+=(targetX-px)*Math.min(1,dt*10);if(targetY!==null)py+=(targetY-py)*Math.min(1,dt*10);}
+    px=Math.max(22*FS,Math.min(VW-22*FS,px));py=Math.max(yMin(),Math.min(yMax(),py));
   }
   const nAlive=fish.reduce((n,f)=>n+(f.alive?1:0),0),h=gaming?null:heroTargets();
   fish.forEach((f,i)=>{
@@ -727,18 +730,21 @@ hit.addEventListener('pointerleave',()=>{hoverOct=false;drewStatic=false;});
 document.getElementById('play-hint').addEventListener('click',startGame);
 document.getElementById('play-cta').addEventListener('click',startGame);
 document.getElementById('h-exit').addEventListener('click',exitGame);
-layer.addEventListener('pointermove',e=>{targetX=e.clientX;});
-layer.addEventListener('pointerdown',e=>{targetX=e.clientX;if(state==='paused')resume();});
+function aimAt(e){targetX=e.clientX;targetY=e.clientY-(e.pointerType==='touch'?44*FS:0);}
+layer.addEventListener('pointermove',aimAt);
+layer.addEventListener('pointerdown',e=>{aimAt(e);if(state==='paused')resume();});
 window.addEventListener('keydown',e=>{
   if(state==='idle')return;
   const k=e.key;
-  if(k==='ArrowLeft'||k==='a'||k==='A'){keys.l=true;targetX=null;e.preventDefault();}
-  else if(k==='ArrowRight'||k==='d'||k==='D'){keys.r=true;targetX=null;e.preventDefault();}
-  else if(k===' '||k==='ArrowUp'||k==='ArrowDown'||k==='PageDown'||k==='PageUp'||k==='Home'||k==='End'){if(document.activeElement.tagName!=='BUTTON')e.preventDefault();}
+  if(k==='ArrowLeft'||k==='a'||k==='A'){keys.l=true;targetX=targetY=null;e.preventDefault();}
+  else if(k==='ArrowRight'||k==='d'||k==='D'){keys.r=true;targetX=targetY=null;e.preventDefault();}
+  else if(k==='ArrowUp'||k==='w'||k==='W'){keys.u=true;targetX=targetY=null;e.preventDefault();}
+  else if(k==='ArrowDown'||k==='s'||k==='S'){keys.d=true;targetX=targetY=null;e.preventDefault();}
+  else if(k===' '||k==='PageDown'||k==='PageUp'||k==='Home'||k==='End'){if(document.activeElement.tagName!=='BUTTON')e.preventDefault();}
   else if(k==='Escape')exitGame();
   else if(k==='p'||k==='P'){state==='paused'?resume():pause();}
 });
-window.addEventListener('keyup',e=>{const k=e.key;if(k==='ArrowLeft'||k==='a'||k==='A')keys.l=false;if(k==='ArrowRight'||k==='d'||k==='D')keys.r=false;});
+window.addEventListener('keyup',e=>{const k=e.key;if(k==='ArrowLeft'||k==='a'||k==='A')keys.l=false;if(k==='ArrowRight'||k==='d'||k==='D')keys.r=false;if(k==='ArrowUp'||k==='w'||k==='W')keys.u=false;if(k==='ArrowDown'||k==='s'||k==='S')keys.d=false;});
 window.addEventListener('scroll',()=>{drewStatic=false;},{passive:true});
 window.addEventListener('resize',resize);
 document.addEventListener('visibilitychange',()=>{if(document.hidden)pause();});

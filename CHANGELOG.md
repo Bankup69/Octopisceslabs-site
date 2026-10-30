@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-30
+- Game: the Pisces now fly anywhere on screen instead of sliding along the bottom. Arrow keys or WASD move in all directions; the mouse steers both ways; on phones the fish sit just above your finger. They stop just below the octopus.
+- Falling background slabs and enemy fire now target the fish wherever they are.
+
 ## 2026-10-29
 - Arm 03 (Rental Calc): "iPhone and Android apps are in the works" with a bell button that opens a Notify me form. Emails go to the launch list in the Rental Calc Supabase project.
 - Rental Calc: email sign-in, website checkout for Pro (switched on once RevenueCat Web Billing is set up), and a Notify me banner in the app.
