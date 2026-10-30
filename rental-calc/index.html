@@ -92,7 +92,7 @@
 
         <fieldset class="units-fieldset" data-strategies="rental brrrr">
           <legend>Units &amp; rent</legend>
-          <p class="hint">Add one row per unit type. For an apartment complex, use the count, e.g. 24 × 1-bed at $950.</p>
+          <p class="hint">Add a row for each unit type. Got an apartment complex? Use the count, like 24 × 1-bed at $950.</p>
           <div class="units-head" aria-hidden="true"><span>Unit type</span><span># Units</span><span>Rent / unit / mo</span><span></span></div>
           <div id="units"></div>
           <div class="units-foot">
@@ -102,7 +102,7 @@
           <div class="unit-extras">
             <label>Vacancy / delinquency rate <span class="pct"><input name="vacancyRate" type="number" min="0" max="100" step="0.5" inputmode="decimal"></span></label>
             <label data-strategies="rental">Rent lost during up-front repairs <span class="money"><input name="repairRentalLoss" type="number" min="0" step="100" inputmode="decimal"></span>
-              <small>When set, this replaces the vacancy allowance for year 1, as in the spreadsheet.</small></label>
+              <small>Fill this in and it replaces the vacancy allowance for year 1.</small></label>
           </div>
         </fieldset>
 
@@ -125,7 +125,7 @@
           <label>Interest rate <span class="pct"><input name="interestRate" type="number" min="0" max="30" step="0.125" inputmode="decimal"></span></label>
           <label>Loan term (years) <input name="loanYears" type="number" min="1" max="40" step="1" inputmode="numeric"></label>
           <label class="check"><input name="interestOnly" type="checkbox"> Interest-only payments</label>
-          <p class="hint span-all" data-strategies="brrrr">The refinance pays this loan off. Enter hard-money or cash terms here.</p>
+          <p class="hint span-all" data-strategies="brrrr">Your refinance pays this loan off. Put your hard-money or cash terms here.</p>
         </fieldset>
 
         <fieldset>
@@ -138,7 +138,7 @@
           <label data-strategies="rental str brrrr">Property management <span class="pct"><input name="mgmtPct" type="number" min="0" max="100" step="0.5" inputmode="decimal"></span><small>% of adjusted income</small></label>
           <label data-strategies="rental str brrrr">Property management (fixed) <span class="money"><input name="mgmtFixed" type="number" min="0" step="100" inputmode="decimal"></span></label>
           <label data-strategies="rental str brrrr">Mortgage insurance <span class="pct"><input name="mortgageInsPct" type="number" min="0" max="10" step="0.05" inputmode="decimal"></span><small>% of loan amount</small></label>
-          <p class="hint span-all" data-strategies="flip">Taxes, insurance and utilities are counted while you own the property.</p>
+          <p class="hint span-all" data-strategies="flip">You pay taxes, insurance and utilities for as long as you own it. They’re counted here.</p>
         </fieldset>
 
         <fieldset data-strategies="rental str brrrr">
@@ -167,7 +167,7 @@
           <div id="projection"></div>
         </details>
 
-        <p class="disclaimer">Estimates only, based on the assumptions you enter. Not financial advice.</p>
+        <p class="disclaimer">These are estimates. They’re only as good as the numbers you put in. This isn’t financial advice.</p>
       </section>
     </main>
     <button type="button" class="mini-result" id="mini-result" aria-label="Jump to results">

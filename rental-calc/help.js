@@ -15,11 +15,11 @@
       find: 'Anything you like, e.g. “Maple St Duplex”. Leave it blank and the address is used.',
     },
     address: {
-      what: 'The property’s street address. For your reference only; it doesn’t change any numbers.',
+      what: 'The property’s street address. It’s just for your reference. It won’t change any numbers.',
       find: 'From the listing. Paste a listing link and it’s filled in for you.',
     },
     cityState: {
-      what: 'The city and state. For your reference only; it doesn’t change any numbers.',
+      what: 'The city and state. It’s just for your reference. It won’t change any numbers.',
       find: 'From the listing, e.g. “Austin, TX”.',
     },
     purchasePrice: {
@@ -40,12 +40,12 @@
     landPct: {
       what: 'How much of the price is for the land rather than the building. It only splits the price into land and building in the Deal summary. Buildings can be depreciated for taxes and land can’t, so your tax preparer may ask for this. It doesn’t change cash flow.',
       find: 'Your county assessor’s website shows a “land value” and an “improvement value”. Divide land by the total.',
-      typical: '20–30% in most suburbs; higher in expensive cities.',
+      typical: '20–30% in most suburbs. Higher in expensive cities.',
     },
     furnishing: {
       what: 'One-time cost to make a short-term rental guest-ready: furniture, beds and linens, kitchenware, decor, a smart lock, and professional photos.',
       find: 'Price out a room-by-room list, or ask local Airbnb hosts.',
-      typical: '$10k–30k for a typical 2–3 bedroom home; more for luxury listings.',
+      typical: '$10k–30k for a typical 2–3 bedroom home. More for luxury listings.',
     },
     arv: {
       what: 'After-repair value: what the property will be worth once the work is done. BRRRR refinances and flip sale prices are based on it.',
@@ -55,7 +55,7 @@
     rehabMonths: {
       what: 'Months from buying the property until it’s fixed up, rented, and refinanced. During this time you pay the loan, taxes and insurance with no rent coming in.',
       find: 'Contractor timelines plus time to find a tenant. Ask lenders how long you must own the property before a cash-out refinance (called “seasoning”).',
-      typical: '3–6 months; many lenders require 6 months of ownership.',
+      typical: '3–6 months. Many lenders want you to own it for 6 months first.',
     },
     holdMonths: {
       what: 'Months from buying the property until the sale closes, including renovation, listing, and time under contract. You pay holding costs (loan, taxes, insurance, utilities) the whole time.',
@@ -115,7 +115,7 @@
     avgStay: {
       what: 'The average number of nights per booking. It sets how many cleanings you pay for.',
       find: 'Market data tools, or the minimum-stay rules on similar listings.',
-      typical: '2–4 nights in cities and vacation spots; longer for mid-term rentals.',
+      typical: '2–4 nights in cities and vacation spots. Longer for mid-term rentals.',
     },
     cleaningFeeCharged: {
       what: 'The cleaning fee each guest pays per booking. It counts as income.',
@@ -143,7 +143,7 @@
     },
     interestRate: {
       what: 'The yearly interest rate on the purchase loan.',
-      find: 'Get a quote or Loan Estimate from a lender. Freddie Mac and Mortgage News Daily publish today’s average rates; investment property rates usually run 0.5–0.75% higher.',
+      find: 'Get a quote or Loan Estimate from a lender. Freddie Mac and Mortgage News Daily publish today’s average rates. Rates for investment properties usually run 0.5–0.75% higher.',
       typical: 'Hard-money loans for flips and BRRRR: 10–13%.',
     },
     loanYears: {
@@ -161,7 +161,7 @@
     insurance: {
       what: 'Yearly landlord insurance (a “dwelling fire” or DP-3 policy). It costs more than a regular homeowner’s policy. Short-term rentals need a policy that specifically covers them.',
       find: 'Get a quote from an insurance agent with the address. It only takes a few minutes.',
-      typical: 'About 0.3–1% of the home’s value per year; more in coastal, wildfire and hail areas.',
+      typical: 'About 0.3–1% of the home’s value per year. More in coastal, wildfire and hail areas.',
     },
     utilities: {
       what: 'Utilities you pay as the owner each year: water, sewer and trash are often owner-paid in multifamily buildings, plus anything a vacant or short-term rental uses. Also a good place for HOA dues and other fixed yearly costs.',
@@ -169,16 +169,16 @@
     },
     maintenancePct: {
       what: 'Money for everyday repairs: leaky faucets, broken appliances, patching and painting between tenants. Entered as a percentage of rent.',
-      typical: '5–10% of rent; use the high end for older homes.',
+      typical: '5–10% of rent. Use the high end for older homes.',
     },
     capexPct: {
       what: 'Savings for big-ticket replacements that come every 10–25 years, such as roof, furnace or AC, water heater, appliances, flooring and parking lot. Entered as a percentage of rent. Even if nothing breaks this year, setting this aside keeps a big bill from wiping out years of cash flow.',
-      typical: '5–10% of rent; more for older properties.',
+      typical: '5–10% of rent. More for older properties.',
     },
     mgmtPct: {
       what: 'The property manager’s fee as a percentage of the rent collected. Enter 0 if you’ll manage it yourself, but your time has value, and it’s safer to check the deal still works with a manager.',
       find: 'Call two or three local property management companies for quotes.',
-      typical: '8–12% for long-term rentals; 20–30% for short-term rentals.',
+      typical: '8–12% for long-term rentals. 20–30% for short-term rentals.',
     },
     mgmtFixed: {
       what: 'Flat yearly management costs that aren’t a percentage of rent: tenant placement fees, lease renewal fees, bookkeeping or landlord software, or a flat monthly management fee × 12.',
@@ -187,7 +187,7 @@
     mortgageInsPct: {
       what: 'Mortgage insurance (PMI, or MIP on FHA loans), as a yearly percentage of the loan. Usually only charged when you put less than 20% down.',
       find: 'The lender’s Loan Estimate shows it.',
-      typical: '0% with 20%+ down; about 0.3–1.5% of the loan per year otherwise.',
+      typical: '0% if you put 20% or more down. Otherwise about 0.3–1.5% of the loan per year.',
     },
     fullValue: {
       what: 'What the property is actually worth today. It can be higher than the price if you’re buying below market. Appreciation and long-term projections start from this value.',
@@ -196,7 +196,7 @@
     appreciationRate: {
       what: 'How much you expect the property’s value to rise each year.',
       find: 'Look at the area’s home value history on Zillow (Home Values) or Redfin (Data Center).',
-      typical: 'The long-run US average is about 3–4% a year. Use a lower number to be safe; good deals shouldn’t depend on appreciation.',
+      typical: 'The long-run US average is about 3–4% a year. Use a lower number to be safe. A good deal shouldn’t depend on appreciation.',
     },
     rentGrowth: {
       what: 'How much you expect rent to rise each year. Used for the long-term projection.',
@@ -402,7 +402,7 @@
       what: 'The part of the price that’s for the land. Land can’t be depreciated for taxes.',
     },
     'Building value': {
-      what: 'The part of the price that’s for the building. Residential rentals are usually depreciated over 27.5 years, which can lower your taxes; ask a tax professional.',
+      what: 'The part of the price that’s for the building. Residential rentals are usually depreciated over 27.5 years, which can lower your taxes. Ask a tax pro.',
     },
     'Loan amount': {
       what: 'How much you borrow (the refinance loan for BRRRR).',

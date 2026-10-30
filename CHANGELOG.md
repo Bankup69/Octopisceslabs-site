@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-30 (later)
+- Rewrote the copy on every page in plain, conversational English: short sentences, contractions, you and your, and no em-dashes, semicolons or buzzwords. Covers the home page, studio privacy policy, the Next Set page and all six Next Set support and legal pages.
+- Next Set Terms and Privacy: reworded only. Every rule, right and promise is unchanged. The lawyer placeholders are still there. Disclaimer and liability sections are now bold instead of all caps.
+- Rental Calc: re-published from the Rental-Income-Calculator repo with plainer hints, Pro renewal note, help text and privacy policy.
+
 ## 2026-10-30
 - Game: the Pisces now fly anywhere on screen instead of sliding along the bottom. Arrow keys or WASD move in all directions; the mouse steers both ways; on phones the fish sit just above your finger. They stop just below the octopus.
 - Falling background slabs and enemy fire now target the fish wherever they are.

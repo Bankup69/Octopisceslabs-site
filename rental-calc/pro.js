@@ -143,9 +143,9 @@
         <button type="button" class="link signin">Already have Pro? Sign in</button>
         <button type="button" class="link notify">Get notified when the apps launch</button>
       </div>
-      <p class="pw-legal">Subscriptions renew automatically unless cancelled at least 24 hours before the end of the
-        current period. Manage or cancel in your App Store or Google Play account settings, or from the receipt email
-        for purchases made on the website.
+      <p class="pw-legal">Your subscription renews on its own unless you cancel at least 24 hours before the current
+        period ends. Manage or cancel it in your App Store or Google Play settings. Bought it on the website? Use the
+        link in your receipt email.
         <a href="${config.legal.termsUrl}" target="_blank" rel="noopener">Terms of Use</a> ·
         <a href="${config.legal.privacyUrl}" target="_blank" rel="noopener">Privacy Policy</a></p>`;
     document.body.appendChild(dialog);
@@ -313,7 +313,7 @@
 
   function paywall(reason) {
     if (!dialog) build();
-    dialog.querySelector('.pw-reason').textContent = reason || 'Get the full toolkit for analyzing deals.';
+    dialog.querySelector('.pw-reason').textContent = reason || 'Everything you need to size up a deal.';
     renderPlans();
     if (!dialog.open) dialog.showModal();
     return new Promise((resolve) => { resolvePaywall = resolve; });
