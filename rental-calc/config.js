@@ -8,7 +8,7 @@ window.APP_CONFIG = {
   supabase: {
     // Shows "Sign in". Turn on once Supabase has custom SMTP set up: its
     // built-in email only reaches your own team (docs/MONETIZATION.md).
-    accountsEnabled: false,
+    accountsEnabled: true,
     url: 'https://wyyytsftkxxqkrekvtkx.supabase.co',
     publishableKey: 'sb_publishable_VGlh7a6qxGWBRvCHtolKhQ_wyf9AoZO',
   },
