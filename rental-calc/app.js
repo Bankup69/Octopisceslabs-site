@@ -524,7 +524,9 @@
 
   function newProperty() {
     const keep = form.elements.strategy.value;
-    fillForm(Object.assign({}, DEFAULTS, { strategy: keep }));
+    // The person's own starting numbers (Account → Settings), keeping the
+    // strategy they're on.
+    fillForm(Object.assign({}, DEFAULTS, window.Settings.newPropertyDefaults(), { strategy: keep }));
     setCurrent(null);
     history.replaceState(history.state, '', location.pathname);
     updateSavedCount();
@@ -732,6 +734,7 @@
   function showView(view, push = true) {
     $('view-calc').hidden = view !== 'calc';
     $('view-dash').hidden = view !== 'dash';
+    $('view-account').hidden = view !== 'account';
     document.querySelectorAll('.tab').forEach((t) => t.setAttribute('aria-pressed', t.dataset.view === view));
     if (view === 'dash') renderDashboard();
     if (push && history.state?.view !== view) history.pushState({ view }, '');
@@ -739,7 +742,20 @@
 
   document.querySelectorAll('[data-view]').forEach((b) => b.addEventListener('click', () => showView(b.dataset.view)));
   document.querySelectorAll('[data-goto]').forEach((b) => b.addEventListener('click', () => showView(b.dataset.goto)));
-  window.addEventListener('popstate', (ev) => showView(ev.state?.view || 'calc', false));
+  window.addEventListener('popstate', (ev) => {
+    const view = ev.state?.view || 'calc';
+    if (view === 'account' && window.AccountPage) window.AccountPage.open();
+    else showView(view, false);
+  });
+
+  // The Account page restores backups and deletes accounts.
+  document.addEventListener('rental-calc:saved-changed', () => {
+    updateSavedCount();
+    if (!$('view-dash').hidden) renderDashboard();
+  });
+  document.addEventListener('rental-calc:toast', (ev) => toast(ev.detail));
+
+  window.App = { showView };
 
   // ---- Pro -------------------------------------------------------------------
 
@@ -766,7 +782,7 @@
   const params = new URLSearchParams(location.search);
   const sharedText = ['title', 'text', 'url'].map((k) => params.get(k)).filter(Boolean).join(' ');
 
-  let initial = DEFAULTS;
+  let initial = Object.assign({}, DEFAULTS, window.Settings.newPropertyDefaults());
   let initialName = null;
   try {
     const shared = params.get('p') ||
@@ -779,7 +795,7 @@
         initialName = draft.name && loadSaved()[draft.name] ? draft.name : null;
       }
     }
-  } catch (_) { initial = DEFAULTS; }
+  } catch (_) { initial = Object.assign({}, DEFAULTS, window.Settings.newPropertyDefaults()); }
 
   fillForm(initial);
   setCurrent(initialName);

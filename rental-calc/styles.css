@@ -12,8 +12,10 @@
   --radius: 10px;
 }
 
+/* Dark palette: follows the device unless the Account page sets
+   Appearance to Light or Dark (data-theme on <html>). */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg: #111418;
     --surface: #1a1f25;
     --text: #e7eaee;
@@ -24,7 +26,22 @@
     --good: #5cc98f;
     --ok: #e0b14a;
     --bad: #f2827a;
+    color-scheme: dark;
   }
+}
+
+:root[data-theme="dark"] {
+  --bg: #111418;
+  --surface: #1a1f25;
+  --text: #e7eaee;
+  --muted: #9aa5b1;
+  --border: #2c333b;
+  --accent: #5cc7a8;
+  --accent-soft: #1c2f2a;
+  --good: #5cc98f;
+  --ok: #e0b14a;
+  --bad: #f2827a;
+  color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
@@ -405,6 +422,68 @@ dialog.account-dialog h2, dialog.launch-dialog h2 { margin: 0 28px 8px 0; font-s
 .pw-note { font-size: 12px; color: var(--muted); text-align: center; margin: 8px 0 0; }
 .pw-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 2px 12px; }
 
+/* Account page */
+.account-page { max-width: 760px; padding-top: 20px; padding-bottom: 64px; display: grid; gap: 14px; }
+.ap-head { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.ap-avatar {
+  width: 56px; height: 56px; border-radius: 50%; flex: none;
+  display: grid; place-items: center; font-weight: 700; font-size: 20px; letter-spacing: .02em;
+  background: var(--accent); color: var(--surface);
+}
+.ap-who { flex: 1 1 220px; min-width: 0; }
+.ap-name { margin: 0; font-size: 22px; overflow-wrap: anywhere; }
+.ap-sub { margin: 2px 0 0; color: var(--muted); font-size: 14px; overflow-wrap: anywhere; }
+.ap-plan-chip {
+  font-size: 12px; font-weight: 800; letter-spacing: .08em; padding: 3px 10px; border-radius: 12px;
+  background: var(--bg); border: 1px solid var(--border); color: var(--muted);
+}
+.ap-plan-chip.pro { background: linear-gradient(135deg, #f0b429, #e08a00); border: 0; color: #2b1d00; }
+.ap-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 16px 18px; display: grid; gap: 12px; min-width: 0;
+}
+.ap-card h3 { margin: 0; font-size: 16px; }
+.ap-card > button { justify-self: start; }
+.ap-card p { margin: 0; }
+.ap-card .hint { margin: 0; }
+.ap-form { display: grid; gap: 10px; }
+.ap-form label, .ap-defaults-grid label { color: var(--muted); font-size: 13px; margin: 0; }
+.ap-form input[type="text"], .ap-form input[type="email"] { max-width: 420px; }
+.ap-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.ap-field { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.ap-label { font-size: 13px; color: var(--muted); }
+.ap-email { font-weight: 600; overflow-wrap: anywhere; }
+.ap-msg { font-size: 13px; color: var(--good); }
+.ap-msg.error { color: var(--bad); }
+.ap-toggle { display: flex; align-items: flex-start; gap: 10px; margin: 0; color: var(--text); font-size: 14px; cursor: pointer; flex-direction: row; }
+.ap-toggle input { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--accent); flex: none; }
+.ap-toggle span { display: grid; gap: 1px; }
+.ap-toggle small { color: var(--muted); font-size: 12px; }
+.ap-setting { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.ap-setting select { min-width: 200px; }
+.ap-seg { display: inline-flex; gap: 3px; padding: 3px; background: var(--bg); border-radius: 9px; }
+.ap-seg button { border: 0; background: transparent; color: var(--muted); padding: 5px 12px; }
+.ap-seg button[aria-checked="true"] { background: var(--surface); color: var(--text); box-shadow: 0 1px 2px rgba(0,0,0,.12); }
+.ap-defaults { border: 1px solid var(--border); border-radius: 8px; padding: 4px 12px 12px; margin: 0; }
+.ap-defaults summary { font-size: 14px; }
+.ap-defaults > * + * { margin-top: 10px; }
+.ap-defaults-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px 14px; }
+.ap-defaults-grid label { display: grid; gap: 4px; }
+.ap-num { display: flex; align-items: center; gap: 6px; }
+.ap-num input { width: 100%; min-width: 0; }
+.ap-num span { font-size: 12px; color: var(--muted); white-space: nowrap; }
+.ap-danger { border-color: color-mix(in srgb, var(--bad) 45%, var(--border)); }
+.ap-danger h3 { color: var(--bad); }
+button.danger { border-color: var(--bad); color: var(--bad); background: transparent; }
+button.danger[type="submit"] { background: var(--bad); color: var(--surface); }
+.ap-foot { font-size: 12px; color: var(--muted); text-align: center; margin: 4px 0 0; }
+.ap-foot a { color: var(--muted); }
+.ap-support { user-select: all; }
+.account-btn { display: inline-flex; align-items: center; gap: 6px; }
+
+/* Help buttons can be hidden from Account → Settings. */
+.hide-help .help-btn, .hide-help .help-panel { display: none !important; }
+
 /* Launch sign-up */
 .launch-banner {
   display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
@@ -512,7 +591,7 @@ dialog.paywall h2 { margin: 10px 0 4px; font-size: 22px; }
 [hidden] { display: none !important; }
 
 @media print {
-  .topbar, .toolbar, .strategies, .strategy-help, .compare-bar, .mini-result, .gate, .help-btn, .help-panel, .help-sheet, .launch-banner, #toast { display: none !important; }
+  .topbar, .toolbar, .strategies, .strategy-help, .compare-bar, .mini-result, .gate, .help-btn, .help-panel, .help-sheet, .launch-banner, #view-account, #toast { display: none !important; }
   body { background: #fff; color: #000; }
   .layout { grid-template-columns: 1fr 1fr; }
   .results { position: static; }
