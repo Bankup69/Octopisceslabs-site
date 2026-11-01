@@ -152,9 +152,12 @@
       pendingEmail = email;
       step('code');
     } catch (err) {
-      status(/rate|limit/i.test(err.message || '')
+      // A server error means the email service failed, not the connection.
+      status(/rate|limit/i.test(err.message || '') || err.status === 429
         ? 'Too many emails sent. Wait a minute and try again.'
-        : 'Couldn’t send the email. Check your connection and try again.', true);
+        : err.status >= 500
+          ? 'We couldn’t send the sign-in email right now. Please try again in a few minutes.'
+          : 'Couldn’t reach the sign-in service. Check your connection and try again.', true);
     } finally {
       busy(false);
     }
