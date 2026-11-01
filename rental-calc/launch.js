@@ -34,16 +34,24 @@
     dialog.innerHTML = `
       <button type="button" class="icon close" aria-label="Close">×</button>
       <div class="launch-icon">${BELL}</div>
-      <h2>Rental Calc is coming to iPhone and Android</h2>
-      <p>The apps are in the works. Leave your email and we’ll send you one note when they launch.</p>
-      <form novalidate>
-        <label>Email <input type="email" name="email" autocomplete="email" inputmode="email" required></label>
-        <button type="submit" class="primary">${BELL} Notify me</button>
-      </form>
-      <p class="hint">Just the launch announcement, no spam. If you buy Pro on the website, it carries over to the apps when you sign in with the same email.</p>
-      <p class="launch-status" role="status"></p>`;
+      <section data-state="ask">
+        <h2>Rental Calc is coming to iPhone and Android</h2>
+        <p>The apps are in the works. Leave your email and we’ll send you one note when they launch.</p>
+        <form novalidate>
+          <label>Email <input type="email" name="email" autocomplete="email" inputmode="email" required></label>
+          <button type="submit" class="primary">${BELL} Notify me</button>
+        </form>
+        <p class="hint">Just the launch announcement, no spam. If you buy Pro on the website, it carries over to the apps when you sign in with the same email.</p>
+        <p class="launch-status" role="status"></p>
+      </section>
+      <section data-state="done" hidden>
+        <h2>You’re on the list</h2>
+        <p>We’ll send one email to <strong class="launch-email"></strong> when the iPhone and Android apps launch.</p>
+        <p class="hint">If you buy Pro on the website before then, sign in to the apps with this same email and Pro carries over.</p>
+        <button type="button" class="primary launch-close">Done</button>
+      </section>`;
     document.body.appendChild(dialog);
-    dialog.querySelector('.close').addEventListener('click', () => dialog.close());
+    dialog.querySelectorAll('.close, .launch-close').forEach((b) => b.addEventListener('click', () => dialog.close()));
     const form = dialog.querySelector('form');
     form.addEventListener('submit', async (ev) => {
       ev.preventDefault();
@@ -60,8 +68,9 @@
       try {
         await join(email, 'rental-calc-app');
         write(DONE_KEY, '1');
-        out.textContent = 'You’re on the list! We’ll email you when the apps launch.';
-        form.hidden = true;
+        out.textContent = '';
+        dialog.querySelector('.launch-email').textContent = email;
+        showState('done');
         renderBanner();
       } catch (err) {
         out.textContent = 'Couldn’t add you right now. Check your connection and try again.';
@@ -72,10 +81,16 @@
     });
   }
 
+  // "ask" shows the form; "done" replaces it with a confirmation.
+  function showState(name) {
+    dialog.querySelectorAll('[data-state]').forEach((el) => { el.hidden = el.dataset.state !== name; });
+    if (name === 'done') dialog.querySelector('.launch-close').focus();
+  }
+
   function open() {
     if (!dialog) build();
     const form = dialog.querySelector('form');
-    form.hidden = false;
+    showState('ask');
     dialog.querySelector('.launch-status').textContent = '';
     const user = window.Account && window.Account.user();
     if (user && !form.elements.email.value) form.elements.email.value = user.email;

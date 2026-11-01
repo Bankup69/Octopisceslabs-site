@@ -421,6 +421,9 @@ dialog.launch-dialog .launch-icon {
 }
 dialog.launch-dialog .launch-icon svg { width: 22px; height: 22px; }
 dialog.launch-dialog .primary { display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+dialog.launch-dialog [data-state] { display: grid; gap: 10px; }
+dialog.launch-dialog [data-state][hidden] { display: none; }
+dialog.launch-dialog [data-state="done"] .launch-close { justify-self: start; padding: 10px 20px; }
 
 /* Locked (Pro) results */
 .results { position: relative; }
