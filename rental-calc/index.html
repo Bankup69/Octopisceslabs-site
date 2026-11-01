@@ -12,6 +12,11 @@
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
   <link rel="stylesheet" href="styles.css">
+  <script>
+    // Apply the Appearance setting before the page draws, to avoid a flash.
+    try { var t = (JSON.parse(localStorage.getItem('rental-calc:settings')) || {}).theme;
+      if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}
+  </script>
 </head>
 <body>
   <header class="topbar">
@@ -219,16 +224,23 @@
     </div>
   </section>
 
+  <!-- Account -->
+  <section id="view-account" class="view" hidden>
+    <main class="wrap account-page" id="account-page"></main>
+  </section>
+
   <div id="toast" role="status" hidden></div>
 
   <script src="config.js"></script>
   <script src="calc.js"></script>
   <script src="listing.js"></script>
   <script src="account.js"></script>
+  <script src="settings.js"></script>
   <script src="pro.js"></script>
   <script src="launch.js"></script>
   <script src="report.js"></script>
   <script src="help.js"></script>
   <script src="app.js"></script>
+  <script src="account-page.js"></script>
 </body>
 </html>

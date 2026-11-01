@@ -44,7 +44,10 @@
     if (cached !== entitled) set(cached);
   }
 
+  let lastInfo = null;
+
   function fromCustomerInfo(info) {
+    lastInfo = info || lastInfo;
     const active = info && info.entitlements && info.entitlements.active;
     set(!!(active && active[config.revenueCat.entitlement]));
   }
@@ -328,6 +331,11 @@
     paywall,
     // Resolves true when the user has Pro, showing the paywall if needed.
     require: (reason) => (entitled ? Promise.resolve(true) : paywall(reason)),
+    // Where the person manages or cancels their subscription: the receipt
+    // portal for website purchases, otherwise their store account.
+    managementUrl: () => (lastInfo && lastInfo.managementURL) ||
+      (platform === 'ios' ? 'https://apps.apple.com/account/subscriptions'
+        : platform === 'android' ? 'https://play.google.com/store/account/subscriptions' : null),
     // For automated tests and local previews only; purchases set this for real.
     _setForTesting: set,
   };

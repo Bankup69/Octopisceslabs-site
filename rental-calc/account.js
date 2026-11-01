@@ -182,10 +182,73 @@
     }
   }
 
-  async function signOut() {
-    try { await (await getClient()).auth.signOut(); } catch (_) {}
+  // scope 'global' also signs out every other device.
+  async function signOut(scope = 'local') {
+    try { await (await getClient()).auth.signOut({ scope }); } catch (_) {}
+    profile = null;
     setUser(null);
-    dialog.close();
+    if (dialog && dialog.open) dialog.close();
+  }
+
+  // ---- profile (name, email preferences, settings) -------------------------
+
+  let profile = null;
+
+  async function loadProfile() {
+    if (!user) return null;
+    const c = await getClient();
+    const { data, error } = await c.from('profiles').select('*').eq('id', user.id).maybeSingle();
+    if (error) throw error;
+    if (data) { profile = data; return profile; }
+    const created = await c.from('profiles').insert({ id: user.id }).select().single();
+    if (created.error) throw created.error;
+    profile = created.data;
+    return profile;
+  }
+
+  async function saveProfile(patch) {
+    if (!user) throw new Error('Not signed in');
+    const c = await getClient();
+    const { data, error } = await c.from('profiles').update(patch).eq('id', user.id).select().single();
+    if (error) throw error;
+    profile = data;
+    return profile;
+  }
+
+  // Supabase emails a confirmation link to the new address; the change
+  // takes effect once it's clicked.
+  async function updateEmail(email) {
+    const c = await getClient();
+    const { error } = await c.auth.updateUser({ email }, { emailRedirectTo: location.origin + location.pathname });
+    if (error) throw error;
+  }
+
+  async function onLaunchList() {
+    const c = await getClient();
+    const { data, error } = await c.from('launch_signups').select('email').limit(1);
+    if (error) throw error;
+    return data.length > 0;
+  }
+
+  async function leaveLaunchList() {
+    const c = await getClient();
+    const { error } = await c.from('launch_signups').delete().eq('email', user.email.toLowerCase());
+    if (error) throw error;
+  }
+
+  async function deleteAccount() {
+    const c = await getClient();
+    const { data } = await c.auth.getSession();
+    const token = data.session && data.session.access_token;
+    if (!token) throw new Error('Sign in again, then retry.');
+    const res = await fetch(`${config.url}/functions/v1/delete-account`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}`, apikey: config.publishableKey, 'Content-Type': 'application/json' },
+      body: '{}',
+    });
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(body.error || 'Could not delete the account.');
+    await signOut('local');
   }
 
   function open(reason) {
@@ -208,7 +271,9 @@
   }
 
   document.addEventListener('click', (ev) => {
-    if (ev.target.closest('#btn-account')) open();
+    if (!ev.target.closest('#btn-account')) return;
+    if (user && window.AccountPage) window.AccountPage.open();
+    else open();
   });
 
   window.Account = {
@@ -220,6 +285,14 @@
     open,
     // Resolves with the signed-in user, asking them to sign in first if needed.
     require: (reason) => (user ? Promise.resolve(user) : open(reason)),
+    signOut,
+    profile: () => profile,
+    loadProfile,
+    saveProfile,
+    updateEmail,
+    onLaunchList,
+    leaveLaunchList,
+    deleteAccount,
   };
   renderButton();
 })();
