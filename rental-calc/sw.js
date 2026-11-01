@@ -1,5 +1,5 @@
 // Offline support: serve the app shell from cache, refreshing it in the background.
-const CACHE = 'rental-calc-v9';
+const CACHE = 'rental-calc-v10';
 const SHELL = [
   './', 'index.html', 'privacy.html', 'styles.css', 'config.js', 'calc.js', 'listing.js', 'account.js', 'pro.js',
   'launch.js', 'report.js',
