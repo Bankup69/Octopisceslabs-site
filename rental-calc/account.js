@@ -11,6 +11,7 @@
   let client = null;
   let loading = null;
   let user = null;
+  let linkProblem = '';
 
   function loadScript(src) {
     return new Promise((resolve, reject) => {
@@ -47,13 +48,42 @@
 
   function hasStoredSession() {
     try { if (localStorage.getItem(SESSION_KEY)) return true; } catch (_) {}
-    return /access_token=|error_description=/.test(location.hash);
+    return /access_token=|error_description=/.test(location.hash) || linkToken() !== null;
+  }
+
+  // The emails link to octopisceslabs.com with a one-time token, rather than
+  // to a supabase.co address, so the link matches the sender (a mismatch is a
+  // spam signal). The token is exchanged for a session here.
+  function linkToken() {
+    const q = new URLSearchParams(location.search);
+    const tokenHash = q.get('token_hash');
+    const type = q.get('type');
+    return tokenHash && /^(email|magiclink|signup|email_change|recovery|invite)$/.test(type || '') ? { tokenHash, type } : null;
+  }
+
+  function cleanAddressBar() {
+    const q = new URLSearchParams(location.search);
+    ['token_hash', 'type'].forEach((k) => q.delete(k));
+    const rest = q.toString();
+    history.replaceState(history.state, '', location.pathname + (rest ? '?' + rest : ''));
   }
 
   async function init() {
     if (!hasStoredSession()) return null;
     try {
       const c = await getClient();
+      const link = linkToken();
+      if (link) {
+        cleanAddressBar();
+        const { data, error } = await c.auth.verifyOtp({ token_hash: link.tokenHash, type: link.type });
+        if (error) {
+          linkProblem = /expired|invalid/i.test(error.message || '')
+            ? 'That sign-in link has expired or was already used. Send yourself a new code.'
+            : 'That sign-in link didn’t work. Send yourself a new code.';
+        } else if (data && data.session) {
+          setUser(data.session.user);
+        }
+      }
       const { data } = await c.auth.getSession();
       setUser(data.session ? data.session.user : null);
       // Clean the sign-in details out of the address bar after a link sign-in.
@@ -61,6 +91,7 @@
     } catch (err) {
       console.warn('Accounts unavailable', err);
     }
+    if (linkProblem) setTimeout(() => open(linkProblem), 0);
     return user;
   }
 
