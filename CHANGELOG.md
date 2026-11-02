@@ -2,8 +2,9 @@
 
 ## 2026-11-02
 - Search: added robots.txt and sitemap.xml so Google can find every page.
-- New free calculator pages: /brrrr-calculator, /airbnb-calculator and /cash-on-cash-return-calculator. Each runs the same engine as EquityFoundry, explains the math in plain English and opens the deal in the full app. Built by tools/build_calculators.py.
-- Home page: Arm 03 card links to the three calculators.
+- New guide pages: /brrrr-calculator, /airbnb-calculator and /cash-on-cash-return-calculator. Each explains the math in plain English with one worked example deal and a button that opens it in EquityFoundry. Built by tools/build_calculators.py.
+- Changed the same day: the guide pages first went out with working calculators. Removed them so nothing paid is given away. BRRRR and Airbnb analysis stay in EquityFoundry Pro.
+- Home page: Arm 03 card links to the three guides.
 - EquityFoundry re-published with a search-friendly title, description and structured data.
 
 ## 2026-11-02

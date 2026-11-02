@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
-"""Builds the calculator landing pages (BRRRR, Airbnb, cash-on-cash).
+"""Builds the guide pages for EquityFoundry (BRRRR, Airbnb, cash-on-cash).
 
-Each page runs the same engine as EquityFoundry (/rental-calc/calc.js), so the
-numbers always match the app. Edit the PAGES list below, then run:
+These are guides, not calculators: nothing to type into. Each shows one worked
+example deal. The example's results are worked out at build time with
+EquityFoundry's own engine (rental-calc/calc.js), so they match the app. The
+button opens that example in EquityFoundry, where Pro gating applies as usual.
+Edit the PAGES list below, then run:
 
     python3 tools/build_calculators.py
 
 and commit the generated folders.
 """
-import html, json, os
+import html, json, os, urllib.parse
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE = 'https://octopisceslabs.com'
@@ -50,9 +53,9 @@ PAGES = [
         'nav': 'Cash-on-cash',
         'strategy': 'rental',
         'title': 'Cash-on-Cash Return Calculator for Rental Property | EquityFoundry',
-        'desc': 'Free cash-on-cash return calculator for rental property. Enter the price, loan and rent and see your cash-on-cash return, monthly cash flow and cap rate.',
-        'h1': 'Cash-on-cash return calculator',
-        'lede': 'How hard is your money working? Put in the deal and you\'ll see what you earn each year on the cash you actually put in.',
+        'desc': 'What cash-on-cash return is, the formula, what a good number looks like and a worked example. Run your own deals in EquityFoundry.',
+        'h1': 'Cash-on-cash return: how the numbers work',
+        'lede': 'How hard is your money working? Here\'s how to tell, with a real example worked all the way through.',
         'groups': [
             ('The purchase', ['purchasePrice', 'downPaymentPct', 'interestRate', 'loanYears', 'closingCosts', 'repairsUpfront']),
             ('The rent', ['rent', 'vacancyRate']),
@@ -73,7 +76,7 @@ PAGES = [
 <p><strong>Yearly cash flow</strong> is rent, minus vacancy, minus every expense, minus the mortgage. <strong>Cash invested</strong> is your down payment plus closing costs plus any repairs you pay for up front.</p>
 <h2>What's a good number?</h2>
 <p>Plenty of investors aim for 8 to 12%. Some markets never get there, and people buy anyway for appreciation. A negative number means the property costs you money every month. Know that before you sign.</p>
-<p>Be honest with the inputs. Most bad deals look good because someone left out vacancy, repairs or big-ticket replacements. This calculator sets money aside for all three by default.</p>
+<p>Be honest with the inputs. Most bad deals look good because someone left out vacancy, repairs or big-ticket replacements. EquityFoundry sets money aside for all three by default.</p>
 <h2>Cash-on-cash vs. cap rate</h2>
 <p>Cap rate ignores the loan. It's the yearly profit before the mortgage divided by the price. Use it to compare properties to each other. Cash-on-cash includes your loan, so it tells you how <em>your</em> deal works with <em>your</em> financing.</p>
 ''',
@@ -83,9 +86,9 @@ PAGES = [
         'nav': 'BRRRR',
         'strategy': 'brrrr',
         'title': 'BRRRR Calculator: Cash Left in the Deal, Refinance and Cash Flow | EquityFoundry',
-        'desc': 'Free BRRRR calculator. See how much cash you pull out at the refinance, how much stays in the deal, and your cash flow and cash-on-cash return after.',
-        'h1': 'BRRRR calculator',
-        'lede': 'Buy, rehab, rent, refinance, repeat. Plug in the deal and see how much of your cash comes back out at the refinance.',
+        'desc': 'How to run the numbers on a BRRRR deal: cash out at the refinance, cash left in the deal and cash flow after. With a worked example. Analyze yours in EquityFoundry.',
+        'h1': 'BRRRR deals: how the numbers work',
+        'lede': 'Buy, rehab, rent, refinance, repeat. Here\'s how to tell how much of your cash comes back out, with an example deal.',
         'groups': [
             ('Buy and rehab', ['purchasePrice', 'repairsUpfront', 'closingCosts', 'downPaymentPct', 'interestRate', 'rehabMonths']),
             ('Refinance', ['arv', 'refiLtv', 'refiRate', 'refiClosingCosts']),
@@ -116,9 +119,9 @@ PAGES = [
         'nav': 'Airbnb',
         'strategy': 'str',
         'title': 'Airbnb Calculator: Short-Term Rental Profit and Cash Flow | EquityFoundry',
-        'desc': 'Free Airbnb calculator for short-term rentals. Enter the nightly rate, occupancy and costs and see yearly revenue, monthly cash flow and cash-on-cash return.',
-        'h1': 'Airbnb calculator',
-        'lede': 'Thinking about a short-term rental? See what it really clears after cleaning, fees, furniture and the mortgage.',
+        'desc': 'How to run the numbers on an Airbnb or short-term rental: revenue, cleaning, fees, furniture and cash flow. With a worked example. Analyze yours in EquityFoundry.',
+        'h1': 'Airbnb rentals: how the numbers work',
+        'lede': 'Thinking about a short-term rental? Here\'s what it really clears after cleaning, fees, furniture and the mortgage.',
         'groups': [
             ('The purchase', ['purchasePrice', 'downPaymentPct', 'interestRate', 'loanYears', 'closingCosts', 'furnishing']),
             ('Bookings', ['nightlyRate', 'occupancy', 'avgStay', 'cleaningFeeCharged', 'cleaningCost', 'platformFeePct']),
@@ -132,7 +135,7 @@ PAGES = [
                     ('cashOnCash', 'Cash-on-cash return', 'pct', False), ('cashInvested', 'Cash you put in', 'money', False),
                     ('nightsBooked', 'Nights booked per year', 'int', False)],
         'body': '''
-<h2>How this Airbnb calculator works</h2>
+<h2>How to run Airbnb numbers</h2>
 <p>It starts with your nightly rate and how often you're booked. It adds the cleaning fees guests pay. Then it takes out everything a short-term rental really costs. That means your cleaner on every turnover, the Airbnb host fee, supplies, utilities, repairs and the mortgage.</p>
 <p>Furniture and setup count as cash you put in, right next to your down payment. That's why a short-term rental can show big cash flow but a so-so return.</p>
 <h2>Getting the inputs right</h2>
@@ -140,7 +143,7 @@ PAGES = [
 <p><strong>You pay the utilities</strong> on a short-term rental. Power, water, internet and streaming add up. So do supplies.</p>
 <p><strong>Check the local rules first.</strong> Lots of cities limit or ban short-term rentals, require a permit or charge a lodging tax. A great number means nothing if you can't legally rent it.</p>
 <h2>What's a good result?</h2>
-<p>Short-term rentals take more work and more risk than a regular lease. Many investors want a clearly higher cash-on-cash return to make that worth it. Run the same house as a long-term rental in EquityFoundry and compare the two side by side.</p>
+<p>Short-term rentals take more work and more risk than a regular lease. Many investors want a clearly higher cash-on-cash return to make that worth it. In EquityFoundry you can run the same house as a long-term rental and compare the two side by side.</p>
 ''',
     },
 ]
@@ -174,6 +177,9 @@ label small{font-weight:400;color:var(--muted);font-size:.8rem;line-height:1.35}
 .inp span{padding:0 .55rem;color:var(--muted);font-size:.9rem}
 .inp input{flex:1 1 0;width:0;min-width:0;background:transparent;border:0;color:var(--ink);font:500 1rem var(--body);padding:.55rem .6rem}
 .inp input:focus{outline:none}.inp:focus-within{border-color:var(--gold)}
+.example{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:6px 16px 12px}.example h2{margin:.6rem 0 .4rem;font-size:1.15rem}
+.example table{width:100%;border-collapse:collapse;font-size:.95rem}.example td{padding:.4rem 0;border-bottom:1px solid var(--line)}.example td:last-child{text-align:right;font-weight:600}
+.example tr.grp th{text-align:left;color:var(--gold2);padding:.9rem 0 .2rem;font-size:.9rem}
 .results{position:sticky;top:12px;background:var(--panel);border:2px solid var(--gold);border-radius:14px;padding:18px}
 .hero-k{font-size:.85rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
 .hero-v{font-family:var(--wide);font-size:clamp(1.7rem,5vw,2.4rem);color:var(--gold);margin:.2rem 0 .8rem}
@@ -192,41 +198,40 @@ dt{color:var(--muted)}dd{margin:0;font-weight:700;text-align:right}
 @media (max-width:820px){.calc{grid-template-columns:minmax(0,1fr)}.results{position:static;order:-1}}
 '''
 
-JS = r'''
-(function(){
-  var C=window.RentalCalc,form=document.getElementById('calc'),out=document.getElementById('out'),open=document.getElementById('open');
-  var cfg=JSON.parse(document.getElementById('cfg').textContent);
-  var usd=new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0});
-  function fmt(v,k){if(v===Infinity)return '∞ (all cash back)';if(v===null||v===undefined||!isFinite(v))return '–';
-    if(k==='money')return usd.format(Math.round(v));if(k==='pct')return (v*100).toFixed(1)+'%';if(k==='int')return Math.round(v).toLocaleString('en-US');return String(v);}
-  function get(o,p){return p.split('.').reduce(function(a,k){return a==null?a:a[k];},o);}
-  function input(){var o=Object.assign({},C.DEFAULTS,cfg.fixed);
-    form.querySelectorAll('input[name]').forEach(function(el){var n=parseFloat(el.value);if(!isFinite(n))n=0;o[el.name]=el.dataset.kind==='pct'?n/100:n;});
-    if('rent' in o){o.units=[{label:'Unit 1',count:1,rent:o.rent}];delete o.rent;}
-    o.strategy=cfg.strategy;return o;}
-  function run(){var i=input(),r=C.analyze(i),first=cfg.results[0],v=get(r,first[0]);
-    var h='<div class="hero-k">'+first[1]+'</div><div class="hero-v'+(typeof v==='number'&&v<0?' neg':'')+'">'+fmt(v,first[2])+'</div><dl>';
-    cfg.results.slice(1).forEach(function(x){h+='<dt>'+x[1]+'</dt><dd>'+fmt(get(r,x[0]),x[2])+'</dd>';});
-    out.innerHTML=h+'</dl>';
-    open.href='/rental-calc/?p='+encodeURIComponent(JSON.stringify(i));}
-  form.addEventListener('input',run);run();
-})();
-'''
+
 
 HEAD_FONTS = '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Michroma&display=swap">'
 
 
-def field(name, val):
-    label, kind, hint = F[name]
-    shown = round(val * 100, 3) if kind == 'pct' else val
-    if isinstance(shown, float) and shown.is_integer():
-        shown = int(shown)
-    step = '0.1' if kind == 'pct' else ('1' if kind == 'num' else '100')
-    pre = '<span>$</span>' if kind == 'money' else ''
-    post = '<span>%</span>' if kind == 'pct' else ''
-    hint_html = f'<small>{html.escape(hint)}</small>' if hint else ''
-    return (f'<label>{html.escape(label)}<span class="inp">{pre}<input name="{name}" data-kind="{kind}" type="number" '
-            f'inputmode="decimal" step="{step}" value="{shown}">{post}</span>{hint_html}</label>')
+import subprocess
+
+
+def compute(inp):
+    """Runs EquityFoundry's engine on one input so the example matches the app."""
+    calc = os.path.join(ROOT, 'rental-calc', 'calc.js')
+    js = ('const C=require(process.argv[1]);const i=JSON.parse(process.argv[2]);'
+          'process.stdout.write(JSON.stringify(C.analyze(i),(k,v)=>v===Infinity?"Infinity":v));')
+    return json.loads(subprocess.check_output(['node', '-e', js, calc, json.dumps(inp)]))
+
+
+def fmt(v, kind):
+    if v == 'Infinity':
+        return 'All your cash back'
+    if v is None:
+        return '–'
+    if kind == 'money':
+        return ('−$' if v < 0 else '$') + f'{abs(round(v)):,}'
+    if kind == 'pct':
+        return f'{v * 100:.1f}%'
+    if kind == 'int':
+        return f'{round(v):,}'
+    return f'{v:g}'
+
+
+def get(o, path):
+    for k in path.split('.'):
+        o = None if o is None else o.get(k)
+    return o
 
 
 def nav(cur):
@@ -236,21 +241,35 @@ def nav(cur):
 
 
 def build(p):
-    shown_fields = [n for _, names in p['groups'] for n in names]
-    fixed = {k: v for k, v in p['example'].items() if k not in shown_fields}
-    groups = ''.join(
-        f'<fieldset><legend>{html.escape(title)}</legend><div class="fields">'
-        + ''.join(field(n, p['example'][n]) for n in names) + '</div></fieldset>'
-        for title, names in p['groups'])
-    cfg = json.dumps({'strategy': p['strategy'], 'fixed': fixed, 'results': p['results']})
+    full = dict(p['example'])
+    inp = dict(full)
+    if 'rent' in inp:
+        inp['units'] = [{'label': 'Unit 1', 'count': 1, 'rent': inp.pop('rent')}]
+    inp['strategy'] = p['strategy']
+    r = compute(inp)
+    rows = ''
+    for title, names in p['groups']:
+        rows += f'<tr class="grp"><th colspan="2">{html.escape(title)}</th></tr>'
+        for n in names:
+            label, kind, _ = F[n]
+            rows += f'<tr><td>{html.escape(label)}</td><td>{fmt(full[n], kind)}</td></tr>'
+    first = p['results'][0]
+    res = ''.join(f'<dt>{html.escape(lab)}</dt><dd>{fmt(get(r, key), kind)}</dd>' for key, lab, kind, _ in p['results'][1:])
+    hv = get(r, first[0])
+    neg = ' neg' if isinstance(hv, (int, float)) and hv < 0 else ''
+    app_inp = {**json.loads(subprocess.check_output(['node', '-e',
+               'process.stdout.write(JSON.stringify(require(process.argv[1]).DEFAULTS))',
+               os.path.join(ROOT, 'rental-calc', 'calc.js')])), **inp}
+    open_href = '/rental-calc/?p=' + urllib.parse.quote(json.dumps(app_inp, separators=(',', ':')))
     url = f'{SITE}/{p["slug"]}/'
-    ld = json.dumps({'@context': 'https://schema.org', '@type': 'WebApplication', 'name': p['h1'].capitalize(),
-                     'url': url, 'applicationCategory': 'FinanceApplication', 'operatingSystem': 'Any (web browser)',
-                     'description': p['desc'], 'offers': {'@type': 'Offer', 'price': '0', 'priceCurrency': 'USD'},
+    ld = json.dumps({'@context': 'https://schema.org', '@type': 'Article', 'headline': p['h1'],
+                     'description': p['desc'], 'url': url, 'datePublished': '2026-11-02',
+                     'author': {'@type': 'Organization', 'name': 'OctoPisces Labs LLC', 'url': SITE + '/'},
                      'publisher': {'@type': 'Organization', 'name': 'OctoPisces Labs LLC', 'url': SITE + '/'}})
-    others = ''.join(f'<a href="/{o["slug"]}/">{html.escape(o["h1"].capitalize())}</a>' for o in PAGES if o is not p)
-    pro_note = ('' if p['strategy'] == 'rental' else
-                ' The full ' + ('BRRRR' if p['strategy'] == 'brrrr' else 'Airbnb') + ' analysis in the app is part of EquityFoundry Pro.')
+    others = ''.join(f'<a href="/{o["slug"]}/">{html.escape(o["h1"])}</a>' for o in PAGES if o is not p)
+    pro = p['strategy'] != 'rental'
+    cta = ('Run your own deal in EquityFoundry Pro' if pro else 'Run your own deal in EquityFoundry')
+    fine = ('BRRRR' if p['strategy'] == 'brrrr' else 'Airbnb') + ' analysis is part of EquityFoundry Pro. ' if pro else ''
     doc = f'''<!doctype html>
 <html lang="en">
 <head>
@@ -259,8 +278,8 @@ def build(p):
 <title>{html.escape(p["title"])}</title>
 <meta name="description" content="{html.escape(p["desc"])}">
 <link rel="canonical" href="{url}">
-<meta property="og:type" content="website"><meta property="og:site_name" content="OctoPisces Labs">
-<meta property="og:title" content="{html.escape(p["h1"].capitalize())}"><meta property="og:description" content="{html.escape(p["desc"])}">
+<meta property="og:type" content="article"><meta property="og:site_name" content="OctoPisces Labs">
+<meta property="og:title" content="{html.escape(p["h1"])}"><meta property="og:description" content="{html.escape(p["desc"])}">
 <meta property="og:url" content="{url}"><meta property="og:image" content="{SITE}/img/og-image.jpg">
 <link rel="icon" href="/img/favicon-32.png"><link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
 {HEAD_FONTS}
@@ -270,31 +289,32 @@ def build(p):
 <body>
 <header class="top">
   <a class="brand" href="/"><img src="/img/logo-mark-128.png" alt="" width="36" height="36">OCTOPISCES LABS</a>
-  <nav aria-label="Calculators">{nav(p["slug"])}</nav>
+  <nav aria-label="Guides">{nav(p["slug"])}</nav>
 </header>
 <main>
 <h1>{html.escape(p["h1"])}</h1>
 <p class="lede">{html.escape(p["lede"])}</p>
 <div class="calc">
-  <form id="calc" autocomplete="off" onsubmit="return false">{groups}</form>
-  <aside class="results" aria-live="polite">
-    <div id="out"></div>
-    <a class="btn" id="open" href="/rental-calc/">Open this deal in EquityFoundry</a>
-    <p class="fine">The example numbers are made up. Swap in your own. Want to paste a Zillow link, save deals and compare them? That's what the full app is for.{pro_note} These are estimates, not financial advice.</p>
+  <section class="example" aria-labelledby="ex-h">
+    <h2 id="ex-h">Example deal</h2>
+    <table>{rows}</table>
+  </section>
+  <aside class="results">
+    <div class="hero-k">{html.escape(first[1])}</div><div class="hero-v{neg}">{fmt(hv, first[2])}</div>
+    <dl>{res}</dl>
+    <a class="btn" href="{open_href}">{cta}</a>
+    <p class="fine">Made-up numbers to show how the math works. EquityFoundry runs your real deal: paste a Zillow or Redfin link, change anything, save it and compare. {fine}Estimates, not financial advice.</p>
   </aside>
 </div>
 <div class="prose">{p["body"]}
-<h2>More free calculators</h2>
-<div class="more">{others}<a href="/rental-calc/">Full rental property calculator</a></div>
+<h2>More guides</h2>
+<div class="more">{others}<a href="/rental-calc/">Open EquityFoundry</a></div>
 </div>
 </main>
 <footer class="foot">
   <span>&copy; 2026 OctoPisces Labs LLC &middot; Nevada</span>
   <nav aria-label="Legal"><a href="/rental-calc/privacy.html">Privacy</a><a href="/rental-calc/terms.html">Terms of Sale</a><a href="/">Studio</a></nav>
 </footer>
-<script id="cfg" type="application/json">{cfg}</script>
-<script src="/rental-calc/calc.js"></script>
-<script>{JS}</script>
 </body>
 </html>
 '''
