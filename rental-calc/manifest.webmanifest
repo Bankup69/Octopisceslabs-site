@@ -1,12 +1,12 @@
 {
-  "name": "Rental Property Calculator",
-  "short_name": "Rental Calc",
-  "description": "Evaluate a potential rental property: cash flow, NOI, cash-on-cash return and total ROI.",
+  "name": "EquityFoundry",
+  "short_name": "EquityFoundry",
+  "description": "Know the deal before you buy. Analyze rentals, Airbnbs, BRRRRs and flips: cash flow, cap rate, cash-on-cash and long-term returns.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f5f6f8",
-  "theme_color": "#1f6f5c",
+  "background_color": "#070d1f",
+  "theme_color": "#0b1630",
   "icons": [
     {
       "src": "icons/icon-192.png",

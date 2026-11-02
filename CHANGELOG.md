@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-02
+- Rental Calc is now **EquityFoundry** ("Know the deal before you buy."): midnight navy and champagne gold, house-and-bars icon, Playfair Display and Inter. Arm 03 card renamed with the new icon. Still at /rental-calc/.
+- EquityFoundry: Account page (profile, plan, email preferences, settings, data export, delete account).
+
 ## 2026-10-30 (later)
 - Rewrote the copy on every page in plain, conversational English: short sentences, contractions, you and your, and no em-dashes, semicolons or buzzwords. Covers the home page, studio privacy policy, the Next Set page and all six Next Set support and legal pages.
 - Next Set Terms and Privacy: reworded only. Every rule, right and promise is unchanged. The lawyer placeholders are still there. Disclaimer and liability sections are now bold instead of all caps.

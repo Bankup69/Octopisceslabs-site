@@ -35,7 +35,7 @@
       <button type="button" class="icon close" aria-label="Close">×</button>
       <div class="launch-icon">${BELL}</div>
       <section data-state="ask">
-        <h2>Rental Calc is coming to iPhone and Android</h2>
+        <h2>EquityFoundry is coming to iPhone and Android</h2>
         <p>The apps are in the works. Leave your email and we’ll send you one note when they launch.</p>
         <form novalidate>
           <label>Email <input type="email" name="email" autocomplete="email" inputmode="email" required></label>

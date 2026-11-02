@@ -1,46 +1,72 @@
+/* EquityFoundry: midnight navy and champagne gold. Playfair Display for
+   headings and the wordmark, Inter for everything else. */
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("vendor/fonts/inter-latin-wght-normal.woff2") format("woff2-variations");
+}
+@font-face {
+  font-family: "Playfair Display";
+  font-style: normal;
+  font-weight: 400 900;
+  font-display: swap;
+  src: url("vendor/fonts/playfair-display-latin-wght-normal.woff2") format("woff2-variations");
+}
+
 :root {
-  --bg: #f5f6f8;
+  --bg: #f3f4f7;
   --surface: #ffffff;
-  --text: #1b1f24;
-  --muted: #5f6b7a;
-  --border: #dde2e8;
-  --accent: #1f6f5c;
-  --accent-soft: #e5f2ee;
+  --text: #0e1a30;
+  --muted: #5a6479;
+  --border: #dde1ea;
+  --accent: #1b3366;
+  --accent-soft: #eef1f8;
   --good: #1f7a4d;
   --ok: #a06a00;
   --bad: #b3261e;
+  --gold: #d9b36a;
+  --gold-ink: #8a6420;
+  --gold-grad: linear-gradient(135deg, #fbe2a6 0%, #eec070 38%, #d79a45 72%, #b9802f 100%);
+  --navy: #0b1630;
+  --navy-2: #13244a;
   --radius: 10px;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Playfair Display", Georgia, "Times New Roman", serif;
 }
 
 /* Dark palette: follows the device unless the Account page sets
    Appearance to Light or Dark (data-theme on <html>). */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #111418;
-    --surface: #1a1f25;
-    --text: #e7eaee;
-    --muted: #9aa5b1;
-    --border: #2c333b;
-    --accent: #5cc7a8;
-    --accent-soft: #1c2f2a;
+    --bg: #070d1f;
+    --surface: #0f1931;
+    --text: #ece9e1;
+    --muted: #9ba4ba;
+    --border: #223154;
+    --accent: #e2c07a;
+    --accent-soft: #1b2643;
     --good: #5cc98f;
     --ok: #e0b14a;
     --bad: #f2827a;
+    --gold-ink: #e2c07a;
     color-scheme: dark;
   }
 }
 
 :root[data-theme="dark"] {
-  --bg: #111418;
-  --surface: #1a1f25;
-  --text: #e7eaee;
-  --muted: #9aa5b1;
-  --border: #2c333b;
-  --accent: #5cc7a8;
-  --accent-soft: #1c2f2a;
+  --bg: #070d1f;
+  --surface: #0f1931;
+  --text: #ece9e1;
+  --muted: #9ba4ba;
+  --border: #223154;
+  --accent: #e2c07a;
+  --accent-soft: #1b2643;
   --good: #5cc98f;
   --ok: #e0b14a;
   --bad: #f2827a;
+  --gold-ink: #e2c07a;
   color-scheme: dark;
 }
 
@@ -50,14 +76,18 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font: 15px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font: 15px/1.45 var(--font-body);
 }
+
+h2, h3, legend, .current, .hero-label, .ap-name, .card h3 { font-family: var(--font-display); letter-spacing: .005em; }
 
 .wrap { max-width: 1180px; margin: 0 auto; padding: 0 16px; }
 
 .topbar {
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
+  background: var(--navy);
+  background-image: linear-gradient(180deg, var(--navy-2), var(--navy));
+  border-bottom: 1px solid rgba(217, 179, 106, .35);
+  color: #ece9e1;
   position: sticky;
   top: 0;
   z-index: 10;
@@ -72,7 +102,20 @@ body {
   padding-top: 12px;
   padding-bottom: 12px;
 }
-.topbar h1 { font-size: 18px; margin: 0; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; min-width: 0; }
+.brand-mark { width: 34px; height: 34px; flex: none; }
+.brand-text { display: grid; line-height: 1.05; }
+.brand-name { font-family: var(--font-display); font-size: 21px; font-weight: 600; letter-spacing: .01em; white-space: nowrap; }
+.brand-equity { color: #f2eee4; }
+.brand-foundry { background: var(--gold-grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.brand-tag { font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); margin-top: 3px; white-space: nowrap; }
+.topbar .tabs { background: rgba(255, 255, 255, .07); }
+.topbar .tab { color: #b9c2d6; }
+.topbar .tab[aria-pressed="true"] { background: #f2eee4; color: var(--navy); }
+.topbar .badge { background: var(--gold); color: var(--navy); }
+.topbar .account-btn { background: transparent; color: #ece9e1; border-color: rgba(236, 233, 225, .28); }
+.topbar .account-btn:hover { border-color: var(--gold); }
+.topbar .account-btn.signed-in { border-color: var(--gold); color: var(--gold); }
 .actions { display: flex; flex-wrap: wrap; gap: 6px; }
 
 button, select, a.button {
@@ -92,11 +135,11 @@ button:disabled { opacity: .45; cursor: default; }
 button.primary { background: var(--accent); border-color: var(--accent); color: var(--surface); }
 
 .topbar-right { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-.pro-btn { background: linear-gradient(135deg, #f0b429, #e08a00); border: 0; color: #2b1d00; font-weight: 700; }
+.pro-btn { background: var(--gold-grad); border: 0; color: #1a1306; font-weight: 700; }
 .pro-btn.active { background: var(--accent-soft); color: var(--accent); }
 .lock {
   display: inline-block; margin-left: 4px; padding: 0 5px; border-radius: 5px;
-  background: #f0b429; color: #2b1d00; font-size: 10px; font-weight: 700; letter-spacing: .03em; vertical-align: 1px;
+  background: var(--gold-grad); color: #1a1306; font-size: 10px; font-weight: 700; letter-spacing: .03em; vertical-align: 1px;
 }
 .lock[hidden] { display: none; }
 
@@ -394,7 +437,9 @@ label.inline { flex-direction: row; align-items: center; gap: 6px; margin: 0; }
 
 @media (max-width: 520px) {
   .topbar-inner { gap: 6px; padding-top: 8px; padding-bottom: 8px; }
-  .topbar h1 { font-size: 16px; }
+  .brand-name { font-size: 18px; }
+  .brand-mark { width: 28px; height: 28px; }
+  .brand-tag { display: none; }
   .topbar-right { gap: 5px; flex-wrap: nowrap; }
   .topbar-right > button, .tabs .tab { padding: 6px 8px; font-size: 13px; }
   .tabs { padding: 2px; }
@@ -437,7 +482,7 @@ dialog.account-dialog h2, dialog.launch-dialog h2 { margin: 0 28px 8px 0; font-s
   font-size: 12px; font-weight: 800; letter-spacing: .08em; padding: 3px 10px; border-radius: 12px;
   background: var(--bg); border: 1px solid var(--border); color: var(--muted);
 }
-.ap-plan-chip.pro { background: linear-gradient(135deg, #f0b429, #e08a00); border: 0; color: #2b1d00; }
+.ap-plan-chip.pro { background: var(--gold-grad); border: 0; color: #1a1306; }
 .ap-card {
   background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
   padding: 16px 18px; display: grid; gap: 12px; min-width: 0;
@@ -538,7 +583,7 @@ dialog.paywall::backdrop { background: rgba(10, 14, 18, .55); }
 dialog.paywall .close { position: absolute; right: 12px; top: 12px; border: 0; }
 .pw-badge {
   display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 800; letter-spacing: .08em;
-  background: linear-gradient(135deg, #f0b429, #e08a00); color: #2b1d00;
+  background: var(--gold-grad); color: #1a1306;
 }
 dialog.paywall h2 { margin: 10px 0 4px; font-size: 22px; }
 .pw-reason { color: var(--muted); margin: 0 0 12px; }
