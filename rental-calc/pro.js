@@ -14,7 +14,16 @@
   const Purchases = native ? Cap.registerPlugin('Purchases') : null;
   const apiKey = platform === 'ios' ? config.revenueCat.iosApiKey
     : platform === 'android' ? config.revenueCat.androidApiKey : '';
-  const webKey = native ? '' : config.revenueCat.webBillingKey;
+  // Test mode (?billing=test) uses the sandbox key, only in this browser.
+  const TEST_KEY = 'rental-calc:billing-test';
+  const billingParam = native ? null : new URLSearchParams(location.search).get('billing');
+  try {
+    if (billingParam === 'test') localStorage.setItem(TEST_KEY, '1');
+    if (billingParam === 'live') localStorage.removeItem(TEST_KEY);
+  } catch (_) {}
+  let testMode = false;
+  try { testMode = !native && !!config.revenueCat.webBillingSandboxKey && localStorage.getItem(TEST_KEY) === '1'; } catch (_) {}
+  const webKey = native ? '' : testMode ? config.revenueCat.webBillingSandboxKey : config.revenueCat.webBillingKey;
   const CANCELLED = 1; // purchases-js ErrorCode.UserCancelledError
 
   let entitled = false;
@@ -26,7 +35,7 @@
   // shows straight away, then it's refreshed from RevenueCat.
   const cacheKey = () => {
     const u = Account.user();
-    return native ? CACHE_KEY : u ? `${CACHE_KEY}:${u.id}` : null;
+    return native ? CACHE_KEY : u ? `${CACHE_KEY}${testMode ? ':test' : ''}:${u.id}` : null;
   };
 
   function set(value) {
@@ -191,6 +200,9 @@
           ? `Signed in as ${user.email}. Pro will also work in the iPhone and Android apps when they launch.`
           : 'You’ll sign in with your email first, so Pro also works in the iPhone and Android apps when they launch.')
         : 'iPhone and Android apps are in the works.';
+    if (testMode) {
+      dialog.querySelector('.pw-note').textContent += ' TEST MODE: use card 4242 4242 4242 4242, any future date, any CVC. No real money moves. Open the site with ?billing=live to leave test mode.';
+    }
   }
 
   async function renderPlans() {
