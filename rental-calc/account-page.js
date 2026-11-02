@@ -63,7 +63,7 @@
       <section class="ap-card" aria-labelledby="ap-email-h">
         <h3 id="ap-email-h">Email preferences</h3>
         <p class="hint">Sign-in codes and purchase receipts are always sent. Everything else is up to you.</p>
-        <label class="ap-toggle"><input type="checkbox" id="ap-pref-launch"><span><b>App launch announcement</b><small>One email when Rental Calc arrives on iPhone and Android.</small></span></label>
+        <label class="ap-toggle"><input type="checkbox" id="ap-pref-launch"><span><b>App launch announcement</b><small>One email when EquityFoundry arrives on iPhone and Android.</small></span></label>
         <label class="ap-toggle"><input type="checkbox" id="ap-pref-updates"><span><b>Product updates</b><small>New features and improvements, a few times a year.</small></span></label>
         <label class="ap-toggle"><input type="checkbox" id="ap-pref-tips"><span><b>Investing tips</b><small>Occasional how-tos on analyzing rental deals.</small></span></label>
         <span class="ap-msg" id="ap-pref-msg" role="status"></span>
@@ -124,7 +124,7 @@
         </form>
       </section>
 
-      <p class="ap-foot">Rental Calc is made by OctoPisces Labs LLC. Questions? Email <span class="ap-support">support@octopisceslabs.com</span> ·
+      <p class="ap-foot">EquityFoundry is made by OctoPisces Labs LLC. Questions? Email <span class="ap-support">support@octopisceslabs.com</span> ·
         <a href="${config.legal.privacyUrl}" target="_blank" rel="noopener">Privacy Policy</a></p>`;
 
     wire(page);
@@ -203,7 +203,7 @@
     // Plan
     const saved = Object.keys(loadSaved()).length;
     $('.ap-plan-text', page).textContent = pro
-      ? 'Rental Calc Pro is active: every strategy, projections, PDF reports and unlimited saved properties.'
+      ? 'EquityFoundry Pro is active: every strategy, projections, PDF reports and unlimited saved properties.'
       : `Free plan: long-term rental analysis, the dashboard and comparison, and up to ${config.freeSaveLimit} saved properties (${Math.min(saved, config.freeSaveLimit)} used).`;
     const actions = $('.ap-plan-actions', page);
     actions.replaceChildren();
@@ -355,7 +355,7 @@
     const dataMsg = $('#ap-data-msg', page);
     $('#ap-export-json', page).addEventListener('click', async () => {
       const backup = { app: 'rental-calc', version: 1, exportedAt: new Date().toISOString(), properties: loadSaved() };
-      await download(`rental-calc-backup-${new Date().toISOString().slice(0, 10)}.json`, 'application/json', JSON.stringify(backup, null, 2));
+      await download(`equityfoundry-backup-${new Date().toISOString().slice(0, 10)}.json`, 'application/json', JSON.stringify(backup, null, 2));
     });
     $('#ap-export-csv', page).addEventListener('click', async () => {
       const head = ['Name', 'Strategy', 'City/State', 'Listing', 'Purchase price', 'Units', 'Monthly cash flow', 'Annual cash flow',
@@ -369,7 +369,7 @@
           round(r.dscr), pctv(r.roiTotal), input.strategy === 'flip' ? round(r.profit, 0) : null];
       });
       const csv = [head].concat(rows).map((r) => r.map(csvCell).join(',')).join('\n');
-      await download(`rental-calc-properties-${new Date().toISOString().slice(0, 10)}.csv`, 'text/csv', csv);
+      await download(`equityfoundry-properties-${new Date().toISOString().slice(0, 10)}.csv`, 'text/csv', csv);
     });
     const fileInput = $('#ap-import-file', page);
     $('#ap-import', page).addEventListener('click', () => fileInput.click());
@@ -395,7 +395,7 @@
         render();
         msg(dataMsg, `Restored ${names.length} ${names.length === 1 ? 'property' : 'properties'}.`);
       } catch (err) {
-        msg(dataMsg, 'That file isn’t a Rental Calc backup.', true);
+        msg(dataMsg, 'That file isn’t an EquityFoundry backup.', true);
       }
     });
 

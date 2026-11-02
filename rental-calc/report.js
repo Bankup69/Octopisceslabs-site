@@ -4,7 +4,10 @@
 (function () {
   'use strict';
 
-  const GREEN = [31, 111, 92];
+  // EquityFoundry colors: midnight navy and champagne gold.
+  const NAVY = [11, 22, 48];
+  const GOLD = [196, 150, 72];
+  const GREEN = NAVY; // table headers and totals
   let loading = null;
 
   function loadScript(src) {
@@ -33,8 +36,23 @@
     const M = 40;
     let y = M;
 
-    doc.setFillColor(...GREEN);
-    doc.rect(0, 0, W, 6, 'F');
+    // Brand band
+    doc.setFillColor(...NAVY);
+    doc.rect(0, 0, W, 46, 'F');
+    doc.setFillColor(...GOLD);
+    doc.rect(0, 46, W, 2, 'F');
+    doc.setFont('times', 'bold');
+    doc.setFontSize(17);
+    doc.setTextColor(242, 238, 228);
+    doc.text('Equity', M, 29);
+    doc.setTextColor(...GOLD);
+    doc.text('Foundry', M + doc.getTextWidth('Equity'), 29);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    doc.setTextColor(...GOLD);
+    doc.text('KNOW THE DEAL BEFORE YOU BUY.', W - M, 28, { align: 'right' });
+    y = 48 + 28;
+
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(20);
     doc.setTextColor(20);
@@ -46,7 +64,7 @@
     doc.text([model.strategy, model.subtitle].filter(Boolean).join(' · '), M, y);
     y += 14;
     if (model.listingUrl) {
-      doc.setTextColor(...GREEN);
+      doc.setTextColor(...NAVY);
       doc.textWithLink(model.listingUrl.length > 90 ? model.listingUrl.slice(0, 87) + '…' : model.listingUrl, M, y, { url: model.listingUrl });
       y += 14;
     }
@@ -54,7 +72,7 @@
     // Headline figure
     y += 8;
     doc.setDrawColor(220);
-    doc.setFillColor(229, 242, 238);
+    doc.setFillColor(243, 238, 226);
     doc.roundedRect(M, y, W - 2 * M, 58, 6, 6, 'F');
     doc.setTextColor(90);
     doc.setFontSize(9);
@@ -136,7 +154,7 @@
       doc.setFontSize(8);
       doc.setTextColor(140);
       const h = doc.internal.pageSize.getHeight();
-      doc.text('Estimates based on the assumptions entered. Not financial advice. Made with Rental Calc.', M, h - 20);
+      doc.text('Estimates based on the assumptions entered. Not financial advice. Made with EquityFoundry by OctoPisces Labs.', M, h - 20);
       doc.text(`${n} / ${pages}`, W - M, h - 20, { align: 'right' });
     }
     return doc;

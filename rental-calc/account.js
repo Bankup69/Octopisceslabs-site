@@ -120,7 +120,7 @@
     dialog.querySelectorAll('.ac-email').forEach((el) => { el.textContent = name === 'account' && user ? user.email : pendingEmail; });
     if (name === 'account') {
       dialog.querySelector('.ac-pro').textContent = window.Pro && window.Pro.isPro()
-        ? 'Rental Calc Pro is active on this account.'
+        ? 'EquityFoundry Pro is active on this account.'
         : 'Free plan. Pro purchases are tied to this account.';
     }
     const input = dialog.querySelector(`[data-step="${name}"] input`);

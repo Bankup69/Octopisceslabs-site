@@ -87,6 +87,8 @@ kbd{font-family:var(--pixel);font-size:.7rem;color:var(--ink);background:var(--s
 .arm-num{font-family:var(--pixel);font-size:.75rem;letter-spacing:.12em;color:var(--muted)}
 .arm h3{margin:0;font-family:var(--body);font-weight:700;font-size:1.35rem;line-height:1.15}
 .arm p{font-size:.95rem;color:var(--muted)}
+.arm-brand{display:flex;align-items:center;gap:.55rem}
+.arm-brand img{flex:none;border-radius:6px}
 .arm-link{font-weight:600;color:var(--gold);text-decoration:none}
 .arm-link:hover{text-decoration:underline}
 .pill{font-family:var(--pixel);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:.35rem .5rem;border-radius:4px;background:var(--space);color:var(--muted);border:1px solid var(--line-2)}
@@ -173,7 +175,7 @@ footer{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;border
     <div class="arms">
       <article class="arm"><div class="arm-top"><span class="arm-num">ARM 01</span><span class="pill live">In development</span></div><h3>Next Set</h3><p>Lifting and running plans that change with you. Beat your numbers and the next workout gets harder. Miss them and it eases off.</p><a class="arm-link" href="/next-set/">See Next Set &rarr;</a></article>
       <article class="arm"><div class="arm-top"><span class="arm-num">ARM 02</span><span class="pill">On the bench</span></div><h3>Personal finance</h3><p>See where your money really goes. Then see how far you are from not needing a paycheck.</p></article>
-      <article class="arm"><div class="arm-top"><span class="arm-num">ARM 03</span><span class="pill live">Live on the web</span></div><h3>Rental Calc</h3><p>Run the numbers before you buy. Paste a Zillow or Redfin link and you'll see the cash flow in seconds. Works for long-term rentals, Airbnb, BRRRR and flips.</p><a class="arm-link" href="/rental-calc/">Open Rental Calc &rarr;</a><div class="notify"><p class="notify-txt">iPhone and Android apps are in the works.</p><button type="button" class="notify-btn" aria-expanded="false" aria-controls="notify-rc"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22Zm7-6V11a7 7 0 0 0-5.5-6.84V3.5a1.5 1.5 0 0 0-3 0v.66A7 7 0 0 0 5 11v5l-2 2v1h18v-1l-2-2Z"/></svg><span>Notify me at launch</span></button><form class="notify-form" id="notify-rc" data-source="octopisceslabs-home" hidden novalidate><label class="sr" for="notify-rc-email">Email</label><input id="notify-rc-email" type="email" name="email" autocomplete="email" inputmode="email" placeholder="you@example.com" required><button type="submit" class="btn primary notify-go">Notify me</button><p class="notify-msg" role="status"></p></form></div></article>
+      <article class="arm"><div class="arm-top"><span class="arm-num">ARM 03</span><span class="pill live">Live on the web</span></div><h3 class="arm-brand"><img src="/rental-calc/icons/icon.svg" alt="" width="28" height="28">EquityFoundry</h3><p>Know the deal before you buy. Paste a Zillow or Redfin link and you'll see the cash flow in seconds. Works for long-term rentals, Airbnb, BRRRR and flips.</p><a class="arm-link" href="/rental-calc/">Open EquityFoundry &rarr;</a><div class="notify"><p class="notify-txt">iPhone and Android apps are in the works.</p><button type="button" class="notify-btn" aria-expanded="false" aria-controls="notify-rc"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22Zm7-6V11a7 7 0 0 0-5.5-6.84V3.5a1.5 1.5 0 0 0-3 0v.66A7 7 0 0 0 5 11v5l-2 2v1h18v-1l-2-2Z"/></svg><span>Notify me at launch</span></button><form class="notify-form" id="notify-rc" data-source="octopisceslabs-home" hidden novalidate><label class="sr" for="notify-rc-email">Email</label><input id="notify-rc-email" type="email" name="email" autocomplete="email" inputmode="email" placeholder="you@example.com" required><button type="submit" class="btn primary notify-go">Notify me</button><p class="notify-msg" role="status"></p></form></div></article>
       <article class="arm"><div class="arm-top"><span class="arm-num">ARM 04</span><span class="pill">On the bench</span></div><h3>Games</h3><p>More fights like the one up top. I'll post details once there's something to play.</p></article>
       <article class="arm open"><span class="arm-num">ARM 05</span><span class="open-txt">OPEN SLOT</span></article>
       <article class="arm open"><span class="arm-num">ARM 06</span><span class="open-txt">OPEN SLOT</span></article>
@@ -769,7 +771,7 @@ resize();update(0);requestAnimationFrame(frame);
 })();
 </script>
 <script>
-// "Notify me" for the Rental Calc app launch. Adds the email to the Rental
+// "Notify me" for the EquityFoundry app launch. Adds the email to the Rental
 // Calc Supabase project's launch list (insert-only; the list can't be read
 // from here).
 (function(){

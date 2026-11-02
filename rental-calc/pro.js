@@ -135,7 +135,7 @@
     dialog.innerHTML = `
       <button type="button" class="icon close" aria-label="Close">×</button>
       <div class="pw-badge">PRO</div>
-      <h2>Rental Calc Pro</h2>
+      <h2>EquityFoundry Pro</h2>
       <p class="pw-reason"></p>
       <ul class="pw-features">${FEATURES.map((f) => `<li>${f}</li>`).join('')}</ul>
       <div class="pw-plans"></div>

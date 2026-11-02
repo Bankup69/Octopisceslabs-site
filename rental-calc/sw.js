@@ -1,11 +1,11 @@
 // Offline support: serve the app shell from cache, refreshing it in the background.
-const CACHE = 'rental-calc-v12';
+const CACHE = 'equityfoundry-v13';
 const SHELL = [
   './', 'index.html', 'privacy.html', 'styles.css', 'config.js', 'calc.js', 'listing.js', 'account.js', 'settings.js',
   'account-page.js', 'pro.js',
   'launch.js', 'report.js',
-  'app.js', 'help.js', 'manifest.webmanifest', 'vendor/jspdf.umd.min.js', 'vendor/jspdf.plugin.autotable.min.js',
-  'icons/icon.svg', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png',
+  'app.js', 'help.js', 'manifest.webmanifest', 'vendor/fonts/inter-latin-wght-normal.woff2', 'vendor/fonts/playfair-display-latin-wght-normal.woff2', 'vendor/jspdf.umd.min.js', 'vendor/jspdf.plugin.autotable.min.js',
+  'icons/icon.svg', 'icons/icon-square.svg', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png',
 ];
 
 self.addEventListener('install', (ev) => {
