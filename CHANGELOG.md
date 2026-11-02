@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-02 (later)
+- EquityFoundry re-published with new icons from its brand kit (tab icon, header logo, home-screen icons, link-preview image).
+- The three EquityFoundry guide pages now use the EquityFoundry tab icon and link-preview image.
+
 ## 2026-11-02
 - Added Google Search Console verification file (google474b1cf66d98dca4.html). Leave it in place or Search Console loses access.
 - Added the Google Search Console verification meta tag to the home page head as well. Leave it in place too.

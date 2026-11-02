@@ -103,7 +103,7 @@ h2, h3, legend, .current, .hero-label, .ap-name, .card h3 { font-family: var(--f
   padding-bottom: 12px;
 }
 .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; min-width: 0; }
-.brand-mark { width: 34px; height: 34px; flex: none; }
+.brand-mark { width: 34px; height: 34px; flex: none; border-radius: 8px; }
 .brand-text { display: grid; line-height: 1.05; }
 .brand-name { font-family: var(--font-display); font-size: 21px; font-weight: 600; letter-spacing: .01em; white-space: nowrap; }
 .brand-equity { color: #f2eee4; }
