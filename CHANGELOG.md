@@ -2,6 +2,7 @@
 
 ## 2026-11-02
 - Added Google Search Console verification file (google474b1cf66d98dca4.html). Leave it in place or Search Console loses access.
+- Added the Google Search Console verification meta tag to the home page head as well. Leave it in place too.
 - Search: added robots.txt and sitemap.xml so Google can find every page.
 - New guide pages: /brrrr-calculator, /airbnb-calculator and /cash-on-cash-return-calculator. Each explains the math in plain English with one worked example deal and a button that opens it in EquityFoundry. Built by tools/build_calculators.py.
 - Changed the same day: the guide pages first went out with working calculators. Removed them so nothing paid is given away. BRRRR and Airbnb analysis stay in EquityFoundry Pro.
