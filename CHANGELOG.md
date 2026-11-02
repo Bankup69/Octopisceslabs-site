@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-02 (evening)
+- EquityFoundry re-published with fixed icons (the swoosh and roof are no longer clipped).
+
 ## 2026-11-02 (later)
 - EquityFoundry re-published with new icons from its brand kit (tab icon, header logo, home-screen icons, link-preview image).
 - The three EquityFoundry guide pages now use the EquityFoundry tab icon and link-preview image.
