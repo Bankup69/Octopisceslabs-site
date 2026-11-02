@@ -609,6 +609,8 @@ dialog.paywall h2 { margin: 10px 0 4px; font-size: 22px; }
 .legal-page h1 { font-size: 26px; }
 .legal-page h2 { font-size: 18px; margin-top: 24px; }
 .legal-page a { color: var(--accent); }
+.legal-page ul { padding-left: 20px; }
+.legal-page li { margin: 4px 0; }
 
 /* Phone-only live result bar for the calculator */
 .mini-result { display: none; }
