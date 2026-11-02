@@ -1,7 +1,7 @@
 // Offline support: serve the app shell from cache, refreshing it in the background.
-const CACHE = 'equityfoundry-v14';
+const CACHE = 'equityfoundry-v15';
 const SHELL = [
-  './', 'index.html', 'privacy.html', 'styles.css', 'config.js', 'calc.js', 'listing.js', 'account.js', 'settings.js',
+  './', 'index.html', 'privacy.html', 'terms.html', 'styles.css', 'config.js', 'calc.js', 'listing.js', 'account.js', 'settings.js',
   'account-page.js', 'pro.js',
   'launch.js', 'report.js',
   'app.js', 'help.js', 'manifest.webmanifest', 'vendor/fonts/inter-latin-wght-normal.woff2', 'vendor/fonts/playfair-display-latin-wght-normal.woff2', 'vendor/jspdf.umd.min.js', 'vendor/jspdf.plugin.autotable.min.js',

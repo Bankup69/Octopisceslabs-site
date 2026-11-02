@@ -148,8 +148,8 @@
       </div>
       <p class="pw-legal">Your subscription renews on its own unless you cancel at least 24 hours before the current
         period ends. Manage or cancel it in your App Store or Google Play settings. Bought it on the website? Use the
-        link in your receipt email.
-        <a href="${config.legal.termsUrl}" target="_blank" rel="noopener">Terms of Use</a> ·
+        link in your receipt email. Website purchases can be refunded within 14 days.
+        <a href="${config.legal.termsUrl}" target="_blank" rel="noopener">Terms of Sale</a> ·
         <a href="${config.legal.privacyUrl}" target="_blank" rel="noopener">Privacy Policy</a></p>`;
     document.body.appendChild(dialog);
     dialog.querySelector('.close').addEventListener('click', () => dialog.close());

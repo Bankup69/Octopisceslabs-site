@@ -125,6 +125,7 @@
       </section>
 
       <p class="ap-foot">EquityFoundry is made by OctoPisces Labs LLC. Questions? Email <span class="ap-support">support@octopisceslabs.com</span> ·
+        <a href="${config.legal.termsUrl}" target="_blank" rel="noopener">Terms of Sale</a> ·
         <a href="${config.legal.privacyUrl}" target="_blank" rel="noopener">Privacy Policy</a></p>`;
 
     wire(page);

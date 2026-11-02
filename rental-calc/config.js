@@ -30,9 +30,10 @@ window.APP_CONFIG = {
     { id: '$rc_lifetime', title: 'Lifetime', price: '$49.99', period: 'one time', note: 'Best value' },
   ],
 
-  // Apple requires both links on the purchase screen.
+  // Apple requires both links on the purchase screen. Our terms include
+  // Apple's standard license by reference.
   legal: {
-    termsUrl: 'https://www.apple.com/legal/internet-services/itunes/dev/stdeula/',
+    termsUrl: 'https://octopisceslabs.com/rental-calc/terms.html',
     privacyUrl: 'https://octopisceslabs.com/rental-calc/privacy.html',
   },
 
