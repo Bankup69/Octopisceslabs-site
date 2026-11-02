@@ -1,6 +1,12 @@
 # Changelog
 
 ## 2026-11-02
+- Search: added robots.txt and sitemap.xml so Google can find every page.
+- New free calculator pages: /brrrr-calculator, /airbnb-calculator and /cash-on-cash-return-calculator. Each runs the same engine as EquityFoundry, explains the math in plain English and opens the deal in the full app. Built by tools/build_calculators.py.
+- Home page: Arm 03 card links to the three calculators.
+- EquityFoundry re-published with a search-friendly title, description and structured data.
+
+## 2026-11-02
 - Rental Calc is now **EquityFoundry** ("Know the deal before you buy."): midnight navy and champagne gold, house-and-bars icon, Playfair Display and Inter. Arm 03 card renamed with the new icon. Still at /rental-calc/.
 - EquityFoundry: Account page (profile, plan, email preferences, settings, data export, delete account).
 

@@ -644,3 +644,6 @@ dialog.paywall h2 { margin: 10px 0 4px; font-size: 22px; }
   .results { position: static; }
   details { break-inside: avoid; }
 }
+
+/* Visually hidden, still read by screen readers and search engines. */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
