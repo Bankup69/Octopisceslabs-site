@@ -19,6 +19,10 @@ window.APP_CONFIG = {
     // Web Billing (Stripe) public key, rcb_... Leave empty to keep web
     // checkout off; the paywall then points to the apps.
     webBillingKey: '',
+    // Sandbox key (rcb_sb_...), used only in test mode: open the site with
+    // ?billing=test to turn it on in that browser, ?billing=live to turn it
+    // off. Test purchases use Stripe test cards; no real money moves.
+    webBillingSandboxKey: 'rcb_sb_FRrVGzGBfNYKJsiYLzzAjZxHM',
     entitlement: 'pro',
   },
 
