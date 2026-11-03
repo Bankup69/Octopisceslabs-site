@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-03
+- Added media/equityfoundry-video1.mp4, the first EquityFoundry how-to video (captions, no voice yet). Hosted here so Descript can import it.
+
 ## 2026-11-02 (night)
 - Home page EquityFoundry card and the guide pages no longer say pasting a listing link fills in the numbers (it fills in the address only).
 - EquityFoundry re-published with the same fix to its search description and link preview.
