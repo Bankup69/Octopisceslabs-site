@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-02 (night)
+- Home page EquityFoundry card and the guide pages no longer say pasting a listing link fills in the numbers (it fills in the address only).
+- EquityFoundry re-published with the same fix to its search description and link preview.
+
 ## 2026-11-02 (evening)
 - EquityFoundry re-published with fixed icons (the swoosh and roof are no longer clipped).
 

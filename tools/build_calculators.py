@@ -304,7 +304,7 @@ def build(p):
     <div class="hero-k">{html.escape(first[1])}</div><div class="hero-v{neg}">{fmt(hv, first[2])}</div>
     <dl>{res}</dl>
     <a class="btn" href="{open_href}">{cta}</a>
-    <p class="fine">Made-up numbers to show how the math works. EquityFoundry runs your real deal: paste a Zillow or Redfin link, change anything, save it and compare. {fine}Estimates, not financial advice.</p>
+    <p class="fine">Made-up numbers to show how the math works. EquityFoundry runs your real deal: put in your own numbers, change anything, save it and compare. {fine}Estimates, not financial advice.</p>
   </aside>
 </div>
 <div class="prose">{p["body"]}
