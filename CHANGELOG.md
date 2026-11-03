@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-03 (later)
+- Next Set page headline is now the new slogan: "Never guess your next set." (replaces "Your plan changes when you do").
+
 ## 2026-11-03
 - Added media/equityfoundry-video1.mp4, the first EquityFoundry how-to video (captions, no voice yet). Hosted here so Descript can import it.
 
