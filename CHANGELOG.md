@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-04 (shorts)
+- Added four vertical Shorts (long-term, short-term, BRRRR, flip) in `media/shorts/` so Metricool can publish them to YouTube Shorts, Facebook and Instagram. Not linked from any page.
+
 ## 2026-11-04 (how-to)
 - New page /how-to/: four EquityFoundry video walkthroughs (long-term rental, short-term rental, BRRRR, fix and flip) in tabs, each with clickable chapters, captions and written steps with screenshots. Deep links like /how-to/#brrrr open that tab. Built by tools/build_howto.py from the recorder output; videos and captions in media/equityfoundry-howto-*.mp4/.vtt.
 - Added How-To to the home page menu and the guide page menus (tools/build_calculators.py, guides regenerated), and to sitemap.xml.
