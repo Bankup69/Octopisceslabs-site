@@ -1,0 +1,20 @@
+{
+"str": {"title":["Is that Airbnb","worth buying?"],"lines":[
+["s1","Is that Airbnb actually worth buying? Let's run the numbers in EquityFoundry, in under a minute."],
+["s2","Pick short-term rental. Enter the price, then your nightly rate and occupancy. Add the cleaning fee and the platform's cut."],
+["s3","Add your loan, then taxes, insurance and utilities. Vacancy and repairs are already built in."],
+["s4","Here's your answer. Monthly cash flow, cash-on-cash return, and revenue per night, after every cost."],
+["s5","Now test a slow season. Drop occupancy to fifty two percent and watch it update. Know the deal before you buy. EquityFoundry. Link in bio."]]},
+"brrrr": {"title":["Pull your cash","back out?"],"lines":[
+["s1","Can you pull your cash back out of a rental? That's the BRRRR method. Here's how to check one in a minute."],
+["s2","Pick BRRRR. Enter the purchase price and your rehab budget. Then the after-repair value, what it's worth once it's fixed."],
+["s3","Add the refinance terms, and the rent you expect once the work is done."],
+["s4","Here's your answer. Cash flow after the refinance, cash left in the deal, and the equity you created. The less cash left in, the stronger the deal."],
+["s5","Save it and compare it with your other deals. Forge better deals. EquityFoundry. Link in bio."]]},
+"flip": {"title":["Will this flip","make money?"],"lines":[
+["s1","Will this flip actually make money? Check it in under a minute with EquityFoundry."],
+["s2","Pick fix and flip. Enter the purchase price, your repair budget, and the after-repair value."],
+["s3","Add how long you'll hold it, your selling costs, and the loan carrying it."],
+["s4","Here's your answer. Profit, return on investment, and the seventy percent rule, so you know your maximum offer."],
+["s5","Offer too high? Lower the price and watch the profit climb. Know the deal before you buy. EquityFoundry. Link in bio."]]}
+}

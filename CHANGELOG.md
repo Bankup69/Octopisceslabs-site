@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-04 (video tools)
+- Saved the video scripts in `tools/video/` so the how-to and Shorts pipeline survives between sessions.
+
 ## 2026-11-04 (shorts)
 - Added four vertical Shorts (long-term, short-term, BRRRR, flip) in `media/shorts/` so Metricool can publish them to YouTube Shorts, Facebook and Instagram. Not linked from any page.
 
