@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-04
+- Rewrote the home page and Next Set page copy in a more literary voice to match the new social bios: hero line, studio intro, app cards, the "Built to adapt" story (octopus with no shell, Pisces as two fish bound by one cord), contact line, Next Set intro and feature cards, and both meta descriptions.
+- Removed the aviation maintenance line from the About section. Legal pages and pricing text unchanged.
+
 ## 2026-11-03 (voice)
 - media/equityfoundry-video1.mp4 replaced with the finished version: AI voiceover (Kokoro, voice am_michael), captions synced to the voice, new slogan on the end card. 67 seconds.
 
