@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-04 (shorts v2)
+- Rebuilt the short-term, BRRRR and flip Shorts at about 50 seconds each, with every input shown (`media/shorts/*-v2.mp4`).
+
 ## 2026-11-04 (video tools)
 - Saved the video scripts in `tools/video/` so the how-to and Shorts pipeline survives between sessions.
 

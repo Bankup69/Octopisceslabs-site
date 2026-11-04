@@ -27,21 +27,28 @@ const OUT = process.argv[2]; const DURS = JSON.parse(fs.readFileSync(process.arg
   await p.evaluate(() => window.scrollTo(0, 0)); await p.waitForTimeout(300);
   await shot(1); await endScene();                                   // s1 hook
   await scrollTo(`[data-strategy=${KEY}]`, 300, 6); await p.click(`[data-strategy=${KEY}]`); await p.waitForTimeout(300); await shot(0.8);
+  const save = async () => { await scrollTo('body', 0, 10); await p.click('#btn-save'); await p.waitForTimeout(500); await shot(1); await p.click('[data-view=dash]'); await p.waitForTimeout(700); await shot(1.2); await endScene(); };
   if (KEY === 'str') {
-    await fillAll([['purchasePrice', 350000], ['nightlyRate', 185], ['occupancy', 62], ['cleaningFeeCharged', 95], ['platformFeePct', 3]]); await endScene();
-    await fillAll([['downPaymentPct', 25], ['interestRate', 7.2], ['propertyTaxes', 3200], ['insurance', 2400], ['utilities', 4200]]); await endScene();
+    await fillAll([['purchasePrice', 350000], ['closingCosts', 10500], ['furnishing', 20000]]); await endScene();
+    await fillAll([['nightlyRate', 185], ['occupancy', 62], ['avgStay', 3], ['cleaningFeeCharged', 95], ['cleaningCost', 85], ['platformFeePct', 3]]); await endScene();
+    await fillAll([['downPaymentPct', 25], ['interestRate', 7.2], ['propertyTaxes', 3200], ['insurance', 2400], ['utilities', 4200], ['strSupplies', 120]]); await endScene();
     await hero(2); await tile('Cash-on-cash', 1.8); await tile('Revenue per night', 1.8); await endScene();
-    await fillAll([['occupancy', 52]], 300); await hero(2); await endScene();
+    await fillAll([['occupancy', 52]], 300); await hero(2.5); await endScene();
+    await save();
   } else if (KEY === 'brrrr') {
-    await fillAll([['purchasePrice', 150000], ['repairsUpfront', 45000], ['closingCosts', 4500], ['arv', 260000]]); await endScene();
-    await fillAll([['rehabMonths', 6], ['refiLtv', 75], ['refiRate', 7.2], ['refiClosingCosts', 5000]]); await scrollTo('#units', 260, 6); await typeIn('#units [data-k=rent]', 2100); await fillAll([['downPaymentPct', 20], ['interestRate', 11], ['propertyTaxes', 2200], ['insurance', 1300]]); await endScene();
-    await hero(2); await tile('Cash left in deal', 2.4); await tile('Equity after refi', 2.0); await endScene();
-    await scrollTo('body', 0, 10); await p.click('#btn-save'); await p.waitForTimeout(500); await shot(1); await p.click('[data-view=dash]'); await p.waitForTimeout(700); await shot(1); await endScene();
+    await fillAll([['purchasePrice', 150000], ['repairsUpfront', 45000], ['closingCosts', 4500]]); await endScene();
+    await fillAll([['arv', 260000], ['rehabMonths', 6]]); await endScene();
+    await fillAll([['refiLtv', 75], ['refiRate', 7.2], ['refiYears', 30], ['refiClosingCosts', 5000]]); await endScene();
+    await scrollTo('#units', 260, 6); await typeIn('#units [data-k=rent]', 2100); await fillAll([['downPaymentPct', 20], ['interestRate', 11], ['propertyTaxes', 2200], ['insurance', 1300]]); await endScene();
+    await hero(2); await tile('Cash left in deal', 2.4); await tile('Equity after refi', 2.2); await endScene();
+    await save();
   } else {
-    await fillAll([['purchasePrice', 180000], ['repairsUpfront', 40000], ['arv', 285000]]); await endScene();
-    await fillAll([['holdMonths', 6], ['sellingCostPct', 7], ['downPaymentPct', 10], ['interestRate', 10]]); await endScene();
-    await hero(2); await tile('ROI', 1.6); await tile('70% rule', 2.4); await endScene();
-    await fillAll([['purchasePrice', 160000]], 300); await hero(2); await endScene();
+    await fillAll([['purchasePrice', 180000], ['repairsUpfront', 40000], ['closingCosts', 5400]]); await endScene();
+    await fillAll([['arv', 285000], ['holdMonths', 6], ['sellingCostPct', 7]]); await endScene();
+    await fillAll([['downPaymentPct', 10], ['interestRate', 10], ['propertyTaxes', 2000], ['insurance', 1200], ['utilities', 1800]]); await endScene();
+    await hero(2); await tile('ROI', 1.6); await tile('Annualized ROI', 2); await endScene();
+    await tile('70% rule', 2.2); await fillAll([['purchasePrice', 160000]], 300); await hero(2.5); await endScene();
+    await save();
   }
   fs.writeFileSync(OUT + '/seq.json', JSON.stringify({ list, scenes }));
   console.log(JSON.stringify({ total: used().toFixed(1), scenes: scenes.map(s => [s[0], +s[1].toFixed(1), +s[2].toFixed(1)]) }));

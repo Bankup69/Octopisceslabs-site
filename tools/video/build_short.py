@@ -36,7 +36,7 @@ for i, (sid, text) in enumerate(cfg['lines']):
     for p in parts:
         dur = span * len(p.split()) / tw; png = f'{V}/c{k:03d}.png'; k += 1; cap(p, png)
         e = round(t + dur, 2)
-        if sid == 's5': e = min(e, total - 3.05)
+        if sid == cfg['lines'][-1][0]: e = min(e, total - 3.05)
         if e > t: items.append((png, round(t, 2), e))
         t += dur
 title = Image.new('RGBA', (W, H), (0,0,0,0)); d = ImageDraw.Draw(title); big = ImageFont.truetype(FONT, 96)
