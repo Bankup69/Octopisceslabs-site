@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-04 (how-to)
+- New page /how-to/: four EquityFoundry video walkthroughs (long-term rental, short-term rental, BRRRR, fix and flip) in tabs, each with clickable chapters, captions and written steps with screenshots. Deep links like /how-to/#brrrr open that tab. Built by tools/build_howto.py from the recorder output; videos and captions in media/equityfoundry-howto-*.mp4/.vtt.
+- Added How-To to the home page menu and the guide page menus (tools/build_calculators.py, guides regenerated), and to sitemap.xml.
+- Fixed the broken EquityFoundry icon on the home page app card (it pointed at the retired icon.svg; now brand-mark-128.png).
+
 ## 2026-11-04
 - Rewrote the home page and Next Set page copy in a more literary voice to match the new social bios: hero line, studio intro, app cards, the "Built to adapt" story (octopus with no shell, Pisces as two fish bound by one cord), contact line, Next Set intro and feature cards, and both meta descriptions.
 - Removed the aviation maintenance line from the About section. Legal pages and pricing text unchanged.

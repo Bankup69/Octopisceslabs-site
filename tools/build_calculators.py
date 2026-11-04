@@ -237,6 +237,7 @@ def get(o, path):
 def nav(cur):
     links = ['<a href="/rental-calc/">EquityFoundry</a>'] + [
         f'<a href="/{p["slug"]}/"{" aria-current=\"page\"" if p["slug"] == cur else ""}>{p["nav"]}</a>' for p in PAGES]
+    links.append('<a href="/how-to/">How-To</a>')
     return ''.join(links)
 
 
