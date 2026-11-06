@@ -324,6 +324,8 @@
     onLaunchList,
     leaveLaunchList,
     deleteAccount,
+    // The Supabase client, for features that store data (Ingot sync).
+    client: getClient,
   };
   renderButton();
 })();

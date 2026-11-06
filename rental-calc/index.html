@@ -50,7 +50,8 @@
       <div class="topbar-right">
         <nav class="tabs" aria-label="Views">
           <button type="button" class="tab" data-view="calc" aria-pressed="true">Calculator</button>
-          <button type="button" class="tab" data-view="dash" aria-pressed="false">Dashboard <span class="badge" id="saved-count">0</span></button>
+          <button type="button" class="tab" data-view="dash" aria-pressed="false">Deals <span class="badge" id="saved-count">0</span></button>
+          <button type="button" class="tab" data-view="ingot" aria-pressed="false">Ingot</button>
         </nav>
         <button type="button" id="btn-account" class="account-btn">Sign in</button>
         <button type="button" id="btn-pro" class="pro-btn">Go Pro</button>
@@ -249,6 +250,11 @@
     </div>
   </section>
 
+  <!-- Ingot: portfolio tracker -->
+  <section id="view-ingot" class="view" hidden>
+    <main class="wrap ingot" id="ingot"></main>
+  </section>
+
   <!-- Account -->
   <section id="view-account" class="view" hidden>
     <main class="wrap account-page" id="account-page"></main>
@@ -265,7 +271,9 @@
   <script src="launch.js"></script>
   <script src="report.js"></script>
   <script src="help.js"></script>
+  <script src="ingot-core.js"></script>
   <script src="app.js"></script>
+  <script src="ingot.js"></script>
   <script src="account-page.js"></script>
 </body>
 </html>
