@@ -507,6 +507,7 @@
     if (writeSaved(all)) {
       setCurrent(name);
       updateSavedCount();
+      document.dispatchEvent(new CustomEvent('rental-calc:deals-changed'));
       render();
       toast(`Saved “${name}”`);
     } else toast('Could not save on this device');
@@ -666,6 +667,7 @@
         <dl class="card-stats">${stats.map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
         <div class="card-actions">
           <button type="button" class="open">Open</button>
+          <button type="button" class="watch" title="Add to your Ingot watchlist">☆ Watch</button>
           ${url ? `<a class="button listing-link" href="${esc(url)}" target="_blank" rel="noopener">${esc(source)} ↗</a>` : ''}
         </div>
       </article>`;
@@ -710,6 +712,7 @@
     if (!card) return;
     const name = card.dataset.name;
     if (ev.target.closest('.open')) { openProperty(name); return; }
+    if (ev.target.closest('.watch')) { if (window.Ingot) window.Ingot.watchDeal(name); return; }
     if (ev.target.closest('.listing-link')) return;
     // Tapping anywhere else on the card toggles it for comparison. A click on
     // the checkbox's label is re-dispatched to the checkbox, so skip it here.
@@ -735,8 +738,10 @@
     $('view-calc').hidden = view !== 'calc';
     $('view-dash').hidden = view !== 'dash';
     $('view-account').hidden = view !== 'account';
+    $('view-ingot').hidden = view !== 'ingot';
     document.querySelectorAll('.tab').forEach((t) => t.setAttribute('aria-pressed', t.dataset.view === view));
     if (view === 'dash') renderDashboard();
+    if (view === 'ingot' && window.Ingot) window.Ingot.render();
     if (push && history.state?.view !== view) history.pushState({ view }, '');
   }
 
@@ -755,7 +760,17 @@
   });
   document.addEventListener('rental-calc:toast', (ev) => toast(ev.detail));
 
-  window.App = { showView };
+  // Start a new analysis from outside the calculator (Ingot's watchlist).
+  function startDeal(fields) {
+    fillForm(Object.assign({}, DEFAULTS, window.Settings.newPropertyDefaults(), fields || {}));
+    setCurrent(null);
+    render();
+    showView('calc');
+    window.scrollTo(0, 0);
+    toast('Fill in the rent, loan and costs, then Save to keep it on your watchlist.');
+  }
+
+  window.App = { showView, openProperty, startDeal };
 
   // ---- Pro -------------------------------------------------------------------
 

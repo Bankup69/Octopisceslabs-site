@@ -647,3 +647,108 @@ dialog.paywall h2 { margin: 10px 0 4px; font-size: 22px; }
 
 /* Visually hidden, still read by screen readers and search engines. */
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* ---- Ingot: portfolio tracker ---- */
+.ingot { padding-top: 16px; padding-bottom: 96px; }
+.ig-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.ig-title { margin: 0; font-size: 26px; }
+.ig-title small { display: block; font-family: var(--font-body, inherit); font-size: 13px; font-weight: 400; color: var(--muted); letter-spacing: 0; }
+.ig-tabs { display: flex; gap: 4px; margin: 14px 0 16px; overflow-x: auto; padding-bottom: 2px; border-bottom: 1px solid var(--border); }
+.ig-tabs button { border: 0; border-bottom: 2px solid transparent; border-radius: 0; background: transparent; color: var(--muted); white-space: nowrap; padding: 8px 12px; }
+.ig-tabs button[aria-pressed="true"] { color: var(--text); border-bottom-color: var(--accent); font-weight: 600; }
+.ig-body h3 { margin: 0; font-size: 17px; }
+.ig-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.ig-toolbar { justify-content: space-between; margin-bottom: 12px; }
+.ig-period { margin-bottom: 12px; }
+.ig-body .tiles { margin-bottom: 14px; }
+.ig-panels { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 12px; margin-bottom: 12px; }
+@media (max-width: 860px) { .ig-panels { grid-template-columns: minmax(0, 1fr); } }
+.ig-panel, .ig-callout, .ig-locked, .ig-welcome, .ig-criteria, .ig-import {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; margin-bottom: 12px;
+}
+.ig-panel h3, .ig-criteria h3 { margin-bottom: 10px; }
+.ig-callout { background: var(--accent-soft); }
+.ig-callout p { margin: 0 0 10px; }
+.ig-locked { text-align: center; padding: 22px 16px; }
+.ig-locked p { color: var(--muted); max-width: 520px; margin: 8px auto 12px; }
+.ig-welcome h3 { font-size: 20px; margin-bottom: 6px; }
+.ig-welcome p { color: var(--muted); margin: 0 0 12px; max-width: 640px; }
+.ig-steps { margin: 14px 0 0; padding-left: 20px; color: var(--muted); font-size: 14px; line-height: 1.7; }
+.lock { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .04em; padding: 1px 5px; border-radius: 4px; background: var(--gold-grad, #c49648); color: #1a1306; vertical-align: middle; }
+.ig-chart { width: 100%; height: auto; display: block; }
+.ig-chart text { font-size: 11px; fill: var(--muted); }
+.ig-axis { stroke: var(--border); }
+.ig-bar-in { fill: var(--good); }
+.ig-bar-out { fill: var(--ok); }
+.ig-legend { font-size: 12px; color: var(--muted); margin: 6px 0 0; display: flex; align-items: center; gap: 6px; }
+.ig-key { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-left: 8px; }
+.ig-key.in { background: var(--good); margin-left: 0; }
+.ig-key.out { background: var(--ok); }
+.ig-cats { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.ig-cats li { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) auto; gap: 8px; align-items: center; font-size: 13px; }
+.ig-cat-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ig-cat-bar { background: var(--bg); border-radius: 4px; height: 10px; overflow: hidden; }
+.ig-cat-bar span { display: block; height: 100%; background: var(--accent); border-radius: 4px; }
+.ig-cat-val { font-variant-numeric: tabular-nums; font-weight: 600; }
+.ig-table { border-collapse: collapse; width: 100%; font-size: 14px; font-variant-numeric: tabular-nums; }
+.ig-table th, .ig-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+.ig-table thead th { font-size: 12px; color: var(--muted); font-weight: 600; white-space: nowrap; }
+.ig-table td.num, .ig-table th.num { text-align: right; white-space: nowrap; }
+.ig-table .pos { color: var(--good); }
+.ig-table .neg { color: var(--bad); }
+.ig-table tr.total th, .ig-table tr.total td { font-weight: 700; color: var(--accent); }
+.ig-tax td { text-align: right; white-space: nowrap; }
+.ig-tax tbody th { font-weight: 400; white-space: nowrap; }
+.ig-row-actions { white-space: nowrap; text-align: right; }
+.ig-row-actions .icon { width: 28px; }
+.ig-type { display: inline-block; font-size: 11px; padding: 0 6px; border-radius: 4px; background: var(--bg); color: var(--muted); margin-right: 4px; }
+.ig-type.income { color: var(--good); }
+.ig-type.expense { color: var(--bad); }
+.ig-type.distribution { color: var(--accent); }
+.ig-month { min-width: 150px; text-align: center; }
+.ig-watch-strip { display: block; width: 100%; text-align: left; margin-top: 4px; padding: 12px 14px; border-radius: 12px; background: var(--accent-soft); border: 1px solid var(--border); color: var(--text); }
+.ig-card .card-actions { flex-wrap: wrap; }
+.ig-watch.st-green { border-left: 4px solid var(--good); }
+.ig-watch.st-amber { border-left: 4px solid var(--ok); }
+.ig-watch.st-red { border-left: 4px solid var(--bad); }
+.ig-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-left: 6px; vertical-align: middle; }
+.ig-dot.green { background: var(--good); } .ig-dot.amber { background: var(--ok); } .ig-dot.red { background: var(--bad); }
+.ig-checks { list-style: none; margin: 0 0 6px; padding: 0; font-size: 13px; }
+.ig-checks li::before { content: '● '; }
+.ig-checks .pass::before { color: var(--good); } .ig-checks .near::before { color: var(--ok); } .ig-checks .miss::before { color: var(--bad); }
+.ig-checks small { color: var(--muted); }
+.ig-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px 14px; margin-bottom: 10px; }
+.ig-form { display: grid; gap: 10px; margin-top: 10px; }
+.ig-form label, .ig-criteria label, .ig-import label, .ig-dep label { color: var(--muted); font-size: 13px; }
+.ig-form input[type="text"], .ig-form input[type="date"], .ig-form input[type="number"], .ig-form input[type="url"], .ig-form select,
+.ig-criteria input, .ig-import select, .ig-dep input, .ig-body input[type="search"] {
+  width: 100%; padding: 8px 10px; font: inherit; color: var(--text); background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+}
+.ig-body input[type="search"] { width: auto; min-width: 220px; }
+.ig-form .ig-types { justify-self: start; flex-wrap: wrap; }
+.ig-form-actions { display: flex; gap: 12px; align-items: center; }
+.ig-form-actions .primary { padding: 10px 18px; }
+.ig-msg { color: var(--bad); font-size: 13px; margin: 0; min-height: 0; }
+.ig-file input { display: block; margin-top: 4px; font-size: 13px; }
+.ig-file.big { display: inline-block; padding: 16px 18px; border: 2px dashed var(--border); border-radius: 12px; margin: 6px 0; color: var(--text); }
+dialog.ig-dialog { width: min(560px, calc(100vw - 24px)); }
+.ig-taxnote { font-size: 13px; color: var(--ok); margin: 0 0 10px; }
+.ig-dep { margin: 12px 0; }
+.ig-dep summary, .ig-rules summary { cursor: pointer; color: var(--accent); font-size: 14px; }
+.ig-exports { margin-top: 12px; }
+.ig-import-table select { min-width: 120px; padding: 5px 6px; }
+.ig-import-table tr.dup td { opacity: .6; }
+.ig-desc { min-width: 180px; max-width: 320px; overflow-wrap: anywhere; }
+.ig-rule { display: flex; gap: 4px; align-items: center; font-size: 12px; white-space: nowrap; }
+.ig-rules ul { list-style: none; padding: 0; margin: 8px 0 0; font-size: 14px; }
+.ig-foot { margin-top: 18px; }
+@media (max-width: 520px) {
+  .tabs { flex-wrap: nowrap; }
+  .ig-title { font-size: 22px; }
+  .ig-table { font-size: 13px; }
+  .ig-table th, .ig-table td { padding: 7px 6px; }
+}
+
+.ig-card { padding-left: 16px; cursor: default; }
+.ig-body label.inline { white-space: nowrap; }
+.ig-table .nowrap { white-space: nowrap; }

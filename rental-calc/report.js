@@ -180,5 +180,5 @@
     }
   }
 
-  window.Report = { exportReport };
+  window.Report = { exportReport, loadLibs };
 })();
