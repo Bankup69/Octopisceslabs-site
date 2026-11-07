@@ -741,7 +741,7 @@
     $('view-ingot').hidden = view !== 'ingot';
     document.querySelectorAll('.tab').forEach((t) => t.setAttribute('aria-pressed', t.dataset.view === view));
     if (view === 'dash') renderDashboard();
-    if (view === 'ingot' && window.Ingot) window.Ingot.render();
+    if (view === 'ingot' && window.Ingot) window.Ingot.show();
     if (push && history.state?.view !== view) history.pushState({ view }, '');
   }
 

@@ -37,8 +37,8 @@
   }
 
   let ui = { tab: 'dash', period: 'month', month: I.ym(new Date()), property: '', taxYear: thisYear(), logQuery: '' };
-  try { Object.assign(ui, JSON.parse(localStorage.getItem(UI_KEY)) || {}, { month: I.ym(new Date()), taxYear: thisYear() }); } catch (_) {}
-  const saveUi = () => { try { localStorage.setItem(UI_KEY, JSON.stringify({ tab: ui.tab, period: ui.period, property: ui.property })); } catch (_) {} };
+  try { Object.assign(ui, JSON.parse(localStorage.getItem(UI_KEY)) || {}, { tab: 'dash', month: I.ym(new Date()), taxYear: thisYear() }); } catch (_) {}
+  const saveUi = () => { try { localStorage.setItem(UI_KEY, JSON.stringify({ period: ui.period, property: ui.property })); } catch (_) {} };
 
   const props = () => I.live(data.properties).sort((a, b) => a.name.localeCompare(b.name));
   const propName = (id) => (data.properties.find((p) => p.id === id) || {}).name || 'No property';
@@ -169,9 +169,13 @@
   const root = () => document.getElementById('ingot');
   const isOpen = () => { const v = document.getElementById('view-ingot'); return v && !v.hidden; };
 
-  function tile(label, value, hint, tone) {
-    return `<div class="tile ${tone || ''}"><div class="tile-label">${esc(label)}</div><div class="tile-value">${esc(value)}</div>${hint ? `<div class="tile-hint">${esc(hint)}</div>` : ''}</div>`;
+  // goto: 'properties' or 'month' makes the tile open that screen.
+  function tile(label, value, hint, tone, goto) {
+    const link = goto ? ` ig-link" role="button" tabindex="0" data-goto="${goto}" aria-label="${esc(label)}: ${esc(value)}. Open ${goto === 'month' ? 'month view' : goto}` : '';
+    return `<div class="tile ${tone || ''}${link}"><div class="tile-label">${esc(label)}${hb(label)}</div><div class="tile-value">${esc(value)}</div>${hint ? `<div class="tile-hint">${esc(hint)}</div>` : ''}</div>`;
   }
+
+  const quickAddRow = (propertyId) => `<div class="ig-quick"><button type="button" class="primary" data-act="quick-add" data-id="${esc(propertyId || '')}">+ Quick add</button><span class="hint">Log rent, a bill or a distribution in seconds.</span></div>`;
 
   function propertyOptions(selected, { all = false, none = false } = {}) {
     const list = props();
@@ -198,10 +202,143 @@
     return `<div class="ig-locked"><h3>${esc(title)} ${LOCK}</h3><p>${esc(text)}</p><button type="button" class="primary" data-act="pro" data-reason="${esc(reason || text)}">See Pro</button></div>`;
   }
 
+
+  // ---- help (ⓘ) ---------------------------------------------------------------------
+  // Fields in forms get an ⓘ that opens the explanation under the field.
+  // Keys are "<form>.<field name>" with a plain "<field name>" fallback.
+  const FIELD_HELP = {
+    type: { what: 'What kind of money this is. Income comes in, expenses go out to run the property, distributions are money you take out for yourself, and Other covers things that are neither, like the principal part of a loan payment.' },
+    amount: { what: 'How much, in dollars. Always type it as a positive number: the type decides whether it counts as money in or out.', find: 'Your bank statement, the receipt, or the payment app (Zelle, Venmo, check).' },
+    date: { what: 'The day the money moved. It decides which month and tax year the entry lands in.', note: 'For rent paid late, use the day you actually received it.' },
+    propertyId: { what: 'Which property this belongs to. Each property gets its own totals and its own column in the Schedule E export.' },
+    category: { what: 'What it was for. Expense categories match the lines on IRS Schedule E, so your tax totals add up by themselves.', note: 'Mortgage interest is only the interest part of your payment. Log the principal part as Other → Loan principal (or use the principal box that appears below).' },
+    principal: { what: 'The part of your mortgage payment that pays down the loan balance. It isn’t an expense, so Ingot logs it separately as Other → Loan principal.', find: 'Your monthly mortgage statement splits each payment into principal, interest, and escrow (taxes and insurance).', note: 'Escrow for property taxes and insurance can be logged as Taxes and Insurance expenses.' },
+    memo: { what: 'A short note to jog your memory later, like “Unit B, March rent” or “new water heater”. It shows in the month view and the CSV export.' },
+    receipt: { what: 'A photo of the receipt or invoice. Handy if you’re ever asked to back up an expense.', note: 'Photos stay on the device that took them.' },
+    'property.name': { what: 'A name you’ll recognize, like the street name or “Maple Duplex”.' },
+    'property.address': { what: 'The street address. Optional, but useful on tax exports.' },
+    'property.units': { what: 'How many rentable units the property has: 1 for a house, 2 for a duplex, and so on.' },
+    'property.occupied': { what: 'How many units have a tenant right now. Leave it blank if they’re all rented.', note: 'Used for the “rented” figure on the dashboard.' },
+    'property.expectedRent': { what: 'The total rent you should collect each month from all units when they’re rented.', find: 'Add up the rent on your current leases.', note: 'The dashboard compares rent collected to this, so a late or missing payment stands out.' },
+    'property.purchasePrice': { what: 'What you paid for the property.', find: 'Your closing statement (the settlement statement or Closing Disclosure).' },
+    'property.purchaseDate': { what: 'The day you closed on the property.', find: 'Your closing statement.' },
+    'property.notes': { what: 'Anything you want to remember: lender, property manager, gate code, lease end dates.' },
+    'watch.address': { what: 'The address of the property you’re considering.' },
+    'watch.price': { what: 'The asking price on the listing.', find: 'The listing on Zillow, Redfin or your agent’s MLS link.' },
+    'watch.rent': { what: 'The monthly rent you think it would bring in, for all units together.', find: 'Look at similar rentals nearby on Zillow, Rentometer or Craigslist, or ask a local property manager.', note: 'Optional. With it, Ingot makes a rough estimate so the property gets colors right away.' },
+    'watch.url': { what: 'The link to the listing, so you can get back to it in one tap.' },
+    'bought.price': { what: 'The final price you paid, after negotiating.', find: 'Your closing statement.' },
+    'bought.date': { what: 'The day you closed.' },
+    'bought.units': { what: 'How many rentable units it has.' },
+    'bought.rent': { what: 'The total monthly rent you expect from all units. The dashboard compares what you collect to this.' },
+    minCashFlow: { what: 'The least you want each property to put in your pocket every month, after the mortgage and all expenses.', typical: 'Many investors look for $100–$300 per unit per month.' },
+    minCoc: { what: 'The yearly cash flow you want, as a percent of the cash you put in (down payment, closing costs, repairs).', typical: '8–12% is a common target.' },
+    minCap: { what: 'The yearly net operating income (rent minus expenses, before the mortgage) as a percent of the price. It compares properties no matter how they’re financed.', typical: '5–8% in many markets; higher in cheaper areas.' },
+    'maint.propertyId': { what: 'Which property the repair was done on.' },
+    'maint.date': { what: 'The day the work was done.' },
+    vendor: { what: 'Who did the work: the company or person you paid.', note: 'Searchable later, so you can find “who fixed the furnace last time”.' },
+    cost: { what: 'What the repair cost in total.', find: 'The invoice or receipt.' },
+    'maint.notes': { what: 'What was fixed, which unit, and any warranty details.' },
+    photos: { what: 'Before and after photos, or the invoice. You can add more than one.', note: 'Photos stay on the device that took them.' },
+    asExpense: { what: 'Also adds the cost as a Repairs expense, so it counts in your totals and Schedule E. Untick it if you already logged the payment.' },
+    date_col: { what: 'The column in your bank file that holds the transaction date.' },
+    description: { what: 'The column with the payee or description, like “HOME DEPOT #4521”. Saved rules match on this text.' },
+    amount_col: { what: 'Pick this when your bank puts money in and out in one column, with spending as negative numbers.' },
+    debit: { what: 'Pick this when your bank has separate columns: this is the money-out (debit or withdrawal) column.' },
+    credit: { what: 'The money-in (credit or deposit) column, for banks that use separate columns.' },
+    flip: { what: 'Some card exports show purchases as positive numbers. Tick this so they’re read as money out.' },
+    'import-default': { what: 'Puts every row on this property to start with. You can still change any single row. Rows matched by a saved rule keep the rule’s property.' },
+    'month-property': { what: 'Show one property or all of them together.' },
+    'tax-year': { what: 'The tax year to total. Entries are counted by their date.' },
+    depreciation: { what: 'The yearly depreciation figure for this property. Ingot doesn’t calculate it.', find: 'Ask your tax preparer, or use last year’s return (Form 4562).', note: 'Added to Schedule E line 18.' },
+    'log-search': { what: 'Find a repair by vendor, notes or property.' },
+  };
+
+  // Tiles, tables and panels open the shared help sheet (from help.js).
+  const SHEET_HELP = {
+    'Properties': { what: 'How many properties and units you track, and how many units have a tenant right now.', note: 'Tap the tile to see your properties.' },
+    'Income': { what: 'All money in for the period: rent plus fees and other income.', calc: 'Adds up every Income entry dated in the period.', note: 'Underneath, rent collected is compared to the rent you expect, so a late tenant stands out (the tile turns amber below 95%).' },
+    'Expenses': { what: 'Every cost of running the properties in the period.', calc: 'Adds up every Expense entry dated in the period.', note: 'Distributions and loan principal are not expenses, so they’re left out.' },
+    'Net': { what: 'What the properties earned in the period.', calc: 'Income minus expenses.', good: 'Positive (green) means the properties made money.' },
+    'Distributions': { what: 'Money you or your partners took out of the properties: owner draws and partner payouts.', calc: 'Kept in the properties = net minus distributions.', note: 'Logged separately so they never lower your tax numbers.' },
+    'Income vs expenses': { what: 'Money in (green) and money out (gold) for each of the last 12 months.', note: 'Hover or tap a bar for the exact numbers. Tap the chart to open the month view.' },
+    'Expenses by category': { what: 'Your five biggest kinds of expense in the period, using the Schedule E names. Everything smaller is grouped at the end.' },
+    'Properties table': { what: 'Each property side by side for the period.', note: 'Rent collected is Rent entries only. Rented is units with a tenant. “vs. expected rent” compares rent collected to the expected monthly rent times the months in the period. Tap a row to open that property’s month.' },
+    'Month entries': { what: 'Everything logged in this month, newest first. Tap ✎ to edit, × to delete, 📎 to see a receipt.' },
+    'Schedule E totals': { what: 'Your income and expenses per property, arranged like the lines on IRS Schedule E (Form 1040).', calc: 'Line 3 is all income. Lines 5–19 add up expenses by category. Line 20 is total expenses, line 21 is income minus expenses.', note: 'Totals of the categories you chose. Not tax advice: confirm with your tax preparer.' },
+    'Your criteria': { what: 'The minimum numbers a property must hit for you to want it.', note: 'With Pro, each watchlist property shows green (meets them all), amber (close: within about 20%) or red (misses), plus a target price.' },
+    'Target price': { what: 'The highest price at which this property would still meet all your criteria, keeping everything else the same.', note: 'A starting point for your offer. It’s blank when no price works, for example if the rent can’t cover the costs.' },
+    'Watchlist': { what: 'Properties you’re thinking about buying, with live numbers from the calculator.', note: 'Change the status as you go. “Bought” moves it into your portfolio.' },
+    'Maintenance log': { what: 'A history of every repair: when, who, how much and what was done, with photos.' },
+    'Import': { what: 'Bring in transactions from a bank or card CSV file.', note: 'Map the columns once per bank. Tick Remember on a row to tag that payee the same way next time.' },
+  };
+
+  if (window.FieldHelp) {
+    Object.entries(SHEET_HELP).forEach(([k, v]) => { window.FieldHelp.RESULT_HELP[`${k} (Ingot)`] = v; });
+  }
+  const hb = (key) => (SHEET_HELP[key]
+    ? ` <button type="button" class="help-btn rhelp" data-help="${esc(key)} (Ingot)" aria-label="What is ${esc(key)}?" aria-expanded="false">i</button>` : '');
+
+  // Adds an ⓘ to each label in the container that has help.
+  function decorate(container, ctx) {
+    container.querySelectorAll('label').forEach((label) => {
+      if (label.querySelector('.ig-fhelp')) return;
+      const input = label.querySelector('input, select');
+      if (!input) return;
+      let name = input.name || (input.dataset && (input.dataset.map || input.dataset.act)) || '';
+      if (name === 'date' && input.dataset.map) name = 'date_col';
+      if (input.dataset && input.dataset.map === 'amount') name = 'amount_col';
+      const entry = FIELD_HELP[`${ctx}.${name}`] || FIELD_HELP[name];
+      if (!entry) return;
+      const textNode = [...label.childNodes].find((n) => n.nodeType === 3 && n.textContent.trim());
+      const wrap = document.createElement('span');
+      wrap.className = 'label-text';
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'help-btn ig-fhelp';
+      btn.textContent = 'i';
+      btn.setAttribute('aria-expanded', 'false');
+      btn.setAttribute('aria-label', `What is “${textNode ? textNode.textContent.trim() : name}”?`);
+      if (textNode) {
+        textNode.textContent = textNode.textContent.trim();
+        label.insertBefore(wrap, textNode);
+        wrap.append(textNode, ' ', btn);
+      } else {
+        const span = label.querySelector('span, b');
+        if (span) span.append(' ', btn); else label.prepend(btn);
+      }
+      const panel = document.createElement('div');
+      panel.className = 'help-panel';
+      panel.hidden = true;
+      [['What it is', entry.what], ['Where to find it', entry.find], ['Typical', entry.typical], ['Note', entry.note]].forEach(([t, text]) => {
+        if (!text) return;
+        const p = document.createElement('p');
+        const b = document.createElement('strong');
+        b.textContent = t + ': ';
+        p.append(b, text);
+        panel.appendChild(p);
+      });
+      panel.addEventListener('click', (ev) => ev.preventDefault());
+      label.appendChild(panel);
+    });
+  }
+
+  document.addEventListener('click', (ev) => {
+    const btn = ev.target.closest('.ig-fhelp');
+    if (!btn) return;
+    ev.preventDefault();
+    ev.stopPropagation();
+    const panel = btn.closest('label').querySelector('.help-panel');
+    const open = panel.hidden;
+    panel.hidden = !open;
+    btn.setAttribute('aria-expanded', String(open));
+    btn.closest('label').classList.toggle('help-open', open);
+  }, true);
+
   // ---- dialog --------------------------------------------------------------------------
 
   let dialog;
-  function openDialog(title, bodyHtml, onSubmit, { submitLabel = 'Save', onReady } = {}) {
+  function openDialog(title, bodyHtml, onSubmit, { submitLabel = 'Save', onReady, ctx = '' } = {}) {
     if (!dialog) {
       dialog = document.createElement('dialog');
       dialog.className = 'account-dialog ig-dialog';
@@ -222,6 +359,7 @@
         if (ok !== false) { dialog.close(); render(); }
       } catch (err) { msg.textContent = err.message || String(err); }
     };
+    decorate(form, ctx);
     if (onReady) onReady(form);
     if (!dialog.open) dialog.showModal();
     const first = form.querySelector('input:not([type=hidden]):not([type=checkbox]), select');
@@ -248,6 +386,8 @@
         <label>Property <select name="propertyId">${propertyOptions(propertyId, { none: !list.length })}</select></label>
         <label>Category <select name="category">${categoryOptions(type, e.category || preset.category)}</select></label>
       </div>
+      <label class="ig-principal" style="display:none">Principal part <input type="text" name="principal" inputmode="decimal" placeholder="Optional: the loan-paydown part of the payment"></label>
+      <p class="hint ig-principal-hint" style="display:none">Only the interest goes on Schedule E. Put your whole payment’s interest above and the principal here. Ingot logs the principal separately as Loan principal.</p>
       <label>Note <input type="text" name="memo" value="${esc(e.memo || '')}" placeholder="Optional, e.g. Unit B, March rent"></label>
       <label class="ig-file">Receipt photo ${isPro() ? '' : LOCK} <input type="file" name="receipt" accept="image/*,application/pdf" capture="environment" ${isPro() ? '' : 'disabled'}></label>
       ${e.receiptId ? '<p class="hint">A receipt is attached. Adding a new photo replaces it.</p>' : ''}
@@ -273,8 +413,12 @@
       if (file) fields.receiptId = (await saveReceiptFiles([file]))[0];
       if (existing) touch(existing, fields);
       else data.entries.push(I.makeEntry(fields));
+      const principal = Math.abs(num(form.elements.principal.value));
+      if (principal && fields.type === 'expense' && /^Mortgage interest/.test(fields.category)) {
+        data.entries.push(I.makeEntry({ type: 'transfer', category: 'Loan principal', amount: principal, date: fields.date, propertyId: fields.propertyId, memo: fields.memo || 'Mortgage payment' }));
+      }
       save();
-      toast(existing ? 'Entry updated' : `Added ${money2(amount)} ${I.TYPES[fields.type].label.toLowerCase()}`);
+      toast(existing ? 'Entry updated' : `Added ${money2(amount)} ${I.TYPES[fields.type].label.toLowerCase()}${principal && /^Mortgage interest/.test(fields.category) ? ` and ${money2(principal)} principal` : ''}`);
     }, {
       submitLabel: existing ? 'Save' : 'Add',
       onReady: (form) => {
@@ -284,7 +428,14 @@
           form.elements.category.innerHTML = categoryOptions(t);
           form.querySelector('[data-type-hint]').textContent = hints[t];
         };
-        form.querySelectorAll('[data-type]').forEach((b) => { b.onclick = () => setType(b.dataset.type); });
+        const showPrincipal = () => {
+          const on = form.elements.type.value === 'expense' && /^Mortgage interest/.test(form.elements.category.value);
+          form.querySelector('.ig-principal').style.display = on ? '' : 'none';
+          form.querySelector('.ig-principal-hint').style.display = on ? '' : 'none';
+        };
+        form.elements.category.addEventListener('change', showPrincipal);
+        form.querySelectorAll('[data-type]').forEach((b) => { b.onclick = () => { setType(b.dataset.type); showPrincipal(); }; });
+        showPrincipal();
         form.querySelector('[data-type-hint]').textContent = hints[type];
       },
     });
@@ -338,7 +489,7 @@
       }
       save();
       toast(existing ? 'Property updated' : `Added “${name}”`);
-    }, { submitLabel: existing ? 'Save' : 'Add property' });
+    }, { submitLabel: existing ? 'Save' : 'Add property', ctx: 'property' });
   }
 
   function deleteProperty(p) {
@@ -414,7 +565,7 @@
       input.roughEstimate = true;
       data.watch.push({ id: I.newId('w'), calcName: '', name: address, input, status: 'watching', passReason: '', addedAt: I.today(), updatedAt: Date.now() });
       save();
-    }, { submitLabel: 'Add to watchlist' });
+    }, { submitLabel: 'Add to watchlist', ctx: 'watch' });
   }
 
   function markBought(row) {
@@ -440,7 +591,7 @@
       touch(w, { status: 'bought' });
       save();
       toast(`Congratulations! “${w.name}” is in your portfolio.`);
-    }, { submitLabel: 'Move to portfolio' });
+    }, { submitLabel: 'Move to portfolio', ctx: 'bought' });
   }
 
   // ---- screens -----------------------------------------------------------------------
@@ -460,15 +611,13 @@
         <div>
           <h2 class="ig-title">${esc(I.NAME)} <small>Your rental portfolio</small></h2>
         </div>
-        <div class="ig-head-actions">
-          <button type="button" class="primary" data-act="quick-add">+ Quick add</button>
-        </div>
       </div>
       <nav class="ig-tabs" aria-label="${esc(I.NAME)} sections">${TABS.map(([k, label]) =>
         `<button type="button" data-tab="${k}" aria-pressed="${ui.tab === k}">${esc(label)}${(k === 'log' || k === 'import') && !isPro() ? ' ' + LOCK : ''}</button>`).join('')}</nav>
       <div class="ig-body">${body}</div>
       <p class="hint ig-foot"><span id="ig-sync">${esc(syncText())}</span></p>`;
     if (ui.tab === 'import') wireImport();
+    decorate(el, 'page');
     saveUi();
   }
 
@@ -501,24 +650,25 @@
     }).join('');
     let out = `<div class="ig-row ig-period"><div class="ap-seg" role="radiogroup" aria-label="Period">${periodBtns}</div><span class="hint">${esc(range.label)}</span></div>
       <div class="tiles">
-        ${tile('Properties', `${list.length} · ${s.units} unit${s.units === 1 ? '' : 's'}`, `${s.occupied} of ${s.units} rented`)}
-        ${tile('Income', money(s.income), rentHint, s.expectedRent && s.rent < s.expectedRent * 0.95 ? 'ok' : '')}
-        ${tile('Expenses', money(s.expense), s.count ? '' : 'Nothing logged yet')}
-        ${tile('Net', money(s.net), 'Income minus expenses', s.net >= 0 ? 'good' : 'bad')}
-        ${tile('Distributions', money(s.distribution), `Kept in the properties: ${money(s.kept)}`)}
-      </div>`;
+        ${tile('Properties', `${list.length} · ${s.units} unit${s.units === 1 ? '' : 's'}`, `${s.occupied} of ${s.units} rented`, '', 'properties')}
+        ${tile('Income', money(s.income), rentHint, s.expectedRent && s.rent < s.expectedRent * 0.95 ? 'ok' : '', 'month')}
+        ${tile('Expenses', money(s.expense), s.count ? '' : 'Nothing logged yet', '', 'month')}
+        ${tile('Net', money(s.net), 'Income minus expenses', s.net >= 0 ? 'good' : 'bad', 'month')}
+        ${tile('Distributions', money(s.distribution), `Kept in the properties: ${money(s.kept)}`, '', 'month')}
+      </div>
+      ${quickAddRow()}`;
     if (!s.count) {
       out += `<div class="ig-callout"><p><b>Nothing logged for ${esc(range.label.toLowerCase())} yet.</b> Add this month’s rent and bills with Quick add, or import a bank export.</p>
-        <div class="ig-row"><button type="button" class="primary" data-act="quick-add">+ Quick add</button><button type="button" data-tab="import">Import a bank CSV</button></div></div>`;
+        <div class="ig-row"><button type="button" data-tab="import">Import a bank CSV</button></div></div>`;
     }
     if (isPro()) {
       const months = I.monthKeys(new Date(), 12);
       const series = I.monthlySeries(data, months);
       out += `<div class="ig-panels">
-        <section class="ig-panel"><h3>Income vs expenses</h3>${barChart(series)}</section>
-        <section class="ig-panel"><h3>Expenses by category</h3>${categoryBars(I.topCategories(s.byCategory, 5))}</section>
+        <section class="ig-panel ig-link" data-goto="month" role="button" tabindex="0" aria-label="Income vs expenses. Open month view"><h3>Income vs expenses${hb('Income vs expenses')} <span class="ig-go">→</span></h3>${barChart(series)}</section>
+        <section class="ig-panel ig-link" data-goto="month" role="button" tabindex="0" aria-label="Expenses by category. Open month view"><h3>Expenses by category${hb('Expenses by category')} <span class="ig-go">→</span></h3>${categoryBars(I.topCategories(s.byCategory, 5))}</section>
       </div>
-      <section class="ig-panel"><h3>Properties · ${esc(range.label)}</h3>${propertyTable(list, s)}</section>`;
+      <section class="ig-panel"><h3><button type="button" class="ig-h-link" data-tab="properties">Properties · ${esc(range.label)} <span class="ig-go">→</span></button>${hb('Properties table')}</h3>${propertyTable(list, s)}</section>`;
     } else {
       out += lockedPanel('Charts and property table', 'See income vs expenses by month, your biggest costs, and how each property compares, including late rent.', 'Pro adds dashboard charts, the property table and unlimited properties.');
     }
@@ -552,7 +702,7 @@
       const b = s.byProperty[p.id] || { income: 0, expense: 0, rent: 0, net: 0 };
       const expected = (Number(p.expectedRent) || 0) * (I.periodRange(ui.period).months || 1);
       const short = expected && b.rent < expected * 0.95;
-      return `<tr><th scope="row"><button type="button" class="link" data-act="open-month" data-id="${esc(p.id)}">${esc(p.name)}</button></th>
+      return `<tr class="ig-link" data-goto="month" data-id="${esc(p.id)}"><th scope="row"><button type="button" class="link" data-act="open-month" data-id="${esc(p.id)}">${esc(p.name)}</button></th>
         <td>${money(b.rent)}</td><td>${money(b.expense)}</td><td class="${b.net >= 0 ? 'pos' : 'neg'}">${money(b.net)}</td>
         <td>${esc(p.occupied)}/${esc(p.units)}</td><td class="${short ? 'neg' : ''}">${expected ? `${Math.round((b.rent / expected) * 100)}% of ${money(expected)}` : '—'}</td></tr>`;
     }).join('');
@@ -625,8 +775,8 @@
         <button type="button" class="icon" data-act="edit-entry" data-id="${esc(e.id)}" aria-label="Edit">✎</button>
         <button type="button" class="icon" data-act="delete-entry" data-id="${esc(e.id)}" aria-label="Delete">×</button></td></tr>`).join('');
     const p = ui.property && data.properties.find((x) => x.id === ui.property);
-    return `<div class="ig-row ig-toolbar">
-        <div class="ig-row"><button type="button" class="icon" data-act="month-prev" aria-label="Previous month">‹</button>
+    return `<div class="ig-monthbar">
+        <div class="ig-monthnav"><button type="button" class="icon" data-act="month-prev" aria-label="Previous month">‹</button>
           <h3 class="ig-month">${esc(range.label)}</h3>
           <button type="button" class="icon" data-act="month-next" aria-label="Next month">›</button></div>
         <label class="inline">Property <select data-act="month-property">${propertyOptions(ui.property, { all: true })}</select></label>
@@ -638,8 +788,8 @@
         ${tile('Distributions', money(s.distribution))}
       </div>
       ${p && p.notes ? `<p class="hint">${esc(p.notes)}</p>` : ''}
-      ${entries.length ? `<div class="table-scroll"><table class="ig-table ig-entries"><thead><tr><th>Date</th>${ui.property ? '' : '<th>Property</th>'}<th>What</th><th class="num">Amount</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`
-        : `<div class="empty"><p>Nothing logged for ${esc(range.label)}.</p><button type="button" class="primary" data-act="quick-add" data-id="${esc(ui.property)}">+ Quick add</button></div>`}`;
+      ${entries.length ? `<h3 class="ig-subhead">Entries${hb('Month entries')}</h3><div class="table-scroll"><table class="ig-table ig-entries"><thead><tr><th>Date</th>${ui.property ? '' : '<th>Property</th>'}<th>What</th><th class="num">Amount</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>${quickAddRow(ui.property)}`
+        : `<div class="empty"><p>Nothing logged for ${esc(range.label)}.</p>${quickAddRow(ui.property)}</div>`}`;
   }
 
   // Watchlist ------------------------------------------------------------------------------------
@@ -649,7 +799,7 @@
     const c = data.criteria;
     const val = (v, scale) => (v === null || v === undefined || v === '' ? '' : esc(+(v * scale).toFixed(2)));
     const criteria = `<form class="ig-criteria" data-form="criteria">
-      <h3>Your criteria ${isPro() ? '' : LOCK}</h3>
+      <h3>Your criteria${hb('Your criteria')} ${isPro() ? '' : LOCK}</h3>
       <div class="ig-grid">
         <label>Minimum cash flow a month <input type="text" name="minCashFlow" inputmode="decimal" value="${val(c.minCashFlow, 1)}" placeholder="$"></label>
         <label>Minimum cash-on-cash (%) <input type="text" name="minCoc" inputmode="decimal" value="${val(c.minCoc, 100)}"></label>
@@ -669,7 +819,7 @@
           <h3>${esc(w.name)}</h3><div class="card-sub">${esc(money(input.purchasePrice))} asking${w.passReason ? ' · Passed: ' + esc(w.passReason) : ''}</div></div>
         ${hasNumbers ? `<div class="card-cf ${r.monthlyCashFlow >= 0 ? 'good' : 'bad'}">${money(r.monthlyCashFlow)}<small>/mo</small></div>
           <dl class="card-stats"><div><dt>Cash-on-cash</dt><dd>${pct(r.cashOnCash)}</dd></div><div><dt>Cap rate</dt><dd>${pct(r.capRate)}</dd></div>
-          <div><dt>Target price</dt><dd>${isPro() ? (tp ? money(tp) : '—') : 'PRO'}</dd></div></dl>
+          <div><dt>Target price${hb('Target price')}</dt><dd>${isPro() ? (tp ? money(tp) : '—') : 'PRO'}</dd></div></dl>
           ${checks ? `<ul class="ig-checks">${checks}</ul>` : ''}
           ${input.roughEstimate && !w.calcName ? '<p class="hint"><b>Rough estimate.</b> Run the numbers for the real figures.</p>' : ''}
           <p class="hint">Adding it ${r.monthlyCashFlow >= 0 ? 'adds' : 'costs'} about ${money(Math.abs(r.monthlyCashFlow))} a month and takes you from ${n} to ${n + 1} propert${n + 1 === 1 ? 'y' : 'ies'}.</p>`
@@ -684,7 +834,7 @@
     }).join('');
     const bought = rows.filter((x) => x.w.status === 'bought');
     const atLimit = I.live(data.watch).length >= I.FREE_LIMITS.watch && !isPro();
-    return `<div class="ig-row ig-toolbar"><h3>Watchlist</h3><div class="ig-row">
+    return `<div class="ig-row ig-toolbar"><h3>Watchlist${hb('Watchlist')}</h3><div class="ig-row">
         ${dealOptions({ act: 'watch-from-deal', label: 'Add a saved deal…' })}
         <button type="button" data-act="watch-add">+ Add by hand${atLimit ? ' ' + LOCK : ''}</button></div></div>
       ${criteria}
@@ -708,7 +858,7 @@
       .concat(I.SCHEDULE_E.map((c) => line(`${c.line} · ${esc(c.name)}`, (r) => r.lines[c.name] || 0)))
       .concat([line('20 · Total expenses', (r) => r.totalExpenses, 'total'), line('21 · Income or loss', (r) => r.net, 'total')]).join('');
     const dep = list.map((p) => `<label>${esc(p.name)} <input type="text" inputmode="decimal" data-act="depreciation" data-id="${esc(p.id)}" value="${esc(((p.depreciation || {})[ui.taxYear]) || '')}" placeholder="$ from your preparer"></label>`).join('');
-    return `<div class="ig-row ig-toolbar"><h3>Schedule E totals</h3>
+    return `<div class="ig-row ig-toolbar"><h3>Schedule E totals${hb('Schedule E totals')}</h3>
         <label class="inline">Tax year <select data-act="tax-year">${years.map((y) => `<option ${y === ui.taxYear ? 'selected' : ''} ${y !== thisYear() && !isPro() ? 'disabled' : ''}>${y}${y !== thisYear() && !isPro() ? ' (Pro)' : ''}</option>`).join('')}</select></label></div>
       <p class="ig-taxnote">${esc(I.TAX_NOTE)}</p>
       <div class="table-scroll"><table class="ig-table ig-tax"><thead><tr><th>Line</th>${head}</tr></thead><tbody>${body}</tbody></table></div>
@@ -736,7 +886,7 @@
       <td class="ig-row-actions">${(m.photos || []).map((id) => `<button type="button" class="icon" data-act="receipt" data-id="${esc(id)}" aria-label="View photo">📷</button>`).join('')}
         <button type="button" class="icon" data-act="edit-maint" data-id="${esc(m.id)}" aria-label="Edit">✎</button>
         <button type="button" class="icon" data-act="delete-maint" data-id="${esc(m.id)}" aria-label="Delete">×</button></td></tr>`).join('');
-    return `<div class="ig-row ig-toolbar"><h3>Maintenance log</h3>
+    return `<div class="ig-row ig-toolbar"><h3>Maintenance log${hb('Maintenance log')}</h3>
         <div class="ig-row"><input type="search" data-act="log-search" placeholder="Search vendor, notes, property" value="${esc(ui.logQuery || '')}">
         <button type="button" class="primary" data-act="add-maint">+ Log a repair</button></div></div>
       ${items.length ? `<div class="table-scroll"><table class="ig-table"><thead><tr><th>Date</th><th>Property</th><th>Vendor</th><th>Notes</th><th class="num">Cost</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`
@@ -770,7 +920,7 @@
         }
       }
       save();
-    }, { submitLabel: existing ? 'Save' : 'Log it' });
+    }, { submitLabel: existing ? 'Save' : 'Log it', ctx: 'maint' });
   }
 
   // CSV import --------------------------------------------------------------------------------------------
@@ -782,7 +932,7 @@
     if (!props().length) return emptyWelcome();
     if (!imp) {
       return `<div class="ig-import">
-        <h3>Import a bank or card export</h3>
+        <h3>Import a bank or card export${hb('Import')}</h3>
         <p>In your bank’s website, find <b>Download</b> or <b>Export</b> on the account’s transactions and choose <b>CSV</b>. Then pick the file here.</p>
         <label class="ig-file big">Choose a CSV file <input type="file" accept=".csv,text/csv,text/plain" data-act="import-file"></label>
         <p class="hint">Nothing is uploaded: the file is read on your device. Rows you’ve imported before are flagged so you don’t double-count.</p>
@@ -958,6 +1108,17 @@
 
   function find(list, id) { return data[list].find((x) => x.id === id); }
 
+  // Tapping a dashboard tile, chart or table row opens the matching screen.
+  function goTo(el) {
+    if (el.dataset.goto === 'properties') ui.tab = 'properties';
+    else { ui.tab = 'month'; ui.month = I.ym(new Date()); ui.property = el.dataset.id || ''; }
+    render();
+    window.scrollTo(0, 0);
+  }
+  document.addEventListener('keydown', (ev) => {
+    if ((ev.key === 'Enter' || ev.key === ' ') && ev.target.matches && ev.target.matches('#ingot [data-goto]')) { ev.preventDefault(); goTo(ev.target); }
+  });
+
   document.addEventListener('click', async (ev) => {
     const el = root();
     if (!el || !el.contains(ev.target)) return;
@@ -969,6 +1130,8 @@
       ui.period = period.dataset.period; render(); return;
     }
     const b = ev.target.closest('button[data-act]');
+    const go = !b && ev.target.closest('[data-goto]');
+    if (go) { goTo(go); return; }
     if (!b) return;
     const id = b.dataset.id;
     switch (b.dataset.act) {
@@ -1096,6 +1259,8 @@
     render,
     watchDeal,
     open(tab) { if (tab) ui.tab = tab; render(); },
+    // Opening the Ingot tab always lands on the dashboard.
+    show() { ui.tab = 'dash'; imp = null; render(); },
     data: () => data,
     sync,
   };

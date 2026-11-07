@@ -752,3 +752,24 @@ dialog.ig-dialog { width: min(560px, calc(100vw - 24px)); }
 .ig-card { padding-left: 16px; cursor: default; }
 .ig-body label.inline { white-space: nowrap; }
 .ig-table .nowrap { white-space: nowrap; }
+.ig-quick { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: 0 0 16px; }
+.ig-quick .primary { padding: 10px 18px; font-size: 15px; }
+.empty .ig-quick { justify-content: center; margin-top: 8px; }
+.ig-link { cursor: pointer; transition: border-color .15s, box-shadow .15s; }
+.tile.ig-link:hover, .ig-panel.ig-link:hover, .tile.ig-link:focus-visible, .ig-panel.ig-link:focus-visible { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; outline: none; }
+tr.ig-link:hover td, tr.ig-link:hover th { background: var(--accent-soft); }
+.ig-go { color: var(--muted); font-family: var(--font-body); font-weight: 400; font-size: 14px; }
+.ig-h-link { border: 0; background: none; padding: 0; font: inherit; color: inherit; cursor: pointer; }
+.ig-h-link:hover { color: var(--accent); }
+.ig-monthbar { display: grid; justify-items: center; gap: 10px; margin-bottom: 14px; }
+.ig-monthnav { display: flex; align-items: center; justify-content: center; gap: 12px; }
+.ig-month { min-width: 180px; text-align: center; margin: 0; }
+.ig-subhead { margin: 4px 0 8px; font-size: 16px; }
+.ig-body .help-panel, .ig-form .help-panel { font-size: 12.5px; }
+.ig-body h3 .help-btn, .tile-label .help-btn, dt .help-btn { vertical-align: middle; }
+/* Footer with links to the website */
+.site-foot { border-top: 1px solid var(--border); margin-top: 24px; padding: 18px 0 calc(28px + env(safe-area-inset-bottom)); font-size: 13px; color: var(--muted); }
+.site-foot .wrap { display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: center; justify-content: space-between; }
+.site-foot nav { display: flex; flex-wrap: wrap; gap: 6px 14px; }
+.site-foot a { color: var(--accent); text-decoration: none; }
+.site-foot a:hover { text-decoration: underline; }
