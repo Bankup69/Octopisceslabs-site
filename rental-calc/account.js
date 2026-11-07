@@ -48,7 +48,7 @@
 
   function hasStoredSession() {
     try { if (localStorage.getItem(SESSION_KEY)) return true; } catch (_) {}
-    return /access_token=|error_description=/.test(location.hash) || linkToken() !== null;
+    return /access_token=|error_description=/.test(location.hash) || /error_description=/.test(location.search) || linkToken() !== null;
   }
 
   // The emails link to octopisceslabs.com with a one-time token, rather than
@@ -86,20 +86,46 @@
       }
       const { data } = await c.auth.getSession();
       setUser(data.session ? data.session.user : null);
-      // Clean the sign-in details out of the address bar after a link sign-in.
-      if (/access_token=/.test(location.hash)) history.replaceState(history.state, '', location.pathname + location.search);
+      // Clean the sign-in details out of the address bar after a link or Google sign-in.
+      if (/access_token=|error_description=/.test(location.hash)) history.replaceState(history.state, '', location.pathname + location.search);
+      const oauthError = new URLSearchParams(location.search).get('error_description') || new URLSearchParams(location.hash.slice(1)).get('error_description');
+      if (oauthError && !data.session) linkProblem = 'Sign-in didn’t finish. Try again, or use your email instead.';
     } catch (err) {
       console.warn('Accounts unavailable', err);
     }
-    if (linkProblem) setTimeout(() => open(linkProblem), 0);
+    if (new URLSearchParams(location.search).has('error_description')) {
+      const q = new URLSearchParams(location.search);
+      ['error', 'error_code', 'error_description'].forEach((k) => q.delete(k));
+      history.replaceState(history.state, '', location.pathname + (q.toString() ? '?' + q : '') + location.hash);
+    }
+    if (linkProblem) setTimeout(() => open(linkProblem, { noAuto: true }), 0);
     return user;
   }
 
   // ---- sign-in dialog -------------------------------------------------------
+  // Fastest first: Continue with Google (when it's switched on in Supabase),
+  // then email + password (the browser can save it), with an emailed code as
+  // the fallback for people who haven't set a password or forgot it.
+
+  const Cap = window.Capacitor;
+  const native = !!(Cap && Cap.isNativePlatform && Cap.isNativePlatform());
+  let authSettings = null;
+  function loadAuthSettings() {
+    if (!authSettings) {
+      authSettings = fetch(`${config.url}/auth/v1/settings`, { headers: { apikey: config.publishableKey } })
+        .then((r) => (r.ok ? r.json() : {}))
+        .catch(() => ({}));
+    }
+    return authSettings;
+  }
+
+  const GOOGLE_G = '<svg viewBox="0 0 48 48" width="18" height="18" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>';
 
   let dialog;
   let resolveDialog = null;
   let pendingEmail = '';
+  let mode = 'signin'; // or 'signup'
+  let afterCode = null; // 'newpass' when signing in to reset a password
 
   function build() {
     dialog = document.createElement('dialog');
@@ -107,22 +133,37 @@
     dialog.innerHTML = `
       <button type="button" class="icon close" aria-label="Close">×</button>
       <section data-step="email">
-        <h2>Sign in or create an account</h2>
+        <h2 class="ac-title">Sign in</h2>
         <p class="ac-reason"></p>
-        <form class="ac-form" novalidate>
-          <label>Email <input type="email" name="email" autocomplete="email" inputmode="email" required></label>
-          <button type="submit" class="primary">Email me a sign-in code</button>
+        <button type="button" class="ac-google" hidden>${GOOGLE_G}<span>Continue with Google</span></button>
+        <div class="ac-or" hidden><span>or use your email</span></div>
+        <form class="ac-form ac-pass-form" novalidate>
+          <label>Email <input type="email" name="email" autocomplete="username" inputmode="email" required></label>
+          <label>Password <input type="password" name="password" autocomplete="current-password" minlength="8" required></label>
+          <button type="submit" class="primary ac-submit">Sign in</button>
         </form>
-        <p class="hint">No password needed. Use the same email in the iPhone and Android apps to keep Pro on every device.</p>
+        <p class="ac-links"><button type="button" class="link ac-mode">New here? Create an account</button></p>
+        <p class="ac-links"><button type="button" class="link ac-forgot">Forgot password?</button><br><button type="button" class="link ac-code">Email me a sign-in code instead</button></p>
+        <p class="hint ac-hint">Use the same account on every device, including the iPhone and Android apps when they’re in the stores, and Pro comes with you.</p>
       </section>
       <section data-step="code" hidden>
         <h2>Check your email</h2>
-        <p>We sent a 6-digit code to <strong class="ac-email"></strong>. Enter it below, or tap the link in the email.</p>
+        <p class="ac-code-msg">We sent a 6-digit code to <strong class="ac-email"></strong>. Enter it below, or tap the link in the email.</p>
         <form class="ac-form" novalidate>
           <label>Code <input type="text" name="code" autocomplete="one-time-code" inputmode="numeric" maxlength="10" required></label>
-          <button type="submit" class="primary">Sign in</button>
+          <button type="submit" class="primary">Continue</button>
         </form>
-        <p class="ac-links"><button type="button" class="link ac-resend">Send a new code</button> · <button type="button" class="link ac-change">Use a different email</button></p>
+        <p class="ac-links"><button type="button" class="link ac-resend">Send a new code</button> · <button type="button" class="link ac-change">Back</button></p>
+      </section>
+      <section data-step="newpass" hidden>
+        <h2>Choose a new password</h2>
+        <p>You’re signed in. Pick a password so next time you can skip the email.</p>
+        <form class="ac-form" novalidate>
+          <input type="email" name="email" autocomplete="username" hidden>
+          <label>New password <input type="password" name="password" autocomplete="new-password" minlength="8" required></label>
+          <button type="submit" class="primary">Save password</button>
+        </form>
+        <p class="ac-links"><button type="button" class="link ac-skip">Skip for now</button></p>
       </section>
       <section data-step="account" hidden>
         <h2>Your account</h2>
@@ -137,12 +178,40 @@
     dialog.addEventListener('close', () => {
       if (resolveDialog) { resolveDialog(user); resolveDialog = null; }
     });
-    const [emailForm, codeForm] = dialog.querySelectorAll('form');
-    emailForm.addEventListener('submit', (ev) => { ev.preventDefault(); sendCode(emailForm.elements.email.value); });
+    const passForm = dialog.querySelector('.ac-pass-form');
+    const codeForm = dialog.querySelector('[data-step="code"] form');
+    const newForm = dialog.querySelector('[data-step="newpass"] form');
+    passForm.addEventListener('submit', (ev) => { ev.preventDefault(); passwordSubmit(passForm.elements.email.value, passForm.elements.password.value); });
     codeForm.addEventListener('submit', (ev) => { ev.preventDefault(); verify(codeForm.elements.code.value); });
+    newForm.addEventListener('submit', (ev) => { ev.preventDefault(); saveNewPassword(newForm.elements.password.value); });
+    dialog.querySelector('.ac-google').addEventListener('click', googleSignIn);
+    dialog.querySelector('.ac-mode').addEventListener('click', () => setMode(mode === 'signin' ? 'signup' : 'signin'));
+    dialog.querySelector('.ac-code').addEventListener('click', () => { afterCode = null; sendCode(passForm.elements.email.value); });
+    dialog.querySelector('.ac-forgot').addEventListener('click', () => { afterCode = 'newpass'; sendCode(passForm.elements.email.value); });
     dialog.querySelector('.ac-resend').addEventListener('click', () => sendCode(pendingEmail));
     dialog.querySelector('.ac-change').addEventListener('click', () => step('email'));
+    dialog.querySelector('.ac-skip').addEventListener('click', () => dialog.close());
     dialog.querySelector('.ac-signout').addEventListener('click', signOut);
+  }
+
+  function setMode(next) {
+    mode = next;
+    const signup = mode === 'signup';
+    dialog.querySelector('.ac-title').textContent = signup ? 'Create your account' : 'Sign in';
+    dialog.querySelector('.ac-submit').textContent = signup ? 'Create account' : 'Sign in';
+    dialog.querySelector('.ac-mode').textContent = signup ? 'Already have an account? Sign in' : 'New here? Create an account';
+    dialog.querySelector('.ac-forgot').hidden = signup;
+    const pw = dialog.querySelector('.ac-pass-form [name=password]');
+    pw.autocomplete = signup ? 'new-password' : 'current-password';
+    pw.placeholder = signup ? 'At least 8 characters' : '';
+    status('');
+  }
+
+  async function showGoogle() {
+    const s = await loadAuthSettings();
+    const on = !native && !!(s && s.external && s.external.google);
+    dialog.querySelector('.ac-google').hidden = !on;
+    dialog.querySelector('.ac-or').hidden = !on;
   }
 
   function step(name) {
@@ -154,7 +223,8 @@
         ? 'EquityFoundry Pro is active on this account.'
         : 'Free plan. Pro purchases are tied to this account.';
     }
-    const input = dialog.querySelector(`[data-step="${name}"] input`);
+    if (name === 'newpass') dialog.querySelector('[data-step="newpass"] [name=email]').value = (user && user.email) || pendingEmail;
+    const input = dialog.querySelector(`[data-step="${name}"] input:not([hidden])`);
     if (input) setTimeout(() => input.focus(), 30);
   }
 
@@ -165,30 +235,109 @@
   }
 
   function busy(on) {
-    dialog.querySelectorAll('button[type=submit]').forEach((b) => { b.disabled = on; });
+    dialog.querySelectorAll('button[type=submit], .ac-google').forEach((b) => { b.disabled = on; });
+  }
+
+  const validEmail = (e) => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e);
+
+  function finishSignIn(session) {
+    if (session) setUser(session.user);
+    status('');
+    dialog.close();
+  }
+
+  // Lets Chrome, Safari and password managers offer to save the password.
+  function rememberPassword(email, password) {
+    try {
+      if (window.PasswordCredential && navigator.credentials) {
+        navigator.credentials.store(new window.PasswordCredential({ id: email, password, name: email })).catch(() => {});
+      }
+    } catch (_) {}
+  }
+
+  async function passwordSubmit(email, password) {
+    email = String(email || '').trim();
+    if (!validEmail(email)) { status('Enter a valid email address.', true); return; }
+    if (String(password || '').length < 8) { status('Passwords are at least 8 characters.', true); return; }
+    pendingEmail = email;
+    busy(true);
+    status(mode === 'signup' ? 'Creating your account…' : 'Signing in…');
+    try {
+      const c = await getClient();
+      if (mode === 'signup') {
+        const { data, error } = await c.auth.signUp({ email, password, options: { emailRedirectTo: location.origin + location.pathname } });
+        if (error) {
+          if (/registered|exists/i.test(error.message || '')) throw new Error('That email already has an account. Sign in instead, or tap “Forgot password?”.');
+          throw error;
+        }
+        if (data.session) { rememberPassword(email, password); finishSignIn(data.session); return; }
+        // Supabase hides whether an address is taken: no identities means it is.
+        if (data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) {
+          throw new Error('That email already has an account. Sign in instead, or tap “Forgot password?”.');
+        }
+        // Email confirmation is on: finish with the code from the email.
+        rememberPassword(email, password);
+        afterCode = null;
+        step('code');
+        dialog.querySelector('.ac-code-msg').innerHTML = 'To finish, enter the 6-digit code we sent to <strong class="ac-email"></strong>.';
+        dialog.querySelector('.ac-code-msg .ac-email').textContent = email;
+        return;
+      }
+      const { data, error } = await c.auth.signInWithPassword({ email, password });
+      if (error) {
+        if (/confirm/i.test(error.message || '')) throw new Error('Confirm your email first: tap “Email me a sign-in code instead”.');
+        if (/invalid/i.test(error.message || '')) throw new Error('Wrong email or password. No password yet? Tap “Email me a sign-in code instead”, then set one.');
+        throw error;
+      }
+      rememberPassword(email, password);
+      finishSignIn(data.session);
+    } catch (err) {
+      status(err.status === 429 || /rate/i.test(err.message || '') ? 'Too many tries. Wait a minute and try again.'
+        : err.message && !/fetch/i.test(err.message) ? err.message : 'Couldn’t reach the sign-in service. Check your connection and try again.', true);
+    } finally {
+      busy(false);
+    }
+  }
+
+  async function googleSignIn() {
+    busy(true);
+    status('Opening Google…');
+    try {
+      const c = await getClient();
+      const { error } = await c.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: location.origin + location.pathname } });
+      if (error) throw error;
+      // The page now goes to Google and comes back signed in.
+    } catch (err) {
+      status('Google sign-in isn’t available right now. Use your email instead.', true);
+      busy(false);
+    }
   }
 
   async function sendCode(email) {
     email = String(email || '').trim();
-    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { status('Enter a valid email address.', true); return; }
+    if (!validEmail(email)) { status('Enter your email address above first.', true); return; }
     busy(true);
     status('Sending…');
     try {
       const c = await getClient();
       const { error } = await c.auth.signInWithOtp({
         email,
-        options: { shouldCreateUser: true, emailRedirectTo: location.origin + location.pathname },
+        options: { shouldCreateUser: afterCode !== 'newpass', emailRedirectTo: location.origin + location.pathname },
       });
       if (error) throw error;
       pendingEmail = email;
       step('code');
+      dialog.querySelector('.ac-code-msg').innerHTML = 'We sent a 6-digit code to <strong class="ac-email"></strong>. Enter it below, or tap the link in the email.';
+      dialog.querySelector('.ac-code-msg .ac-email').textContent = email;
     } catch (err) {
       // A server error means the email service failed, not the connection.
       status(/rate|limit/i.test(err.message || '') || err.status === 429
         ? 'Too many emails sent. Wait a minute and try again.'
-        : err.status >= 500
-          ? 'We couldn’t send the sign-in email right now. Please try again in a few minutes.'
-          : 'Couldn’t reach the sign-in service. Check your connection and try again.', true);
+        : /not found|signups not allowed/i.test(err.message || '')
+          ? 'There’s no account with that email yet. Tap “New here? Create an account”.'
+          : err.status >= 500
+            ? 'We couldn’t send the sign-in email right now. Please try again in a few minutes.'
+            : 'Couldn’t reach the sign-in service. Check your connection and try again.', true);
     } finally {
       busy(false);
     }
@@ -201,9 +350,11 @@
     status('Signing in…');
     try {
       const c = await getClient();
-      const { data, error } = await c.auth.verifyOtp({ email: pendingEmail, token: code, type: 'email' });
-      if (error) throw error;
-      setUser(data.user);
+      let res = await c.auth.verifyOtp({ email: pendingEmail, token: code, type: 'email' });
+      if (res.error) res = await c.auth.verifyOtp({ email: pendingEmail, token: code, type: 'signup' });
+      if (res.error) throw res.error;
+      setUser(res.data.user);
+      if (afterCode === 'newpass') { afterCode = null; step('newpass'); return; }
       status('');
       dialog.close();
     } catch (err) {
@@ -211,6 +362,48 @@
     } finally {
       busy(false);
     }
+  }
+
+  async function saveNewPassword(password) {
+    if (String(password || '').length < 8) { status('Passwords are at least 8 characters.', true); return; }
+    busy(true);
+    status('Saving…');
+    try {
+      await setPassword(password);
+      rememberPassword((user && user.email) || pendingEmail, password);
+      status('');
+      dialog.close();
+      document.dispatchEvent(new CustomEvent('rental-calc:toast', { detail: 'Password saved. Next time, sign in with it.' }));
+    } catch (err) {
+      status(err.message || 'Couldn’t save the password. Try again.', true);
+    } finally {
+      busy(false);
+    }
+  }
+
+  async function setPassword(password) {
+    const c = await getClient();
+    const { error } = await c.auth.updateUser({ password });
+    if (error) {
+      if (/different/i.test(error.message || '')) throw new Error('That’s already your password. Pick a different one.');
+      if (/weak|short|characters/i.test(error.message || '')) throw new Error('Pick a longer password: at least 8 characters, ideally a few words.');
+      throw error;
+    }
+  }
+
+  // A saved password (Chrome, Android) can sign in with one tap.
+  async function offerSavedPassword() {
+    try {
+      if (!window.PasswordCredential || !navigator.credentials) return;
+      const cred = await navigator.credentials.get({ password: true, mediation: 'optional' });
+      if (cred && cred.password && dialog.open && !user) {
+        const f = dialog.querySelector('.ac-pass-form');
+        f.elements.email.value = cred.id;
+        f.elements.password.value = cred.password;
+        setMode('signin');
+        passwordSubmit(cred.id, cred.password);
+      }
+    } catch (_) {}
   }
 
   // scope 'global' also signs out every other device.
@@ -282,11 +475,13 @@
     await signOut('local');
   }
 
-  function open(reason) {
+  function open(reason, opts = {}) {
     if (!dialog) build();
     dialog.querySelector('.ac-reason').textContent = reason || '';
+    if (!user) { setMode(opts.signup ? 'signup' : 'signin'); showGoogle(); }
     step(user ? 'account' : 'email');
     if (!dialog.open) dialog.showModal();
+    if (!user && !opts.noAuto) offerSavedPassword();
     return new Promise((resolve) => { resolveDialog = resolve; });
   }
 
@@ -326,6 +521,9 @@
     deleteAccount,
     // The Supabase client, for features that store data (Ingot sync).
     client: getClient,
+    setPassword,
+    // Which sign-in methods Supabase has switched on (Google, email confirmation).
+    authSettings: loadAuthSettings,
   };
   renderButton();
 })();

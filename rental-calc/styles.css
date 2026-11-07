@@ -209,7 +209,7 @@ label {
 label small { font-size: 11px; }
 label.check { flex-direction: row; align-items: center; color: var(--text); margin-top: 22px; }
 
-input[type="text"], input[type="number"], input[type="url"] {
+input[type="text"], input[type="number"], input[type="url"], input[type="password"], input[type="email"] {
   width: 100%;
   font: inherit;
   color: var(--text);
@@ -773,3 +773,11 @@ tr.ig-link:hover td, tr.ig-link:hover th { background: var(--accent-soft); }
 .site-foot nav { display: flex; flex-wrap: wrap; gap: 6px 14px; }
 .site-foot a { color: var(--accent); text-decoration: none; }
 .site-foot a:hover { text-decoration: underline; }
+/* Sign in: Google button and divider */
+.ac-google { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 11px 14px; margin: 10px 0 4px; font-size: 15px; font-weight: 600; background: #fff; color: #1f1f1f; border: 1px solid #dadce0; border-radius: 8px; }
+.ac-google:hover { border-color: #b4b8bf; box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+.ac-or { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 12px; margin: 10px 0 0; }
+.ac-or::before, .ac-or::after { content: ''; flex: 1; border-top: 1px solid var(--border); }
+.ac-links + .ac-links { margin-top: -6px; }
+.ac-status.error { color: var(--bad); }
+.ap-form input[type="password"] { max-width: 420px; }
