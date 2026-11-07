@@ -787,3 +787,5 @@ tr.ig-link:hover td, tr.ig-link:hover th { background: var(--accent-soft); }
 .pw-rules li::before { content: '○ '; }
 .pw-rules li.ok { color: var(--good); }
 .pw-rules li.ok::before { content: '✓ '; }
+.ac-captcha:empty { display: none; }
+.ac-captcha { margin: 8px 0 0; display: flex; justify-content: center; }
