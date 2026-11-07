@@ -789,3 +789,4 @@ tr.ig-link:hover td, tr.ig-link:hover th { background: var(--accent-soft); }
 .pw-rules li.ok::before { content: '✓ '; }
 .ac-captcha:empty { display: none; }
 .ac-captcha { margin: 8px 0 0; display: flex; justify-content: center; }
+input.needs-value { outline: 2px solid var(--bad); outline-offset: 0; border-color: transparent; }
