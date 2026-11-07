@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-07
+- Added `/next-set-open`: where Next Set's sign-up and password-reset email links land. It passes the one-time code to the app and has an "Open Next Set" button. Not indexed, not in the sitemap, loads nothing from other sites.
+- Added `/next-set/email/`: banner and icon images used inside Next Set's emails (hosted here because email apps can't load images from the app). Source and builder live in the next-set repo (`scripts/email/build.mjs`); copy new images here when they change.
+
 ## 2026-11-05 (voice fix)
 - How-to videos: the closing line now says OctoPisces the right way (octo-pie-sees). Re-voiced and re-published all four videos and their captions. Page text unchanged.
 

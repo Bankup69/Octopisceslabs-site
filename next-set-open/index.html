@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<title>Open Next Set | OctoPisces Labs</title>
+<link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png">
+<link rel="canonical" href="https://octopisceslabs.com/next-set-open">
+<style>
+:root{--bg:#0E1412;--panel:#17201C;--line:#29352F;--ink:#EEF3F1;--muted:#9BAAA3;--blue:#2350C8;--soft:#7D9CFF;--orange:#F28A2E;color-scheme:dark}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:var(--ink);font:400 17px/1.55 "Barlow",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;padding:24px max(16px,env(safe-area-inset-right)) 24px max(16px,env(safe-area-inset-left))}
+main{width:100%;max-width:440px;background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;text-align:center}
+.bar{height:5px;background:linear-gradient(90deg,#2F6BFF,#7D9CFF 45%,var(--orange))}
+.in{padding:32px 28px 30px}
+img{width:84px;height:84px;border-radius:20px;display:block;margin:0 auto 16px;box-shadow:0 6px 18px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.08)}
+h1{margin:0 0 10px;font:700 34px/1.05 "Barlow Condensed","Arial Narrow",Arial,sans-serif;letter-spacing:1px;text-transform:uppercase}
+p{margin:0 0 14px;color:var(--muted)}
+.btn{display:inline-block;margin:10px 0 6px;padding:15px 30px;border-radius:10px;background:var(--blue);color:#fff;font:700 16px/1 Arial,Helvetica,sans-serif;letter-spacing:1px;text-transform:uppercase;text-decoration:none}
+.btn:focus-visible{outline:2px solid var(--orange);outline-offset:3px}
+.small{font-size:14px}
+a{color:var(--soft)}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main>
+<div class="bar"></div>
+<div class="in">
+<img src="/next-set/email/icon.png" alt="Next Set" width="84" height="84">
+<h1 id="title">Opening Next Set</h1>
+<p id="msg">If the app doesn't open on its own, tap the button.</p>
+<a class="btn" id="open" href="com.octopisceslabs.nextset://auth-callback">Open Next Set</a>
+<p class="small" id="desk" hidden>On a computer? Open this email on the phone where you installed Next Set and tap the link there. If you were confirming a new account, that part is already done: open the app and sign in. If you were resetting a password, ask for a new link from the app on your phone.</p>
+<p class="small" id="bad" hidden>This link has expired or was already used. Open Next Set and ask for a new one, or write to <a href="mailto:support@octopisceslabs.com">support@octopisceslabs.com</a>.</p>
+</div>
+</main>
+<script>
+(function () {
+  var scheme = 'com.octopisceslabs.nextset://auth-callback';
+  var q = location.search, h = location.hash;
+  var failed = /[?#&]error(_code|_description)?=/.test(q + h);
+  var phone = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  var $ = function (id) { return document.getElementById(id); };
+  // The app reads the one-time code from the address, so pass it along untouched.
+  $('open').href = scheme + q;
+  if (failed) {
+    $('title').textContent = 'Link expired';
+    $('msg').textContent = 'That link can only be used once, and only for a short time.';
+    $('open').hidden = false; $('bad').hidden = false;
+  } else if (!phone) {
+    $('title').textContent = 'Open this on your phone';
+    $('msg').textContent = 'Next Set links open the app on your phone.';
+    $('open').hidden = true; $('desk').hidden = false;
+  } else {
+    setTimeout(function () { location.href = scheme + q; }, 350);
+  }
+})();
+</script>
+</body>
+</html>
