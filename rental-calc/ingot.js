@@ -597,7 +597,7 @@
   // ---- screens -----------------------------------------------------------------------
 
   const TABS = [
-    ['dash', 'Dashboard'], ['properties', 'Properties'], ['month', 'Month'], ['watch', 'Watchlist'],
+    ['dash', 'Dashboard'], ['properties', 'Properties'], ['month', 'Month'],
     ['taxes', 'Taxes'], ['log', 'Maintenance'], ['import', 'Import'],
   ];
 
@@ -624,7 +624,7 @@
   function emptyWelcome() {
     return `<div class="ig-welcome">
       <h3>Track the rentals you own</h3>
-      <p>Log rent and costs in seconds, see how each property is doing, and get your Schedule E totals ready at tax time. Your watchlist of properties to buy lives here too.</p>
+      <p>Log rent and costs in seconds, see how each property is doing, and get your Schedule E totals ready at tax time.</p>
       <div class="ig-row">
         <button type="button" class="primary" data-act="add-property">Add your first property</button>
         ${dealOptions({ act: 'property-from-deal', label: 'Or start from a saved deal…' })}
@@ -639,7 +639,7 @@
 
   function renderDash() {
     const list = props();
-    if (!list.length) return emptyWelcome() + watchStrip();
+    if (!list.length) return emptyWelcome();
     if (ui.period === 'last12' && !isPro()) ui.period = 'ytd';
     const range = I.periodRange(ui.period);
     const s = I.summarize(data, range);
@@ -672,7 +672,7 @@
     } else {
       out += lockedPanel('Charts and property table', 'See income vs expenses by month, your biggest costs, and how each property compares, including late rent.', 'Pro adds dashboard charts, the property table and unlimited properties.');
     }
-    return out + watchStrip();
+    return out;
   }
 
   function barChart(series) {
