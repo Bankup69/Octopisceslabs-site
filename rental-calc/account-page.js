@@ -106,6 +106,12 @@
 
       <section class="ap-card" aria-labelledby="ap-security-h">
         <h3 id="ap-security-h">Security</h3>
+        <form id="ap-pass-form" class="ap-form" novalidate>
+          <input type="email" name="email" autocomplete="username" hidden>
+          <label>Password <small>Set one to sign in without waiting for an email code. Your browser can save it.</small>
+            <input type="password" name="password" id="ap-pass" autocomplete="new-password" minlength="8" placeholder="New password, at least 8 characters"></label>
+          <div class="ap-row"><button type="submit">Save password</button><span class="ap-msg" id="ap-pass-msg" role="status"></span></div>
+        </form>
         <div class="ap-row">
           <button type="button" id="ap-signout">Sign out</button>
           <button type="button" id="ap-signout-all">Sign out on all devices</button>
@@ -401,6 +407,25 @@
     });
 
     // Security
+    const passForm = $('#ap-pass-form', page);
+    const passMsg = $('#ap-pass-msg', page);
+    passForm.elements.email.value = (Account.user() || {}).email || '';
+    passForm.addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      const pw = passForm.elements.password.value;
+      if (pw.length < 8) { msg(passMsg, 'Use at least 8 characters.', true); return; }
+      msg(passMsg, 'Saving…');
+      try {
+        await Account.setPassword(pw);
+        try {
+          if (window.PasswordCredential && navigator.credentials) navigator.credentials.store(new window.PasswordCredential({ id: passForm.elements.email.value, password: pw, name: passForm.elements.email.value })).catch(() => {});
+        } catch (_) {}
+        passForm.elements.password.value = '';
+        msg(passMsg, 'Saved. Next time, sign in with your email and this password.');
+      } catch (err) {
+        msg(passMsg, err.message || 'Couldn’t save the password.', true);
+      }
+    });
     $('#ap-signout', page).addEventListener('click', () => Account.signOut('local'));
     $('#ap-signout-all', page).addEventListener('click', () => Account.signOut('global'));
 

@@ -197,9 +197,9 @@
       ? (user ? `Signed in as ${user.email}. Pro is saved to this account.` : 'Sign in to use Pro you bought on the website.')
       : webKey
         ? (user
-          ? `Signed in as ${user.email}. Pro will also work in the iPhone and Android apps when they launch.`
-          : 'You’ll sign in with your email first, so Pro also works in the iPhone and Android apps when they launch.')
-        : 'iPhone and Android apps are in the works.';
+          ? `Signed in as ${user.email}. Pro will also work in the App Store and Google Play versions when they launch.`
+          : 'You’ll sign in first (Google, or email and password), so Pro also works in the App Store and Google Play versions when they launch.')
+        : 'App Store and Google Play versions are coming.';
     if (testMode) {
       dialog.querySelector('.pw-note').textContent += ' TEST MODE: use card 4242 4242 4242 4242, any future date, any CVC. No real money moves. Open the site with ?billing=live to leave test mode.';
     }

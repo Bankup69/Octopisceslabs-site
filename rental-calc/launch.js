@@ -35,19 +35,19 @@
       <button type="button" class="icon close" aria-label="Close">×</button>
       <div class="launch-icon">${BELL}</div>
       <section data-state="ask">
-        <h2>EquityFoundry is coming to iPhone and Android</h2>
-        <p>The apps are in the works. Leave your email and we’ll send you one note when they launch.</p>
+        <h2>EquityFoundry is coming to the App Store and Google Play</h2>
+        <p>You’re using the web version, which works in your browser and can be added to your home screen. Leave your email and we’ll send one note when the store versions launch.</p>
         <form novalidate>
           <label>Email <input type="email" name="email" autocomplete="email" inputmode="email" required></label>
           <button type="submit" class="primary">${BELL} Notify me</button>
         </form>
-        <p class="hint">Just the launch announcement, no spam. If you buy Pro on the website, it carries over to the apps when you sign in with the same email.</p>
+        <p class="hint">Just the launch announcement, no spam. Pro you buy here carries over to the store versions when you sign in with the same account.</p>
         <p class="launch-status" role="status"></p>
       </section>
       <section data-state="done" hidden>
         <h2>You’re on the list</h2>
-        <p>We’ll send one email to <strong class="launch-email"></strong> when the iPhone and Android apps launch.</p>
-        <p class="hint">If you buy Pro on the website before then, sign in to the apps with this same email and Pro carries over.</p>
+        <p>We’ll send one email to <strong class="launch-email"></strong> when EquityFoundry is in the App Store and Google Play.</p>
+        <p class="hint">Keep using the web version until then. Pro you buy here carries over when you sign in to the store version with the same account.</p>
         <button type="button" class="primary launch-close">Done</button>
       </section>`;
     document.body.appendChild(dialog);
@@ -106,10 +106,16 @@
     const done = read(DONE_KEY) === '1';
     slot.hidden = native || read(HIDE_KEY) === '1';
     if (slot.hidden) return;
+    // Installed from the browser ("Add to home screen"), it can look like the
+    // store app, so say plainly which version this is.
+    const installed = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+    const lead = installed
+      ? '<strong>This is the web version of EquityFoundry.</strong> App Store and Google Play versions are coming.'
+      : '<strong>You’re using the web version.</strong> App Store and Google Play versions are coming.';
     slot.innerHTML = done
-      ? `<span class="launch-icon">${BELL}</span><span>You’re on the list for the iPhone and Android apps. We’ll email you at launch.</span>` +
+      ? `<span class="launch-icon">${BELL}</span><span>You’re on the list. We’ll email you when EquityFoundry is in the App Store and Google Play.</span>` +
         '<button type="button" class="icon launch-hide" aria-label="Hide">×</button>'
-      : `<span class="launch-icon">${BELL}</span><span><strong>iPhone and Android apps are in the works.</strong> Want to know when they launch?</span>` +
+      : `<span class="launch-icon">${BELL}</span><span>${lead} Want to know when?</span>` +
         `<button type="button" class="primary launch-open">${BELL} Notify me</button>` +
         '<button type="button" class="icon launch-hide" aria-label="Hide">×</button>';
   }
