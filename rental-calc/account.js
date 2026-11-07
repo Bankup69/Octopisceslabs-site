@@ -102,6 +102,33 @@
     return user;
   }
 
+  // ---- password rules -------------------------------------------------------
+  // Same rules as Supabase's "lowercase, uppercase, digits and symbols"
+  // setting with an 8-character minimum, so the app catches them first.
+  const SYMBOLS = /[!@#$%^&*()_+\-=[\]{};':"\\|<>?,./`~]/;
+  const PASSWORD_RULES = [
+    ['At least 8 characters', (p) => p.length >= 8],
+    ['An uppercase letter (A–Z)', (p) => /[A-Z]/.test(p)],
+    ['A lowercase letter (a–z)', (p) => /[a-z]/.test(p)],
+    ['A number (0–9)', (p) => /\d/.test(p)],
+    ['A symbol, like ! ? # $ %', (p) => SYMBOLS.test(p)],
+  ];
+  const passwordProblems = (p) => PASSWORD_RULES.filter(([, ok]) => !ok(String(p || ''))).map(([label]) => label);
+  const PASSWORD_HELP = 'Use at least 8 characters with an uppercase letter, a lowercase letter, a number and a symbol.';
+
+  // A live checklist under a new-password field.
+  function attachRules(input, list) {
+    list.classList.add('pw-rules');
+    list.innerHTML = PASSWORD_RULES.map(([label]) => `<li>${label}</li>`).join('');
+    const update = () => {
+      const v = input.value;
+      [...list.children].forEach((li, k) => li.classList.toggle('ok', PASSWORD_RULES[k][1](v)));
+    };
+    input.addEventListener('input', update);
+    update();
+    return update;
+  }
+
   // ---- sign-in dialog -------------------------------------------------------
   // Fastest first: Continue with Google (when it's switched on in Supabase),
   // then email + password (the browser can save it), with an emailed code as
@@ -140,6 +167,7 @@
         <form class="ac-form ac-pass-form" novalidate>
           <label>Email <input type="email" name="email" autocomplete="username" inputmode="email" required></label>
           <label>Password <input type="password" name="password" autocomplete="current-password" minlength="8" required></label>
+          <ul class="ac-rules" hidden></ul>
           <button type="submit" class="primary ac-submit">Sign in</button>
         </form>
         <p class="ac-links"><button type="button" class="link ac-mode">New here? Create an account</button></p>
@@ -161,6 +189,7 @@
         <form class="ac-form" novalidate>
           <input type="email" name="email" autocomplete="username" hidden>
           <label>New password <input type="password" name="password" autocomplete="new-password" minlength="8" required></label>
+          <ul class="ac-newrules"></ul>
           <button type="submit" class="primary">Save password</button>
         </form>
         <p class="ac-links"><button type="button" class="link ac-skip">Skip for now</button></p>
@@ -181,6 +210,8 @@
     const passForm = dialog.querySelector('.ac-pass-form');
     const codeForm = dialog.querySelector('[data-step="code"] form');
     const newForm = dialog.querySelector('[data-step="newpass"] form');
+    attachRules(passForm.elements.password, dialog.querySelector('.ac-rules'));
+    attachRules(newForm.elements.password, dialog.querySelector('.ac-newrules'));
     passForm.addEventListener('submit', (ev) => { ev.preventDefault(); passwordSubmit(passForm.elements.email.value, passForm.elements.password.value); });
     codeForm.addEventListener('submit', (ev) => { ev.preventDefault(); verify(codeForm.elements.code.value); });
     newForm.addEventListener('submit', (ev) => { ev.preventDefault(); saveNewPassword(newForm.elements.password.value); });
@@ -203,7 +234,8 @@
     dialog.querySelector('.ac-forgot').hidden = signup;
     const pw = dialog.querySelector('.ac-pass-form [name=password]');
     pw.autocomplete = signup ? 'new-password' : 'current-password';
-    pw.placeholder = signup ? 'At least 8 characters' : '';
+    pw.placeholder = '';
+    dialog.querySelector('.ac-rules').hidden = !signup;
     status('');
   }
 
@@ -258,7 +290,8 @@
   async function passwordSubmit(email, password) {
     email = String(email || '').trim();
     if (!validEmail(email)) { status('Enter a valid email address.', true); return; }
-    if (String(password || '').length < 8) { status('Passwords are at least 8 characters.', true); return; }
+    if (mode === 'signup' && passwordProblems(password).length) { status(PASSWORD_HELP, true); return; }
+    if (mode !== 'signup' && !password) { status('Enter your password.', true); return; }
     pendingEmail = email;
     busy(true);
     status(mode === 'signup' ? 'Creating your account…' : 'Signing in…');
@@ -279,7 +312,7 @@
         rememberPassword(email, password);
         afterCode = null;
         step('code');
-        dialog.querySelector('.ac-code-msg').innerHTML = 'To finish, enter the 6-digit code we sent to <strong class="ac-email"></strong>.';
+        dialog.querySelector('.ac-code-msg').innerHTML = 'To confirm it’s your email, enter the 6-digit code we sent to <strong class="ac-email"></strong>. You only do this once: after that, you sign in with your password.';
         dialog.querySelector('.ac-code-msg .ac-email').textContent = email;
         return;
       }
@@ -365,7 +398,7 @@
   }
 
   async function saveNewPassword(password) {
-    if (String(password || '').length < 8) { status('Passwords are at least 8 characters.', true); return; }
+    if (passwordProblems(password).length) { status(PASSWORD_HELP, true); return; }
     busy(true);
     status('Saving…');
     try {
@@ -381,12 +414,28 @@
     }
   }
 
-  async function setPassword(password) {
+  // Changing a password while signed in needs a code from the person's email
+  // (Supabase "reauthentication"), so someone using an unlocked device can't
+  // quietly change it.
+  async function sendPasswordCode() {
     const c = await getClient();
-    const { error } = await c.auth.updateUser({ password });
+    const { error } = await c.auth.reauthenticate();
     if (error) {
+      if (error.status === 429 || /rate/i.test(error.message || '')) throw new Error('Too many emails sent. Wait a minute and try again.');
+      throw error;
+    }
+  }
+
+  async function setPassword(password, nonce) {
+    if (passwordProblems(password).length) throw new Error(PASSWORD_HELP);
+    const c = await getClient();
+    const { error } = await c.auth.updateUser(nonce ? { password, nonce } : { password });
+    if (error) {
+      if (/nonce|reauthenticat/i.test(error.message || '') || error.code === 'reauthentication_needed' || error.code === 'reauthentication_not_valid') {
+        throw new Error(nonce ? 'That code didn’t work. Check it, or send a new one.' : 'Enter the code we email you to change your password.');
+      }
       if (/different/i.test(error.message || '')) throw new Error('That’s already your password. Pick a different one.');
-      if (/weak|short|characters/i.test(error.message || '')) throw new Error('Pick a longer password: at least 8 characters, ideally a few words.');
+      if (/weak|short|characters|contain/i.test(error.message || '') || error.code === 'weak_password') throw new Error(PASSWORD_HELP);
       throw error;
     }
   }
@@ -522,6 +571,10 @@
     // The Supabase client, for features that store data (Ingot sync).
     client: getClient,
     setPassword,
+    sendPasswordCode,
+    passwordProblems,
+    attachRules,
+    PASSWORD_HELP,
     // Which sign-in methods Supabase has switched on (Google, email confirmation).
     authSettings: loadAuthSettings,
   };
