@@ -489,10 +489,22 @@
     window.scrollTo(0, 0);
   }
 
+  form.elements.propertyName.addEventListener('input', (ev) => ev.target.classList.remove('needs-value'));
+
   $('btn-save').addEventListener('click', async () => {
     const input = readForm();
-    const name = input.propertyName || input.address || currentName || prompt('Name this property:');
-    if (!name) return;
+    const nameField = form.elements.propertyName;
+    const name = input.propertyName || input.address || currentName;
+    if (!name) {
+      // No name yet: take them to the Property name box instead of a pop-up.
+      nameField.classList.add('needs-value');
+      nameField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => nameField.focus({ preventScroll: true }), 300);
+      toast('Give this property a name, then tap Save.');
+      return;
+    }
+    // Keep the box in step with the name it's saved under.
+    if (!input.propertyName) { nameField.value = name; input.propertyName = name; }
     let all = loadSaved();
     const renaming = currentName && currentName !== name && all[currentName] && !all[name];
     const adding = !all[name] && !renaming;
