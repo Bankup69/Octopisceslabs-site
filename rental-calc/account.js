@@ -12,6 +12,7 @@
   let loading = null;
   let user = null;
   let linkProblem = '';
+  let choosePasswordNext = false;
 
   function loadScript(src) {
     return new Promise((resolve, reject) => {
@@ -82,6 +83,8 @@
             : 'That sign-in link didn’t work. Send yourself a new code.';
         } else if (data && data.session) {
           setUser(data.session.user);
+          // Reset-password and invite links go straight to choosing a password.
+          if (link.type === 'recovery' || link.type === 'invite') choosePasswordNext = true;
         }
       }
       const { data } = await c.auth.getSession();
@@ -99,6 +102,7 @@
       history.replaceState(history.state, '', location.pathname + (q.toString() ? '?' + q : '') + location.hash);
     }
     if (linkProblem) setTimeout(() => open(linkProblem, { noAuto: true }), 0);
+    else if (choosePasswordNext && user) setTimeout(() => { open('', { noAuto: true }); step('newpass'); }, 0);
     return user;
   }
 
@@ -127,6 +131,45 @@
     input.addEventListener('input', update);
     update();
     return update;
+  }
+
+  // ---- captcha (Cloudflare Turnstile) ------------------------------------------
+  // Off until a site key is in config.js. Once Supabase's captcha protection is
+  // on, every sign-up, password sign-in and emailed code needs a fresh token.
+  const captchaKey = ((window.APP_CONFIG.captcha || {}).siteKey) || '';
+  let captchaLoading = null;
+  let captchaWidget = null;
+  let captchaToken = '';
+  let captchaWaiters = [];
+
+  function renderCaptcha(el) {
+    if (!captchaKey || !el) return;
+    if (!captchaLoading) captchaLoading = loadScript('https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit');
+    captchaLoading.then(() => {
+      if (captchaWidget !== null) return;
+      captchaWidget = window.turnstile.render(el, {
+        sitekey: captchaKey,
+        appearance: 'interaction-only',
+        callback: (t) => { captchaToken = t; captchaWaiters.splice(0).forEach((f) => f(t)); },
+        'expired-callback': () => { captchaToken = ''; },
+        'error-callback': () => { captchaToken = ''; },
+      });
+    }).catch(() => {});
+  }
+
+  // A token for one request; the widget is reset so the next request gets a new one.
+  function captchaFor() {
+    if (!captchaKey) return Promise.resolve(undefined);
+    const take = (t) => {
+      captchaToken = '';
+      setTimeout(() => { try { window.turnstile.reset(captchaWidget); } catch (_) {} }, 0);
+      return t;
+    };
+    if (captchaToken) return Promise.resolve(take(captchaToken));
+    return new Promise((resolve, reject) => {
+      const timer = setTimeout(() => reject(new Error('Please finish the quick “are you human” check above, then try again.')), 15000);
+      captchaWaiters.push((t) => { clearTimeout(timer); resolve(take(t)); });
+    });
   }
 
   // ---- sign-in dialog -------------------------------------------------------
@@ -200,6 +243,7 @@
         <p class="ac-pro"></p>
         <button type="button" class="ac-signout">Sign out</button>
       </section>
+      <div class="ac-captcha"></div>
       <p class="ac-status" role="status"></p>`;
     document.body.appendChild(dialog);
 
@@ -223,6 +267,7 @@
     dialog.querySelector('.ac-change').addEventListener('click', () => step('email'));
     dialog.querySelector('.ac-skip').addEventListener('click', () => dialog.close());
     dialog.querySelector('.ac-signout').addEventListener('click', signOut);
+    renderCaptcha(dialog.querySelector('.ac-captcha'));
   }
 
   function setMode(next) {
@@ -298,7 +343,7 @@
     try {
       const c = await getClient();
       if (mode === 'signup') {
-        const { data, error } = await c.auth.signUp({ email, password, options: { emailRedirectTo: location.origin + location.pathname } });
+        const { data, error } = await c.auth.signUp({ email, password, options: { emailRedirectTo: location.origin + location.pathname, captchaToken: await captchaFor() } });
         if (error) {
           if (/registered|exists/i.test(error.message || '')) throw new Error('That email already has an account. Sign in instead, or tap “Forgot password?”.');
           throw error;
@@ -316,8 +361,9 @@
         dialog.querySelector('.ac-code-msg .ac-email').textContent = email;
         return;
       }
-      const { data, error } = await c.auth.signInWithPassword({ email, password });
+      const { data, error } = await c.auth.signInWithPassword({ email, password, options: { captchaToken: await captchaFor() } });
       if (error) {
+        if (/captcha/i.test(error.message || '')) throw new Error('The “are you human” check didn’t go through. Try again.');
         if (/confirm/i.test(error.message || '')) throw new Error('Confirm your email first: tap “Email me a sign-in code instead”.');
         if (/invalid/i.test(error.message || '')) throw new Error('Wrong email or password. No password yet? Tap “Email me a sign-in code instead”, then set one.');
         throw error;
@@ -355,7 +401,7 @@
       const c = await getClient();
       const { error } = await c.auth.signInWithOtp({
         email,
-        options: { shouldCreateUser: afterCode !== 'newpass', emailRedirectTo: location.origin + location.pathname },
+        options: { shouldCreateUser: afterCode !== 'newpass', emailRedirectTo: location.origin + location.pathname, captchaToken: await captchaFor() },
       });
       if (error) throw error;
       pendingEmail = email;
@@ -364,7 +410,9 @@
       dialog.querySelector('.ac-code-msg .ac-email').textContent = email;
     } catch (err) {
       // A server error means the email service failed, not the connection.
-      status(/rate|limit/i.test(err.message || '') || err.status === 429
+      status(/captcha|human/i.test(err.message || '')
+        ? 'The “are you human” check didn’t go through. Try again.'
+        : /rate|limit/i.test(err.message || '') || err.status === 429
         ? 'Too many emails sent. Wait a minute and try again.'
         : /not found|signups not allowed/i.test(err.message || '')
           ? 'There’s no account with that email yet. Tap “New here? Create an account”.'

@@ -26,6 +26,10 @@ window.APP_CONFIG = {
     entitlement: 'pro',
   },
 
+  // Bot protection for sign-in (Cloudflare Turnstile). Paste the public
+  // site key here once captcha is set up in Supabase; leave empty for off.
+  captcha: { siteKey: '' },
+
   // Shown when the store can't be reached. Real prices come from the stores
   // and RevenueCat.
   plans: [
