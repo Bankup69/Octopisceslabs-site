@@ -667,7 +667,6 @@
         <dl class="card-stats">${stats.map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
         <div class="card-actions">
           <button type="button" class="open">Open</button>
-          <button type="button" class="watch" title="Add to your Ingot watchlist">☆ Watch</button>
           ${url ? `<a class="button listing-link" href="${esc(url)}" target="_blank" rel="noopener">${esc(source)} ↗</a>` : ''}
         </div>
       </article>`;
@@ -712,7 +711,6 @@
     if (!card) return;
     const name = card.dataset.name;
     if (ev.target.closest('.open')) { openProperty(name); return; }
-    if (ev.target.closest('.watch')) { if (window.Ingot) window.Ingot.watchDeal(name); return; }
     if (ev.target.closest('.listing-link')) return;
     // Tapping anywhere else on the card toggles it for comparison. A click on
     // the checkbox's label is re-dispatched to the checkbox, so skip it here.
