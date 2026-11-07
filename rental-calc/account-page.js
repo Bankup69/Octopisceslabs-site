@@ -108,9 +108,11 @@
         <h3 id="ap-security-h">Security</h3>
         <form id="ap-pass-form" class="ap-form" novalidate>
           <input type="email" name="email" autocomplete="username" hidden>
-          <label>Password <small>Set one to sign in without waiting for an email code. Your browser can save it.</small>
-            <input type="password" name="password" id="ap-pass" autocomplete="new-password" minlength="8" placeholder="New password, at least 8 characters"></label>
-          <div class="ap-row"><button type="submit">Save password</button><span class="ap-msg" id="ap-pass-msg" role="status"></span></div>
+          <label>Password <small>Set or change the password you sign in with. Your browser can save it. For your security we email you a code to confirm the change.</small>
+            <input type="password" name="password" id="ap-pass" autocomplete="new-password" placeholder="New password"></label>
+          <ul id="ap-pass-rules"></ul>
+          <label id="ap-pass-code-wrap" hidden>Code from your email <input type="text" name="code" id="ap-pass-code" autocomplete="one-time-code" inputmode="numeric" maxlength="10"></label>
+          <div class="ap-row"><button type="submit" id="ap-pass-btn">Email me a code</button><button type="button" class="link" id="ap-pass-resend" hidden>Send a new code</button><span class="ap-msg" id="ap-pass-msg" role="status"></span></div>
         </form>
         <div class="ap-row">
           <button type="button" id="ap-signout">Sign out</button>
@@ -409,18 +411,40 @@
     // Security
     const passForm = $('#ap-pass-form', page);
     const passMsg = $('#ap-pass-msg', page);
+    const passBtn = $('#ap-pass-btn', page);
+    const codeWrap = $('#ap-pass-code-wrap', page);
+    const resend = $('#ap-pass-resend', page);
+    let codeSent = false;
     passForm.elements.email.value = (Account.user() || {}).email || '';
+    Account.attachRules(passForm.elements.password, $('#ap-pass-rules', page));
+    const askForCode = async () => {
+      msg(passMsg, 'Sending…');
+      await Account.sendPasswordCode();
+      codeSent = true;
+      codeWrap.hidden = false;
+      resend.hidden = false;
+      passBtn.textContent = 'Save password';
+      msg(passMsg, `We emailed a code to ${passForm.elements.email.value}.`);
+      passForm.elements.code.focus();
+    };
+    resend.addEventListener('click', () => askForCode().catch((err) => msg(passMsg, err.message || 'Couldn’t send the code.', true)));
     passForm.addEventListener('submit', async (ev) => {
       ev.preventDefault();
       const pw = passForm.elements.password.value;
-      if (pw.length < 8) { msg(passMsg, 'Use at least 8 characters.', true); return; }
-      msg(passMsg, 'Saving…');
+      if (Account.passwordProblems(pw).length) { msg(passMsg, Account.PASSWORD_HELP, true); return; }
       try {
-        await Account.setPassword(pw);
+        if (!codeSent) { await askForCode(); return; }
+        const code = passForm.elements.code.value.replace(/\s+/g, '');
+        if (!/^\d{6,10}$/.test(code)) { msg(passMsg, 'Enter the code from your email.', true); return; }
+        msg(passMsg, 'Saving…');
+        await Account.setPassword(pw, code);
         try {
           if (window.PasswordCredential && navigator.credentials) navigator.credentials.store(new window.PasswordCredential({ id: passForm.elements.email.value, password: pw, name: passForm.elements.email.value })).catch(() => {});
         } catch (_) {}
         passForm.elements.password.value = '';
+        passForm.elements.code.value = '';
+        passForm.elements.password.dispatchEvent(new Event('input'));
+        codeSent = false; codeWrap.hidden = true; resend.hidden = true; passBtn.textContent = 'Email me a code';
         msg(passMsg, 'Saved. Next time, sign in with your email and this password.');
       } catch (err) {
         msg(passMsg, err.message || 'Couldn’t save the password.', true);
