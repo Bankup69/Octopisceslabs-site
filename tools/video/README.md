@@ -4,3 +4,5 @@ Serve the app: `python3 -m http.server 8790 -d <rental-income-calculator>/www`. 
 - Desktop how-to (1080p): kokoro_lines.py -> rec_multi.js -> build2.py (see CLAUDE.md for the page generator, build_howto.py).
 - Short (vertical, under 60s): write lines.json, kokoro_lines.py, rec_short.js <dir> <dir>/durs.json <key>, build_short.py <key> <out.mp4>.
 - Paths inside scripts point at the old scratchpad; adjust D/LOGO at the top.
+
+Pronunciation: write OctoPisces as "octo pie sees" in narration (octopisceslabs.com = "octo pie sees labs dot com"). EquityFoundry = "Equity Foundry", DSCR = "D S C R", BRRRR = "BURR".

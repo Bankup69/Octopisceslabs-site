@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-05 (voice fix)
+- How-to videos: the closing line now says OctoPisces the right way (octo-pie-sees). Re-voiced and re-published all four videos and their captions. Page text unchanged.
+
 ## 2026-11-04 (shorts v2)
 - Rebuilt the short-term, BRRRR and flip Shorts at about 50 seconds each, with every input shown (`media/shorts/*-v2.mp4`).
 

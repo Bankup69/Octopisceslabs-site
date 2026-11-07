@@ -20,4 +20,5 @@ Read this first. Keep it short: it loads every session.
 
 One line per fixed mistake, newest first.
 
+- 2026-11-06: The AI voice said "octo-puss-ees". Brand is said octo-pie-sees. In any narration write it "octo pie sees labs" and check the phonemes (kokoro_onnx Tokenizer.phonemize) before building.
 - 2026-11-04: Home page app card pointed at `rental-calc/icons/icon.svg` after that file was retired. When rental-calc assets change, grep the site for old paths.
