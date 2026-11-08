@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-08 (educational video pilot)
+- Built tools/video/edu: animated graphic explainer pipeline (stage.html scenes, render.js frames, assemble.py). First video: 'The 5 numbers that decide a short-term rental' (2:19). Not published yet; waiting on owner review.
+
 ## 2026-11-08 (calendar Shorts 1 and 2)
 - Added two Shorts for the 14-day campaign calendar: 'Is this rental a good deal?' (Nov 9) and 'This rental loses money' (Nov 10). Files in media/shorts. Recorder gained a long-term rental scenario.
 
