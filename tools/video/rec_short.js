@@ -42,6 +42,14 @@ const OUT = process.argv[2]; const DURS = JSON.parse(fs.readFileSync(process.arg
     await scrollTo('#units', 260, 6); await typeIn('#units [data-k=rent]', 2100); await fillAll([['downPaymentPct', 20], ['interestRate', 11], ['propertyTaxes', 2200], ['insurance', 1300]]); await endScene();
     await hero(2); await tile('Cash left in deal', 2.4); await tile('Equity after refi', 2.2); await endScene();
     await save();
+  } else if (KEY === 'rental') {
+    const V = process.env.V || 'good'; const rent = V === 'good' ? 2400 : 1700;
+    await fillAll([['propertyName', 'Maple St Rental'], ['purchasePrice', 250000], ['closingCosts', 7500]]); await endScene();
+    await scrollTo('#units', 260, 6); await typeIn('#units [data-k=rent]', rent); await endScene();
+    await fillAll([['downPaymentPct', 25], ['interestRate', 6.75], ['propertyTaxes', 3000], ['insurance', 1600]]); await endScene();
+    await hero(2.5); console.log('HERO', await p.evaluate(() => document.getElementById('hero').innerText.replace(/\s+/g, ' ')));
+    await tile('Cash-on-cash', 2); await tile('Cap rate', 2); console.log('TILES', await p.evaluate(() => document.getElementById('tiles').innerText.replace(/\s+/g, ' ')));
+    await endScene(); await save();
   } else {
     await fillAll([['purchasePrice', 180000], ['repairsUpfront', 40000], ['closingCosts', 5400]]); await endScene();
     await fillAll([['arv', 285000], ['holdMonths', 6], ['sellingCostPct', 7]]); await endScene();

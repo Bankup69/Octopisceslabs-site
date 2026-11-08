@@ -106,5 +106,69 @@
     "Save it, compare it with your other deals, and know before you buy. EquityFoundry. Link in bio."
    ]
   ]
+ },
+ "rental_good": {
+  "title": [
+   "Is this rental",
+   "a good deal?"
+  ],
+  "lines": [
+   [
+    "s1",
+    "Is this rental a good deal? Let's find out in under a minute."
+   ],
+   [
+    "s2",
+    "A two hundred fifty thousand dollar house. Enter the price and your closing costs."
+   ],
+   [
+    "s3",
+    "Rent is twenty four hundred a month."
+   ],
+   [
+    "s4",
+    "Twenty five percent down, a six point seven five percent rate, then taxes and insurance. Vacancy and repairs are already built in."
+   ],
+   [
+    "s5",
+    "Here's your answer. Four hundred forty one dollars a month in cash flow. A seven point five five percent cash-on-cash return. And a seven point nine five cap rate."
+   ],
+   [
+    "s6",
+    "Save it and compare it with your other deals. Equity Foundry. Link in bio."
+   ]
+  ]
+ },
+ "rental_bad": {
+  "title": [
+   "This rental",
+   "loses money"
+  ],
+  "lines": [
+   [
+    "s1",
+    "This two hundred fifty thousand dollar rental looks fine. Run the numbers before you buy."
+   ],
+   [
+    "s2",
+    "Same house. Enter the price and your closing costs."
+   ],
+   [
+    "s3",
+    "Rent is seventeen hundred a month."
+   ],
+   [
+    "s4",
+    "Twenty five percent down, a six point seven five percent rate, then taxes and insurance. Vacancy and repairs are already built in."
+   ],
+   [
+    "s5",
+    "Here's the problem. Negative one hundred fifty four dollars a month. Cash-on-cash return is negative two point six five percent. Cap rate, five point one."
+   ],
+   [
+    "s6",
+    "Know before you buy. Equity Foundry. Link in bio."
+   ]
+  ]
  }
 }

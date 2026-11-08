@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-08 (calendar Shorts 1 and 2)
+- Added two Shorts for the 14-day campaign calendar: 'Is this rental a good deal?' (Nov 9) and 'This rental loses money' (Nov 10). Files in media/shorts. Recorder gained a long-term rental scenario.
+
 ## 2026-11-07
 - Added `/next-set-open`: where Next Set's sign-up and password-reset email links land. It passes the one-time code to the app and has an "Open Next Set" button. Not indexed, not in the sitemap, loads nothing from other sites.
 - Added `/next-set/email/`: banner and icon images used inside Next Set's emails (hosted here because email apps can't load images from the app). Source and builder live in the next-set repo (`scripts/email/build.mjs`); copy new images here when they change.
