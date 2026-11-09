@@ -3,7 +3,7 @@ import json, os, subprocess, sys
 import numpy as np, soundfile as sf
 from PIL import Image, ImageDraw, ImageFont
 D = os.path.dirname(os.path.abspath(__file__)); key, out = sys.argv[1], sys.argv[2]; V = f'{D}/v_{key}'
-FONT = '/usr/share/fonts/opentype/inter/InterDisplay-Bold.otf'; LOGO = '/home/claude/rental-income-calculator/assets/brand/social-logo-1200x630.png'
+FONT = '/usr/share/fonts/opentype/inter/InterDisplay-Bold.otf'; LOGO = '/tmp/claude-0/-home-claude/9747ce12-c821-5271-b46a-c30fbd8b1522/scratchpad/edu/logo_keyed.png'
 W, H = 1080, 1920; GOLD = (244, 196, 92)
 cfg = json.load(open(f'{D}/lines.json'))[key]; seq = json.load(open(f'{V}/seq.json')); durs = json.load(open(f'{V}/durs.json'))
 sc = {n: (a, b) for n, a, b in seq['scenes']}; total = seq['scenes'][-1][2]

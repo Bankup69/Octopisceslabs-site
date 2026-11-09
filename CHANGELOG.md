@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-08
+- Video end cards: removed the navy rectangle around the EquityFoundry logo (keyed logo). Re-rendered the Mon/Tue rental Shorts; same file names, so scheduled posts pick them up. Educational video: "Airbnb" now spoken "Air B N B" (air-bee-en-bee) with the clean end banner.
+
 ## 2026-11-08 (educational video pilot)
 - Built tools/video/edu: animated graphic explainer pipeline (stage.html scenes, render.js frames, assemble.py). First video: 'The 5 numbers that decide a short-term rental' (2:19). Not published yet; waiting on owner review.
 
