@@ -1,7 +1,8 @@
 # Changelog
 
 ## 2026-11-08 (BRRRR video)
-- Added educational video "BRRRR Explained" (media/edu/equityfoundry-edu-brrrr-explained.mp4); sources in tools/video/edu_brrrr/. Numbers come from the calculator (150k buy, 45k rehab, 260k value, 75% refi: cash left $17,844). Voice says BRRRR as the plain word "burr".
+- BRRRR video refinance scene redrawn (one stacked bar plus three rows; the small closing-cost bar was unreadable). File is now media/edu/equityfoundry-edu-brrrr-explained-v2.mp4.
+- Added educational video "BRRRR Explained" (media/edu/equityfoundry-edu-brrrr-explained-v2.mp4); sources in tools/video/edu_brrrr/. Numbers come from the calculator (150k buy, 45k rehab, 260k value, 75% refi: cash left $17,844). Voice says BRRRR as the plain word "burr".
 
 ## 2026-11-08 (edu video)
 - Added media/edu/equityfoundry-edu-str-5-numbers.mp4 (educational video, "Air bee en bee" pronunciation locked at speed 1.15; BURR is spoken as the plain word "burr").
