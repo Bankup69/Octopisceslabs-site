@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-08 (ad landing links)
+- Added /deal/<name>/ short links (maple-loss, maple, oak-1pct, birch-rate, pine-hidden). Each opens the calculator pre-filled with the exact deal from a Short, so an ad click lands on the same numbers the video showed. Extra query text (like utm tags) is passed through. They are noindex redirects, so they are not in sitemap.xml.
+
 ## 2026-11-08 (recap Short)
 - Added media/shorts/equityfoundry-short-recap.mp4 (11/22 two-week recap, built from result screens of earlier Shorts). Rate Short title split to three lines so it fits.
 
