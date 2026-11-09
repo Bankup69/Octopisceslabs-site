@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-08 (Shorts)
+- Rental Shorts re-rendered with the clean end banner and renamed -v2 (Metricool keeps its own copy of media, so scheduled posts had to be updated by hand). Added the Wednesday 1% rule Short (media/shorts/equityfoundry-short-onepct.mp4; rec_short.js scenario onepct).
+
 ## 2026-11-08 (two more educational videos)
 - Added media/edu/equityfoundry-edu-good-deal-5-numbers.mp4 (cash flow, cap rate, cash-on-cash, DSCR, 1% rule on a $250k rental) and media/edu/equityfoundry-edu-70-percent-rule.mp4 (fix-and-flip 70% rule, tested at three offers and a lower sale price). All numbers come from the calculator. Sources in tools/video/edu_g, edu_f and gen_edu.py.
 

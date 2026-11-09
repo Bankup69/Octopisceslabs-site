@@ -26,7 +26,7 @@ const OUT = process.argv[2]; const DURS = JSON.parse(fs.readFileSync(process.arg
   await p.addStyleTag({ content: '.toast,#toast,[class*=toast]{display:none!important} .vc-hl{outline:3px solid #f4c45c !important;outline-offset:3px;border-radius:8px}' });
   await p.evaluate(() => window.scrollTo(0, 0)); await p.waitForTimeout(300);
   await shot(1); await endScene();                                   // s1 hook
-  await scrollTo(`[data-strategy=${KEY}]`, 300, 6); await p.click(`[data-strategy=${KEY}]`); await p.waitForTimeout(300); await shot(0.8);
+  await scrollTo(`[data-strategy=${KEY === "onepct" ? "rental" : KEY}]`, 300, 6); await p.click(`[data-strategy=${KEY === "onepct" ? "rental" : KEY}]`); await p.waitForTimeout(300); await shot(0.8);
   const save = async () => { await scrollTo('body', 0, 10); await p.click('#btn-save'); await p.waitForTimeout(500); await shot(1); await p.click('[data-view=dash]'); await p.waitForTimeout(700); await shot(1.2); await endScene(); };
   if (KEY === 'str') {
     await fillAll([['purchasePrice', 350000], ['closingCosts', 10500], ['furnishing', 20000]]); await endScene();
@@ -42,6 +42,12 @@ const OUT = process.argv[2]; const DURS = JSON.parse(fs.readFileSync(process.arg
     await scrollTo('#units', 260, 6); await typeIn('#units [data-k=rent]', 2100); await fillAll([['downPaymentPct', 20], ['interestRate', 11], ['propertyTaxes', 2200], ['insurance', 1300]]); await endScene();
     await hero(2); await tile('Cash left in deal', 2.4); await tile('Equity after refi', 2.2); await endScene();
     await save();
+  } else if (KEY === 'onepct') {
+    await fillAll([['propertyName', 'Oak Ave Rental'], ['purchasePrice', 200000], ['closingCosts', 6000]]); await endScene();
+    await scrollTo('#units', 260, 6); await typeIn('#units [data-k=rent]', 2000); await endScene();
+    await fillAll([['downPaymentPct', 10], ['interestRate', 7.25], ['propertyTaxes', 3600], ['insurance', 1800]]); await endScene();
+    await hero(2.5); await tile('1% rule', 2); await tile('Cash-on-cash', 2); console.log('TILES', await p.evaluate(() => document.getElementById('tiles').innerText.replace(/\s+/g, ' ')));
+    await endScene(); await save();
   } else if (KEY === 'rental') {
     const V = process.env.V || 'good'; const rent = V === 'good' ? 2400 : 1700;
     await fillAll([['propertyName', 'Maple St Rental'], ['purchasePrice', 250000], ['closingCosts', 7500]]); await endScene();
