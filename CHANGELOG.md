@@ -1,6 +1,7 @@
 # Changelog
 
 ## 2026-11-08
+- Educational video: "B N B" in Air B N B spoken ~30% faster (voice line 1 built in three chunks, middle at speed 1.3).
 - Video end cards: removed the navy rectangle around the EquityFoundry logo (keyed logo). Re-rendered the Mon/Tue rental Shorts; same file names, so scheduled posts pick them up. Educational video: "Airbnb" now spoken "Air B N B" (air-bee-en-bee) with the clean end banner.
 
 ## 2026-11-08 (educational video pilot)
