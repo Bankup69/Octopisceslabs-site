@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-08 (Shorts batch 2)
+- Added 10 Shorts to media/shorts/ (str_slow, brrrr2, flip2, flip3, capcoc, rate, hidden, dscr, duplex, strltr) for the 11/12 to 11/21 calendar. New rec_short.js scenarios; voice by tools/video/gen_voice.py (handles Airbnb as Air + bee en bee). The planned 'offer finder' Short for 11/21 was swapped for the flip-delay Short because the app has no offer finder for long-term rentals.
+
 ## 2026-11-08 (Shorts)
 - Rental Shorts re-rendered with the clean end banner and renamed -v2 (Metricool keeps its own copy of media, so scheduled posts had to be updated by hand). Added the Wednesday 1% rule Short (media/shorts/equityfoundry-short-onepct.mp4; rec_short.js scenario onepct).
 

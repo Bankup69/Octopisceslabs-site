@@ -1,6 +1,6 @@
 // Vertical 1080x1920 short: screenshot sequence timed to voice durations. Usage: node rec_short.js <outdir> <durs.json> <str|brrrr|flip>
 const { chromium } = require('playwright'); const fs = require('fs');
-const OUT = process.argv[2]; const DURS = JSON.parse(fs.readFileSync(process.argv[3])); const KEY = process.argv[4]; const PAD = 0.5;
+const OUT = process.argv[2]; const DURS = JSON.parse(fs.readFileSync(process.argv[3])); const KEY = process.argv[4]; const PAD = 0.5; const SM = { onepct:'rental', str_slow:'str', brrrr2:'brrrr', flip2:'flip', flip3:'flip', capcoc:'rental', rate:'rental', hidden:'rental', dscr:'rental', duplex:'rental', strltr:'rental' };
 (async () => {
   const b = await chromium.launch();
   const ctx = await b.newContext({ viewport: { width: 432, height: 768 }, deviceScaleFactor: 2.5, isMobile: true, hasTouch: true });
@@ -26,7 +26,7 @@ const OUT = process.argv[2]; const DURS = JSON.parse(fs.readFileSync(process.arg
   await p.addStyleTag({ content: '.toast,#toast,[class*=toast]{display:none!important} .vc-hl{outline:3px solid #f4c45c !important;outline-offset:3px;border-radius:8px}' });
   await p.evaluate(() => window.scrollTo(0, 0)); await p.waitForTimeout(300);
   await shot(1); await endScene();                                   // s1 hook
-  await scrollTo(`[data-strategy=${KEY === "onepct" ? "rental" : KEY}]`, 300, 6); await p.click(`[data-strategy=${KEY === "onepct" ? "rental" : KEY}]`); await p.waitForTimeout(300); await shot(0.8);
+  await scrollTo(`[data-strategy=${(SM[KEY] || KEY)}]`, 300, 6); await p.click(`[data-strategy=${(SM[KEY] || KEY)}]`); await p.waitForTimeout(300); await shot(0.8);
   const save = async () => { await scrollTo('body', 0, 10); await p.click('#btn-save'); await p.waitForTimeout(500); await shot(1); await p.click('[data-view=dash]'); await p.waitForTimeout(700); await shot(1.2); await endScene(); };
   if (KEY === 'str') {
     await fillAll([['purchasePrice', 350000], ['closingCosts', 10500], ['furnishing', 20000]]); await endScene();
@@ -42,6 +42,68 @@ const OUT = process.argv[2]; const DURS = JSON.parse(fs.readFileSync(process.arg
     await scrollTo('#units', 260, 6); await typeIn('#units [data-k=rent]', 2100); await fillAll([['downPaymentPct', 20], ['interestRate', 11], ['propertyTaxes', 2200], ['insurance', 1300]]); await endScene();
     await hero(2); await tile('Cash left in deal', 2.4); await tile('Equity after refi', 2.2); await endScene();
     await save();
+  } else if (KEY === 'str_slow') {
+    await fillAll([['purchasePrice', 300000], ['closingCosts', 9000], ['furnishing', 18000]]); await endScene();
+    await fillAll([['nightlyRate', 210], ['occupancy', 65], ['avgStay', 3], ['cleaningFeeCharged', 100], ['cleaningCost', 90], ['platformFeePct', 3]]); await endScene();
+    await fillAll([['downPaymentPct', 25], ['interestRate', 7], ['propertyTaxes', 2800], ['insurance', 2200], ['utilities', 4000], ['strSupplies', 120]]); await endScene();
+    await hero(2); console.log('HERO1', await p.evaluate(() => document.getElementById('hero').innerText.replace(/\s+/g, ' '))); console.log('TILES1', await p.evaluate(() => document.getElementById('tiles').innerText.replace(/\s+/g, ' '))); await tile('Cash-on-cash', 1.8); await endScene();
+    await fillAll([['occupancy', 52]], 300); await hero(2.5); console.log('HERO2', await p.evaluate(() => document.getElementById('hero').innerText.replace(/\s+/g, ' '))); console.log('TILES2', await p.evaluate(() => document.getElementById('tiles').innerText.replace(/\s+/g, ' '))); await endScene();
+    await save();
+  } else if (KEY === 'brrrr2') {
+    await fillAll([['purchasePrice', 120000], ['repairsUpfront', 30000], ['closingCosts', 3600]]); await endScene();
+    await fillAll([['arv', 200000], ['rehabMonths', 5]]); await endScene();
+    await fillAll([['refiLtv', 75], ['refiRate', 7.2], ['refiYears', 30], ['refiClosingCosts', 4000]]); await endScene();
+    await scrollTo('#units', 260, 6); await typeIn('#units [data-k=rent]', 1800); await fillAll([['downPaymentPct', 20], ['interestRate', 11], ['propertyTaxes', 1800], ['insurance', 1100]]); await endScene();
+    await hero(2); await tile('Cash left in deal', 2.4); await tile('Equity after refi', 2.2); console.log('HERO', await p.evaluate(() => document.getElementById('hero').innerText.replace(/\s+/g, ' '))); console.log('TILES', await p.evaluate(() => document.getElementById('tiles').innerText.replace(/\s+/g, ' '))); await endScene();
+    await save();
+  } else if (KEY === 'flip2') {
+    const PR = +(process.env.PR || 174000);
+    await fillAll([['purchasePrice', 200000], ['repairsUpfront', 50000], ['closingCosts', 6000]]); await endScene();
+    await fillAll([['arv', 320000], ['holdMonths', 6], ['sellingCostPct', 7]]); await endScene();
+    await fillAll([['downPaymentPct', 10], ['interestRate', 10], ['propertyTaxes', 2400], ['insurance', 1300], ['utilities', 1800]]); await endScene();
+    await hero(2); console.log('HERO_200', await p.evaluate(() => document.getElementById('hero').innerText.replace(/\s+/g, ' '))); await tile('70% rule', 2.4); await endScene();
+    await fillAll([['purchasePrice', PR]], 300); await hero(2.5); console.log('HERO_PR', PR, await p.evaluate(() => document.getElementById('hero').innerText.replace(/\s+/g, ' '))); console.log('TILES', await p.evaluate(() => document.getElementById('tiles').innerText.replace(/\s+/g, ' '))); await endScene();
+    await save();
+  } else if (KEY === 'flip3') {
+    await fillAll([['purchasePrice', 190000], ['repairsUpfront', 45000], ['closingCosts', 5700]]); await endScene();
+    await fillAll([['arv', 315000], ['holdMonths', 6], ['sellingCostPct', 7]]); await endScene();
+    await fillAll([['downPaymentPct', 10], ['interestRate', 10], ['propertyTaxes', 2200], ['insurance', 1300], ['utilities', 1800]]); await endScene();
+    await hero(2.5); console.log('HERO6', await p.evaluate(() => document.getElementById('hero').innerText.replace(/\s+/g, ' '))); console.log('TILES6', await p.evaluate(() => document.getElementById('tiles').innerText.replace(/\s+/g, ' '))); await endScene();
+    await fillAll([['holdMonths', 9]], 300); await hero(2.5); console.log('HERO9', await p.evaluate(() => document.getElementById('hero').innerText.replace(/\s+/g, ' '))); console.log('TILES9', await p.evaluate(() => document.getElementById('tiles').innerText.replace(/\s+/g, ' '))); await endScene();
+    await save();
+  } else if (KEY === 'capcoc') {
+    await fillAll([['propertyName', 'Cedar Ct Rental'], ['purchasePrice', 300000], ['closingCosts', 9000]]); await endScene();
+    await scrollTo('#units', 260, 6); await typeIn('#units [data-k=rent]', 2600); await endScene();
+    await fillAll([['downPaymentPct', 20], ['interestRate', 6.75], ['propertyTaxes', 3600], ['insurance', 1800]]); await endScene();
+    await hero(1); await tile('Cap rate', 5.5); await tile('Cash-on-cash', 5.5); console.log('HERO', await p.evaluate(() => document.getElementById('hero').innerText.replace(/\s+/g, ' '))); console.log('TILES', await p.evaluate(() => document.getElementById('tiles').innerText.replace(/\s+/g, ' '))); await endScene(); await save();
+  } else if (KEY === 'rate') {
+    await fillAll([['propertyName', 'Birch Ln Rental'], ['purchasePrice', 280000], ['closingCosts', 8400]]); await endScene();
+    await scrollTo('#units', 260, 6); await typeIn('#units [data-k=rent]', 2500); await endScene();
+    await fillAll([['downPaymentPct', 20], ['interestRate', 6.5], ['propertyTaxes', 3200], ['insurance', 1700]]); await endScene();
+    await hero(2.5); console.log('HERO65', await p.evaluate(() => document.getElementById('hero').innerText.replace(/\s+/g, ' '))); console.log('TILES65', await p.evaluate(() => document.getElementById('tiles').innerText.replace(/\s+/g, ' '))); await endScene();
+    await fillAll([['interestRate', 7.5]], 300); await hero(2.5); console.log('HERO75', await p.evaluate(() => document.getElementById('hero').innerText.replace(/\s+/g, ' '))); console.log('TILES75', await p.evaluate(() => document.getElementById('tiles').innerText.replace(/\s+/g, ' '))); await endScene(); await save();
+  } else if (KEY === 'hidden') {
+    await fillAll([['propertyName', 'Pine St Rental'], ['purchasePrice', 260000], ['closingCosts', 7800]]); await scrollTo('#units', 260, 6); await typeIn('#units [data-k=rent]', 2300); await endScene();
+    await fillAll([['downPaymentPct', 20], ['interestRate', 6.75], ['propertyTaxes', 3100], ['insurance', 1700]]); await endScene();
+    await hero(2); await scrollTo('#tables', 120, 10); await shot(3); await scrollTo('#tables', -250, 10); await shot(3); console.log('TABLES', await p.evaluate(() => document.getElementById('tables').innerText.replace(/\s+/g, ' ').slice(0, 900))); await endScene();
+    await tile('Cash-on-cash', 2.5); console.log('TILES', await p.evaluate(() => document.getElementById('tiles').innerText.replace(/\s+/g, ' '))); await endScene(); await save();
+  } else if (KEY === 'dscr') {
+    await fillAll([['propertyName', 'Elm St Rental'], ['purchasePrice', 320000], ['closingCosts', 9600]]); await endScene();
+    await scrollTo('#units', 260, 6); await typeIn('#units [data-k=rent]', 2800); await endScene();
+    await fillAll([['downPaymentPct', 20], ['interestRate', 7], ['propertyTaxes', 3800], ['insurance', 1900]]); await endScene();
+    await hero(1.5); await tile('DSCR', 3.5); console.log('HERO', await p.evaluate(() => document.getElementById('hero').innerText.replace(/\s+/g, ' '))); console.log('TILES', await p.evaluate(() => document.getElementById('tiles').innerText.replace(/\s+/g, ' '))); await endScene(); await save();
+  } else if (KEY === 'duplex') {
+    await fillAll([['propertyName', 'Duplex on Grove'], ['purchasePrice', 380000], ['closingCosts', 11400]]); await endScene();
+    await scrollTo('#units', 260, 6); await typeIn('#units [data-k=rent]', 1450); await p.click('#btn-add-unit'); await p.waitForTimeout(300); await shot(0.4);
+    const r2 = p.locator('#units [data-k=rent]').nth(1); await r2.fill('1250'); await r2.dispatchEvent('change'); await p.waitForTimeout(200); await shot(1); await endScene();
+    await fillAll([['downPaymentPct', 25], ['interestRate', 6.9], ['propertyTaxes', 4200], ['insurance', 2400]]); await endScene();
+    await hero(2.5); console.log('HERO', await p.evaluate(() => document.getElementById('hero').innerText.replace(/\s+/g, ' '))); console.log('TILES', await p.evaluate(() => document.getElementById('tiles').innerText.replace(/\s+/g, ' '))); await tile('Cap rate', 2); await endScene(); await save();
+  } else if (KEY === 'strltr') {
+    await fillAll([['propertyName', 'Lakeview House'], ['purchasePrice', 300000], ['closingCosts', 9000]]); await scrollTo('#units', 260, 6); await typeIn('#units [data-k=rent]', 2300); await fillAll([['downPaymentPct', 25], ['interestRate', 6.9], ['propertyTaxes', 3000], ['insurance', 1700]]); await endScene();
+    await hero(2.5); console.log('HERO_LTR', await p.evaluate(() => document.getElementById('hero').innerText.replace(/\s+/g, ' '))); console.log('TILES_LTR', await p.evaluate(() => document.getElementById('tiles').innerText.replace(/\s+/g, ' '))); await endScene();
+    await scrollTo('[data-strategy=str]', 300, 8); await p.click('[data-strategy=str]'); await p.waitForTimeout(400); await shot(1);
+    await fillAll([['furnishing', 18000], ['nightlyRate', 200], ['occupancy', 60], ['avgStay', 3], ['cleaningFeeCharged', 95], ['cleaningCost', 85], ['platformFeePct', 3], ['utilities', 4000], ['strSupplies', 120]]); await endScene();
+    await hero(2.5); console.log('HERO_STR', await p.evaluate(() => document.getElementById('hero').innerText.replace(/\s+/g, ' '))); console.log('TILES_STR', await p.evaluate(() => document.getElementById('tiles').innerText.replace(/\s+/g, ' '))); await endScene(); await save();
   } else if (KEY === 'onepct') {
     await fillAll([['propertyName', 'Oak Ave Rental'], ['purchasePrice', 200000], ['closingCosts', 6000]]); await endScene();
     await scrollTo('#units', 260, 6); await typeIn('#units [data-k=rent]', 2000); await endScene();

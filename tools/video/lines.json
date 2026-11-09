@@ -202,5 +202,346 @@
     "Run the real numbers before you buy. Equity Foundry. Link in bio."
    ]
   ]
+ },
+ "str_slow": {
+  "title": [
+   "Your Airbnb at",
+   "20% fewer nights"
+  ],
+  "lines": [
+   [
+    "s1",
+    "What happens to your Airbnb if bookings drop twenty percent? Let's run it."
+   ],
+   [
+    "s2",
+    "A three hundred thousand dollar house, with nine thousand in closing costs and eighteen thousand for furniture."
+   ],
+   [
+    "s3",
+    "Two hundred ten dollars a night, sixty five percent booked, three night stays, and cleaning fees."
+   ],
+   [
+    "s4",
+    "Twenty five percent down, a seven percent rate, taxes, insurance, and utilities."
+   ],
+   [
+    "s5",
+    "At sixty five percent occupancy, this makes twelve hundred twenty five dollars a month. A fourteen point four percent cash-on-cash return."
+   ],
+   [
+    "s6",
+    "Now drop occupancy to fifty two percent. That's twenty percent fewer nights. Cash flow falls to five hundred seven dollars a month, and cash-on-cash drops to about six percent."
+   ],
+   [
+    "s7",
+    "Stress test every short term rental. Equity Foundry. Link in bio."
+   ]
+  ]
+ },
+ "brrrr2": {
+  "title": [
+   "How much cash",
+   "is left in this BRRRR?"
+  ],
+  "lines": [
+   [
+    "s1",
+    "How much of your cash is left in this BRRRR deal? Let's find out."
+   ],
+   [
+    "s2",
+    "A hundred twenty thousand dollar house, thirty thousand in repairs, and thirty six hundred in closing costs."
+   ],
+   [
+    "s3",
+    "After repairs, it's worth two hundred thousand. The rehab takes five months."
+   ],
+   [
+    "s4",
+    "Refinance at seventy five percent of the new value, at seven point two percent, with four thousand in closing costs."
+   ],
+   [
+    "s5",
+    "Rent is eighteen hundred a month. Twenty percent down on the first loan, at eleven percent."
+   ],
+   [
+    "s6",
+    "Only about thirteen thousand dollars is left in the deal. You own fifty thousand dollars in equity, and cash flow is two hundred seventy a month."
+   ],
+   [
+    "s7",
+    "Save it and compare. Equity Foundry. Link in bio."
+   ]
+  ]
+ },
+ "flip2": {
+  "title": [
+   "The offer price for",
+   "a $30K flip profit"
+  ],
+  "lines": [
+   [
+    "s1",
+    "What can you offer on a flip and still make thirty thousand dollars? Let's run it."
+   ],
+   [
+    "s2",
+    "A two hundred thousand dollar offer, fifty thousand in repairs, and six thousand in closing costs."
+   ],
+   [
+    "s3",
+    "The house will sell for three hundred twenty thousand after repairs. Six months to finish, and seven percent selling costs."
+   ],
+   [
+    "s4",
+    "Ten percent down at ten percent interest, plus taxes, insurance, and utilities."
+   ],
+   [
+    "s5",
+    "At two hundred thousand, projected profit is about thirty thousand dollars. The seventy percent rule says the max offer is one hundred seventy four thousand."
+   ],
+   [
+    "s6",
+    "Offer the rule's max, and profit jumps to about fifty seven thousand dollars."
+   ],
+   [
+    "s7",
+    "Find your offer price. Equity Foundry. Link in bio."
+   ]
+  ]
+ },
+ "flip3": {
+  "title": [
+   "Your flip takes",
+   "3 months longer"
+  ],
+  "lines": [
+   [
+    "s1",
+    "What if your flip takes three months longer than planned?"
+   ],
+   [
+    "s2",
+    "A one hundred ninety thousand dollar house, forty five thousand in repairs, and fifty seven hundred in closing costs."
+   ],
+   [
+    "s3",
+    "It sells for three hundred fifteen thousand after repairs, with seven percent selling costs."
+   ],
+   [
+    "s4",
+    "Ten percent down, a ten percent rate, plus taxes, insurance, and utilities."
+   ],
+   [
+    "s5",
+    "Finish in six months, and profit is about forty one thousand dollars. A fifty percent return."
+   ],
+   [
+    "s6",
+    "Take nine months, and profit falls to about thirty five thousand. The annualized return drops from one hundred twenty six percent to fifty eight percent."
+   ],
+   [
+    "s7",
+    "Stress test your timeline. Equity Foundry. Link in bio."
+   ]
+  ]
+ },
+ "capcoc": {
+  "title": [
+   "Cap rate vs",
+   "cash-on-cash"
+  ],
+  "lines": [
+   [
+    "s1",
+    "Cap rate or cash-on-cash? Here's the difference in thirty seconds."
+   ],
+   [
+    "s2",
+    "A three hundred thousand dollar house, with nine thousand in closing costs."
+   ],
+   [
+    "s3",
+    "Rent is twenty six hundred a month."
+   ],
+   [
+    "s4",
+    "Twenty percent down, a six point seven five percent rate, plus taxes and insurance."
+   ],
+   [
+    "s5",
+    "The cap rate is seven point oh four percent. It ignores your loan. The cash-on-cash return is three point five four percent. It counts your loan and your cash in. Same house, two different answers."
+   ],
+   [
+    "s6",
+    "See both for any deal. Equity Foundry. Link in bio."
+   ]
+  ]
+ },
+ "rate": {
+  "title": [
+   "Rates up 1%.",
+   "What happens",
+   "to cash flow?"
+  ],
+  "lines": [
+   [
+    "s1",
+    "Rates go up one percent. What happens to your cash flow?"
+   ],
+   [
+    "s2",
+    "A two hundred eighty thousand dollar house, with eighty four hundred in closing costs."
+   ],
+   [
+    "s3",
+    "Rent is twenty five hundred a month."
+   ],
+   [
+    "s4",
+    "Twenty percent down at six and a half percent, plus taxes and insurance."
+   ],
+   [
+    "s5",
+    "Today, cash flow is three hundred one dollars a month. A five point six percent cash-on-cash return."
+   ],
+   [
+    "s6",
+    "Rates rise to seven and a half percent. Cash flow is cut in half, to about one hundred fifty dollars a month, and cash-on-cash falls to two point eight percent."
+   ],
+   [
+    "s7",
+    "Stress test your rate. Equity Foundry. Link in bio."
+   ]
+  ]
+ },
+ "hidden": {
+  "title": [
+   "Most rental math",
+   "forgets this"
+  ],
+  "lines": [
+   [
+    "s1",
+    "Most rental math forgets vacancy and repairs. Here's what that costs."
+   ],
+   [
+    "s2",
+    "A two hundred sixty thousand dollar house renting for twenty three hundred a month."
+   ],
+   [
+    "s3",
+    "Twenty percent down, a six point seven five percent rate, plus taxes and insurance."
+   ],
+   [
+    "s4",
+    "Look at the year one breakdown. Rent is twenty seven thousand six hundred. But vacancy takes thirteen hundred eighty. Repairs take thirteen hundred eighty. And a reserve for big items takes another thirteen hundred eighty."
+   ],
+   [
+    "s5",
+    "Leave those out, and you overestimate cash flow by over four thousand dollars a year. With them, cash-on-cash is four point one percent."
+   ],
+   [
+    "s6",
+    "Run it with everything included. Equity Foundry. Link in bio."
+   ]
+  ]
+ },
+ "dscr": {
+  "title": [
+   "DSCR in",
+   "30 seconds"
+  ],
+  "lines": [
+   [
+    "s1",
+    "What's DSCR? Here's the lender ratio in thirty seconds."
+   ],
+   [
+    "s2",
+    "A three hundred twenty thousand dollar house, with ninety six hundred in closing costs."
+   ],
+   [
+    "s3",
+    "Rent is twenty eight hundred a month."
+   ],
+   [
+    "s4",
+    "Twenty percent down, a seven percent rate, plus taxes and insurance."
+   ],
+   [
+    "s5",
+    "DSCR is net operating income divided by your mortgage payments. Here it's one point one two. Many lenders want one point two five or more, so this deal falls short."
+   ],
+   [
+    "s6",
+    "Check DSCR before you apply. Equity Foundry. Link in bio."
+   ]
+  ]
+ },
+ "duplex": {
+  "title": [
+   "Buying a duplex?",
+   "Check this first"
+  ],
+  "lines": [
+   [
+    "s1",
+    "Buying a duplex? Check the numbers on every unit first."
+   ],
+   [
+    "s2",
+    "A three hundred eighty thousand dollar duplex, with eleven thousand four hundred in closing costs."
+   ],
+   [
+    "s3",
+    "Unit one rents for fourteen fifty, and unit two for twelve fifty. Twenty seven hundred a month in total."
+   ],
+   [
+    "s4",
+    "Twenty five percent down, a six point nine percent rate, plus taxes and insurance."
+   ],
+   [
+    "s5",
+    "Cash flow is negative one hundred thirty two dollars a month. DSCR is only point nine three, and the cap rate is five point five percent. More units doesn't mean a better deal."
+   ],
+   [
+    "s6",
+    "Run every unit before you buy. Equity Foundry. Link in bio."
+   ]
+  ]
+ },
+ "strltr": {
+  "title": [
+   "Airbnb or",
+   "long-term rental?"
+  ],
+  "lines": [
+   [
+    "s1",
+    "Same house. Airbnb or long-term rental? Let's compare."
+   ],
+   [
+    "s2",
+    "A three hundred thousand dollar house. As a long-term rental, it rents for twenty three hundred a month, with twenty five percent down."
+   ],
+   [
+    "s3",
+    "Cash flow is just eighty one dollars a month. A one point two percent cash-on-cash return."
+   ],
+   [
+    "s4",
+    "Now run it as an Airbnb. Two hundred dollars a night, sixty percent booked, with eighteen thousand for furniture."
+   ],
+   [
+    "s5",
+    "Cash flow jumps to eight hundred thirty four dollars a month. A nine point eight percent cash-on-cash return. But it takes more cash, and more work."
+   ],
+   [
+    "s6",
+    "Compare any house both ways. Equity Foundry. Link in bio."
+   ]
+  ]
  }
 }
