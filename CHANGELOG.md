@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-08 (recap Short)
+- Added media/shorts/equityfoundry-short-recap.mp4 (11/22 two-week recap, built from result screens of earlier Shorts). Rate Short title split to three lines so it fits.
+
 ## 2026-11-08 (Shorts batch 2)
 - Added 10 Shorts to media/shorts/ (str_slow, brrrr2, flip2, flip3, capcoc, rate, hidden, dscr, duplex, strltr) for the 11/12 to 11/21 calendar. New rec_short.js scenarios; voice by tools/video/gen_voice.py (handles Airbnb as Air + bee en bee). The planned 'offer finder' Short for 11/21 was swapped for the flip-delay Short because the app has no offer finder for long-term rentals.
 
