@@ -156,6 +156,7 @@ button.primary { background: var(--accent); border-color: var(--accent); color: 
   background: var(--good); color: #fff; font-size: 10px; font-weight: 700; letter-spacing: .03em; vertical-align: 1px;
 }
 .strategies button[aria-checked="true"] .free { background: var(--surface); color: var(--good); }
+.ig-guide { font-size: 14px; font-weight: 600; color: var(--accent); white-space: nowrap; }
 .pitch { margin: 12px 2px 0; font-size: 14px; line-height: 1.45; color: var(--muted); }
 .pitch strong { display: block; font-family: var(--font-display); font-size: 20px; line-height: 1.25; color: var(--text); margin-bottom: 2px; }
 

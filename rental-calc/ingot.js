@@ -412,7 +412,7 @@
       const file = form.elements.receipt.files && form.elements.receipt.files[0];
       if (file) fields.receiptId = (await saveReceiptFiles([file]))[0];
       if (existing) touch(existing, fields);
-      else data.entries.push(I.makeEntry(fields));
+      else { data.entries.push(I.makeEntry(fields)); if (window.Stats) window.Stats.log('ingot_add', true); }
       const principal = Math.abs(num(form.elements.principal.value));
       if (principal && fields.type === 'expense' && /^Mortgage interest/.test(fields.category)) {
         data.entries.push(I.makeEntry({ type: 'transfer', category: 'Loan principal', amount: principal, date: fields.date, propertyId: fields.propertyId, memo: fields.memo || 'Mortgage payment' }));
@@ -485,6 +485,7 @@
       else {
         const created = I.makeProperty(fields);
         data.properties.push(created);
+        if (window.Stats) window.Stats.log('ingot_add', true);
         if (!ui.property) ui.property = '';
       }
       save();
@@ -611,6 +612,7 @@
         <div>
           <h2 class="ig-title">${esc(I.NAME)}<span class="sr-only">:</span> <small>Income, expenses and receipts for your rentals</small></h2>
         </div>
+        <a class="ig-guide" href="https://octopisceslabs.com/how-to/#ingot" target="_blank" rel="noopener">How-to guide and video</a>
       </div>
       <nav class="ig-tabs" aria-label="${esc(I.NAME)} sections">${TABS.map(([k, label]) =>
         `<button type="button" data-tab="${k}" aria-pressed="${ui.tab === k}">${esc(label)}${(k === 'log' || k === 'import') && !isPro() ? ' ' + LOCK : ''}</button>`).join('')}</nav>
@@ -700,7 +702,7 @@
   function propertyTable(list, s) {
     const rows = list.map((p) => {
       const b = s.byProperty[p.id] || { income: 0, expense: 0, rent: 0, net: 0 };
-      const expected = (Number(p.expectedRent) || 0) * (I.periodRange(ui.period).months || 1);
+      const expected = I.expectedFor(p, I.periodRange(ui.period));
       const short = expected && b.rent < expected * 0.95;
       return `<tr class="ig-link" data-goto="month" data-id="${esc(p.id)}"><th scope="row"><button type="button" class="link" data-act="open-month" data-id="${esc(p.id)}">${esc(p.name)}</button></th>
         <td>${money(b.rent)}</td><td>${money(b.expense)}</td><td class="${b.net >= 0 ? 'pos' : 'neg'}">${money(b.net)}</td>

@@ -1,0 +1,173 @@
+WEBVTT
+
+1
+00:00:00.350 --> 00:00:04.856
+This is Ingot, the income and expense tracker inside EquityFoundry.
+
+2
+00:00:04.856 --> 00:00:13.129
+In a few minutes you'll see how to add your rentals, log rent and bills, and have your Schedule E totals ready at tax time.
+
+3
+00:00:13.929 --> 00:00:15.402
+Tap Ingot in the menu.
+
+4
+00:00:15.402 --> 00:00:17.545
+On a phone, it's called Rentals.
+
+5
+00:00:17.545 --> 00:00:24.041
+Your entries are saved on your device, and if you sign in, they stay in sync across your devices.
+
+6
+00:00:24.841 --> 00:00:27.432
+Start on Properties and tap Add property.
+
+7
+00:00:27.432 --> 00:00:34.575
+Give it a name and address, the number of units, the rent you expect each month, and the purchase price and date.
+
+8
+00:00:34.575 --> 00:00:38.494
+Ingot uses the expected rent to show when rent comes in short.
+
+9
+00:00:40.151 --> 00:00:42.801
+Quick add is how you log money in or out.
+
+10
+00:00:42.801 --> 00:00:44.158
+There are four kinds.
+
+11
+00:00:44.158 --> 00:00:45.321
+Income, like rent.
+
+12
+00:00:45.321 --> 00:00:48.165
+Expenses, the costs of running the property.
+
+13
+00:00:48.165 --> 00:00:52.754
+Distributions, money you take out, which never lowers your tax numbers.
+
+14
+00:00:52.754 --> 00:00:56.891
+And other, for things like loan principal and deposits you hold.
+
+15
+00:00:56.891 --> 00:00:58.959
+Here's November rent for Unit A:
+
+16
+00:00:58.959 --> 00:01:01.868
+amount, date, property, category, and a note.
+
+17
+00:01:02.668 --> 00:01:05.848
+For a mortgage payment, pick mortgage interest.
+
+18
+00:01:05.848 --> 00:01:11.599
+Only the interest is a Schedule E expense, so type the principal part in its own box.
+
+19
+00:01:11.599 --> 00:01:14.508
+Ingot logs it separately as loan principal.
+
+20
+00:01:15.308 --> 00:01:16.999
+Repairs work the same way.
+
+21
+00:01:16.999 --> 00:01:22.333
+Pick the property and the category, add a note, and attach a photo of the receipt.
+
+22
+00:01:22.333 --> 00:01:24.609
+On a phone, this opens your camera.
+
+23
+00:01:26.735 --> 00:01:35.176
+The dashboard shows income, expenses, net and distributions for this month, the quarter, the year to date, or the last twelve months.
+
+24
+00:01:35.176 --> 00:01:44.633
+Below that, income against expenses by month, your biggest costs, and how each property compares, including rent collected against what you expected.
+
+25
+00:01:45.433 --> 00:01:48.155
+Month view lists every entry for one month.
+
+26
+00:01:48.155 --> 00:01:55.119
+Step back and forward with the arrows, filter to one property, and tap an entry to edit it or see its receipt.
+
+27
+00:01:55.919 --> 00:01:57.733
+At tax time, open Taxes.
+
+28
+00:01:57.733 --> 00:02:05.975
+Ingot totals each property on the Schedule E lines, from rents received to total expenses and income or loss.
+
+29
+00:02:05.975 --> 00:02:09.907
+Download it as a CSV or a PDF for your tax preparer.
+
+30
+00:02:09.907 --> 00:02:14.671
+It's not tax advice, so have your preparer confirm the numbers.
+
+31
+00:02:15.471 --> 00:02:18.885
+The maintenance log keeps a record of every repair:
+
+32
+00:02:18.885 --> 00:02:20.960
+the vendor, the cost and notes.
+
+33
+00:02:20.960 --> 00:02:25.110
+Leave the box ticked to log the cost as a repairs expense too.
+
+34
+00:02:25.110 --> 00:02:29.060
+Untick it if you already logged the payment, like this one.
+
+35
+00:02:31.001 --> 00:02:33.778
+Already have it all in your bank account?
+
+36
+00:02:33.778 --> 00:02:37.572
+Download the transactions as a CSV and import them here.
+
+37
+00:02:37.572 --> 00:02:43.941
+Map the columns once, tag each row to a property and category, and Ingot remembers your rules.
+
+38
+00:02:43.941 --> 00:02:48.345
+Rows you've imported before are flagged, so nothing counts twice.
+
+39
+00:02:49.145 --> 00:02:58.426
+The free version tracks one property for the current year, with quick add, the dashboard totals, month view, and your Schedule E totals on screen.
+
+40
+00:02:58.426 --> 00:03:07.961
+Pro adds unlimited properties, the charts and property table, receipt photos, past years, Schedule E downloads, the maintenance log, and bank imports.
+
+41
+00:03:08.761 --> 00:03:09.730
+That's Ingot.
+
+42
+00:03:09.730 --> 00:03:13.384
+Log it as it happens, and tax time takes minutes.
+
+43
+00:03:13.384 --> 00:03:17.486
+Try it at octo pie sees labs dot com slash rental calc.

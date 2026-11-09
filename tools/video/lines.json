@@ -721,5 +721,197 @@
     "Run it with everything included. Equity Foundry. Tap learn more."
    ]
   ]
+ },
+ "ingot_compare": {
+  "title": [
+   "Which rental",
+   "makes money?"
+  ],
+  "lines": [
+   [
+    "s1",
+    "Two rentals. Which one actually makes money? Here's how to see it in ten seconds."
+   ],
+   [
+    "s2",
+    "Ingot tracks rent and bills for every property. This year, these two brought in about forty eight thousand eight hundred, and kept about thirteen thousand one hundred after expenses."
+   ],
+   [
+    "s3",
+    "Income against expenses, month by month. The spikes are property tax months."
+   ],
+   [
+    "s4",
+    "Side by side, the house nets about thirty eight hundred. The duplex nets about ninety three hundred."
+   ],
+   [
+    "s5",
+    "But the duplex is at ninety six percent of expected rent. One payment never came in."
+   ],
+   [
+    "s6",
+    "Track your rentals in EquityFoundry. Charts and the property table come with Pro. Link in bio."
+   ]
+  ]
+ },
+ "ingot_compare_ad": {
+  "title": [
+   "Which rental",
+   "makes money?"
+  ],
+  "lines": [
+   [
+    "s1",
+    "Two rentals. Which one actually makes money? Here's how to see it in ten seconds."
+   ],
+   [
+    "s2",
+    "Ingot tracks rent and bills for every property. This year, these two brought in about forty eight thousand eight hundred, and kept about thirteen thousand one hundred after expenses."
+   ],
+   [
+    "s3",
+    "Income against expenses, month by month. The spikes are property tax months."
+   ],
+   [
+    "s4",
+    "Side by side, the house nets about thirty eight hundred. The duplex nets about ninety three hundred."
+   ],
+   [
+    "s5",
+    "But the duplex is at ninety six percent of expected rent. One payment never came in."
+   ],
+   [
+    "s6",
+    "Track your rentals in EquityFoundry. Charts and the property table come with Pro. Tap learn more."
+   ]
+  ]
+ },
+ "ingot_tax": {
+  "title": [
+   "Your Schedule E,",
+   "ready in seconds"
+  ],
+  "lines": [
+   [
+    "s1",
+    "Rentals and tax time? Your Schedule E totals can be ready before your preparer asks."
+   ],
+   [
+    "s2",
+    "Every rent payment and bill you log in Ingot goes into a category that matches a Schedule E line."
+   ],
+   [
+    "s3",
+    "When it's time, open Taxes."
+   ],
+   [
+    "s4",
+    "Rents received, insurance, mortgage interest, repairs, taxes. Every line, totaled for each property."
+   ],
+   [
+    "s5",
+    "Download it as a CSV or a PDF for your tax preparer."
+   ],
+   [
+    "s6",
+    "Track one rental free. Downloads and more properties come with Pro. EquityFoundry. Link in bio."
+   ]
+  ]
+ },
+ "ingot_tax_ad": {
+  "title": [
+   "Your Schedule E,",
+   "ready in seconds"
+  ],
+  "lines": [
+   [
+    "s1",
+    "Rentals and tax time? Your Schedule E totals can be ready before your preparer asks."
+   ],
+   [
+    "s2",
+    "Every rent payment and bill you log in Ingot goes into a category that matches a Schedule E line."
+   ],
+   [
+    "s3",
+    "When it's time, open Taxes."
+   ],
+   [
+    "s4",
+    "Rents received, insurance, mortgage interest, repairs, taxes. Every line, totaled for each property."
+   ],
+   [
+    "s5",
+    "Download it as a CSV or a PDF for your tax preparer."
+   ],
+   [
+    "s6",
+    "Track one rental free. Downloads and more properties come with Pro. EquityFoundry. Tap learn more."
+   ]
+  ]
+ },
+ "ingot_receipt": {
+  "title": [
+   "Stop losing",
+   "rental receipts"
+  ],
+  "lines": [
+   [
+    "s1",
+    "Still keeping rental receipts in a shoebox?"
+   ],
+   [
+    "s2",
+    "In Ingot, tap Quick add and pick expense."
+   ],
+   [
+    "s3",
+    "Type the amount. Pick the property and the category, and add a note."
+   ],
+   [
+    "s4",
+    "Then snap the receipt. It's saved with the entry."
+   ],
+   [
+    "s5",
+    "At tax time, it's one tap away in month view."
+   ],
+   [
+    "s6",
+    "Receipt photos are part of EquityFoundry Pro, from four ninety nine a month. Link in bio."
+   ]
+  ]
+ },
+ "ingot_receipt_ad": {
+  "title": [
+   "Stop losing",
+   "rental receipts"
+  ],
+  "lines": [
+   [
+    "s1",
+    "Still keeping rental receipts in a shoebox?"
+   ],
+   [
+    "s2",
+    "In Ingot, tap Quick add and pick expense."
+   ],
+   [
+    "s3",
+    "Type the amount. Pick the property and the category, and add a note."
+   ],
+   [
+    "s4",
+    "Then snap the receipt. It's saved with the entry."
+   ],
+   [
+    "s5",
+    "At tax time, it's one tap away in month view."
+   ],
+   [
+    "s6",
+    "Receipt photos are part of EquityFoundry Pro, from four ninety nine a month. Tap learn more."
+   ]
+  ]
  }
 }

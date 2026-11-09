@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-09 (Ingot videos and guide)
+- /how-to/ has a fifth walkthrough: "How to track rental income and expenses (Ingot)", 3:20, with written steps and screenshots (#ingot). Video at media/equityfoundry-howto-ingot.mp4. Built by tools/build_howto.py from tools/video/howto_manifest.json; recorder in tools/video/ingot/.
+- Three Ingot Shorts in media/shorts (ingot_compare, ingot_tax, ingot_receipt) and ad cuts in media/ads (ad5-ingot-compare, ad6-ingot-tax, ad7-ingot-receipt). Recorder tools/video/rec_ingot_short.js with tools/video/seed.js demo data.
+- /rentals/ short link opens the calculator on Ingot (noindex redirect, passes utm tags through).
+- rental-calc/ updated: Ingot how-to link, ?view=ingot, Ingot usage counts.
+
 ## 2026-11-09
 - rental-calc/ updated: Ingot tab shows "Ingot / Income & expenses" on computers and "Rentals" on phones; clearer Ingot page subtitle.
 

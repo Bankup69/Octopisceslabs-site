@@ -57,7 +57,7 @@ page = f'''<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>How-To: Video Walkthroughs | OctoPisces Labs</title>
-<meta name="description" content="Step-by-step video walkthroughs for OctoPisces Labs apps. Learn to analyze long-term rentals, short-term rentals, BRRRR deals and fix and flips in EquityFoundry.">
+<meta name="description" content="Step-by-step video walkthroughs for OctoPisces Labs apps. Learn to analyze long-term rentals, short-term rentals, BRRRR deals and fix and flips in EquityFoundry, and to track rental income, expenses and Schedule E totals with Ingot.">
 <link rel="canonical" href="https://octopisceslabs.com/how-to/">
 <meta property="og:type" content="website"><meta property="og:site_name" content="OctoPisces Labs">
 <meta property="og:title" content="How to analyze a rental property in EquityFoundry"><meta property="og:description" content="Every listing tells a story. The numbers tell the truth. Video walkthroughs for long-term rentals, short-term rentals, BRRRR and fix and flips.">
@@ -119,7 +119,7 @@ video{{width:100%;aspect-ratio:16/9;background:#000;border-radius:12px;border:1p
 
   <section class="app" id="equityfoundry" aria-labelledby="ef-h">
     <div class="app-head"><img src="/rental-calc/icons/brand-mark-128.png" alt="" width="40" height="40"><h2 id="ef-h">EquityFoundry</h2></div>
-    <p class="sub">Every listing tells a story. The numbers tell the truth. Pick the kind of deal you are weighing and follow along.</p>
+    <p class="sub">Every listing tells a story. The numbers tell the truth. Pick the kind of deal you are weighing and follow along. Already own rentals? The Income &amp; expenses walkthrough covers Ingot.</p>
     <div class="tabs" role="tablist" aria-label="EquityFoundry walkthroughs">{"".join(tabs)}</div>
     {"".join(panels)}
     <div class="cta"><a class="btn" href="/rental-calc/">Run your first deal free</a><a class="btn ghost" href="/brrrr-calculator/">Read the BRRRR guide</a></div>

@@ -1,0 +1,67 @@
+[
+[
+"s1",
+"Intro",
+"This is Ingot, the income and expense tracker inside EquityFoundry. In a few minutes you'll see how to add your rentals, log rent and bills, and have your Schedule E totals ready at tax time."
+],
+[
+"s2",
+"Open Ingot",
+"Tap Ingot in the menu. On a phone, it's called Rentals. Your entries are saved on your device, and if you sign in, they stay in sync across your devices."
+],
+[
+"s3",
+"Add a property",
+"Start on Properties and tap Add property. Give it a name and address, the number of units, the rent you expect each month, and the purchase price and date. Ingot uses the expected rent to show when rent comes in short."
+],
+[
+"s4",
+"Log rent",
+"Quick add is how you log money in or out. There are four kinds. Income, like rent. Expenses, the costs of running the property. Distributions, money you take out, which never lowers your tax numbers. And other, for things like loan principal and deposits you hold. Here's November rent for Unit A: amount, date, property, category, and a note."
+],
+[
+"s5",
+"Mortgage payments",
+"For a mortgage payment, pick mortgage interest. Only the interest is a Schedule E expense, so type the principal part in its own box. Ingot logs it separately as loan principal."
+],
+[
+"s6",
+"Receipts",
+"Repairs work the same way. Pick the property and the category, add a note, and attach a photo of the receipt. On a phone, this opens your camera."
+],
+[
+"s7",
+"Dashboard",
+"The dashboard shows income, expenses, net and distributions for this month, the quarter, the year to date, or the last twelve months. Below that, income against expenses by month, your biggest costs, and how each property compares, including rent collected against what you expected."
+],
+[
+"s8",
+"Month view",
+"Month view lists every entry for one month. Step back and forward with the arrows, filter to one property, and tap an entry to edit it or see its receipt."
+],
+[
+"s9",
+"Schedule E",
+"At tax time, open Taxes. Ingot totals each property on the Schedule E lines, from rents received to total expenses and income or loss. Download it as a CSV or a PDF for your tax preparer. It's not tax advice, so have your preparer confirm the numbers."
+],
+[
+"s10",
+"Maintenance log",
+"The maintenance log keeps a record of every repair: the vendor, the cost and notes. Leave the box ticked to log the cost as a repairs expense too. Untick it if you already logged the payment, like this one."
+],
+[
+"s11",
+"Bank import",
+"Already have it all in your bank account? Download the transactions as a CSV and import them here. Map the columns once, tag each row to a property and category, and Ingot remembers your rules. Rows you've imported before are flagged, so nothing counts twice."
+],
+[
+"s12",
+"Free and Pro",
+"The free version tracks one property for the current year, with quick add, the dashboard totals, month view, and your Schedule E totals on screen. Pro adds unlimited properties, the charts and property table, receipt photos, past years, Schedule E downloads, the maintenance log, and bank imports."
+],
+[
+"s13",
+"Wrap up",
+"That's Ingot. Log it as it happens, and tax time takes minutes. Try it at octo pie sees labs dot com slash rental calc."
+]
+]

@@ -185,6 +185,22 @@
 
   const inRange = (date, r) => date >= r.start && date <= r.end;
 
+  // Expected rent for one property over a period. Months before the property
+  // was bought don't count, and neither does the month of purchase unless it
+  // was bought on the 1st (rent usually starts the next month).
+  function expectedFor(p, range) {
+    const rent = Number(p && p.expectedRent) || 0;
+    if (!rent) return 0;
+    const idx = (s) => +s.slice(0, 4) * 12 + (+s.slice(5, 7) - 1);
+    let first = idx(range.start);
+    const last = idx(range.end);
+    if (p.purchaseDate && /^\d{4}-\d{2}-\d{2}$/.test(p.purchaseDate)) {
+      const b = idx(p.purchaseDate) + (p.purchaseDate.slice(8) === '01' ? 0 : 1);
+      if (b > first) first = b;
+    }
+    return last < first ? 0 : rent * (last - first + 1);
+  }
+
   function summarize(data, range, propertyId) {
     const out = {
       income: 0, expense: 0, distribution: 0, transfer: 0, rent: 0, count: 0,
@@ -212,7 +228,7 @@
     out.kept = out.net - out.distribution;
     Object.values(out.byProperty).forEach((b) => { b.net = b.income - b.expense; });
     const scope = propertyId ? props.filter((p) => p.id === propertyId) : props;
-    out.expectedRent = scope.reduce((a, p) => a + (Number(p.expectedRent) || 0), 0) * (range.months || 1);
+    out.expectedRent = scope.reduce((a, p) => a + expectedFor(p, range), 0);
     out.units = scope.reduce((a, p) => a + (Number(p.units) || 0), 0);
     out.occupied = scope.reduce((a, p) => a + Math.min(Number(p.units) || 0, Number(p.occupied) || 0), 0);
     return out;
@@ -490,6 +506,7 @@
   }
 
   const api = {
+    expectedFor,
     NAME, SCHEDULE_E, TYPES, FREE_LIMITS, CRITERIA, WATCH_STATUS, TAX_NOTE,
     newId, today, ymd, ym, parseYmd, monthKeys, monthLabel, periodRange, monthRange, shiftMonth,
     parseAmount, parseDate, round2,

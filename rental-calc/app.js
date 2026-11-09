@@ -754,6 +754,7 @@
     document.querySelectorAll('.tab').forEach((t) => t.setAttribute('aria-pressed', t.dataset.view === view));
     if (view === 'dash') renderDashboard();
     if (view === 'ingot' && window.Ingot) window.Ingot.show();
+    if (view === 'ingot' && window.Stats) window.Stats.log('ingot_open', true);
     if (push && history.state?.view !== view) history.pushState({ view }, '');
   }
 
@@ -844,6 +845,9 @@
     }
     setTimeout(() => toast('This is the example deal. Change any number to run your own.'), 400);
   }
+  // Links from Ingot ads and guides (?view=ingot) open Ingot directly.
+  // (Ingot loads after this file, so wait for the page to finish loading.)
+  if (params.get('view') === 'ingot') window.addEventListener('load', () => showView('ingot', false));
   if (sharedText) handleShared(sharedText);
 
   Pro.init().then(() => { updateProButton(); render(); });

@@ -56,7 +56,7 @@
   window.Stats = {
     log,
     // True when the visit came from an ad, a post or a /deal/ example link.
-    fromCampaign: () => !!(from.deal || params.get('utm_source') || params.get('p')),
+    fromCampaign: () => !!(from.deal || params.get('utm_source') || params.get('p') || params.get('view')),
   };
 
   log('visit', true);
