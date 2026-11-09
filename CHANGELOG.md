@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-08 (Meta ad videos)
+- Added media/ads/ad1-loss, ad2-1pct, ad3-rate, ad4-hidden (.mp4): the four test Shorts with the ending changed from "Link in bio" to "Tap Learn more" for paid ads. build_short.py takes END_TEXT for the end card.
+
 ## 2026-11-08 (calculator update)
 - rental-calc/ updated from the Rental-Income-Calculator repo: pitch line, FREE badge, result-first deal links, anonymous usage counts, privacy policy update. /deal/ links now add deal=<name> so the counts show which example a visitor came from.
 

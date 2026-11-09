@@ -588,5 +588,138 @@
     "Run your own deal free. Equity Foundry. Link in bio."
    ]
   ]
+ },
+ "rental_bad_ad": {
+  "title": [
+   "This rental",
+   "loses money"
+  ],
+  "lines": [
+   [
+    "s1",
+    "This two hundred fifty thousand dollar rental looks fine. Run the numbers before you buy."
+   ],
+   [
+    "s2",
+    "Same house. Enter the price and your closing costs."
+   ],
+   [
+    "s3",
+    "Rent is seventeen hundred a month."
+   ],
+   [
+    "s4",
+    "Twenty five percent down, a six point seven five percent rate, then taxes and insurance. Vacancy and repairs are already built in."
+   ],
+   [
+    "s5",
+    "Here's the problem. Negative one hundred fifty four dollars a month. Cash-on-cash return is negative two point six five percent. Cap rate, five point one."
+   ],
+   [
+    "s6",
+    "Know before you buy. Equity Foundry. Tap learn more."
+   ]
+  ]
+ },
+ "onepct_ad": {
+  "title": [
+   "The 1% rule says yes.",
+   "The numbers say no."
+  ],
+  "lines": [
+   [
+    "s1",
+    "The one percent rule says this rental is a winner. Let's check the real numbers."
+   ],
+   [
+    "s2",
+    "A two hundred thousand dollar house, with six thousand in closing costs."
+   ],
+   [
+    "s3",
+    "Rent is two thousand a month. That's exactly one percent of the price. Rule passed."
+   ],
+   [
+    "s4",
+    "Ten percent down, a seven and a quarter percent rate, then taxes and insurance."
+   ],
+   [
+    "s5",
+    "Cash flow is twenty two dollars a month. A one point oh two percent cash-on-cash return. The rule said yes. The numbers say no."
+   ],
+   [
+    "s6",
+    "Run the real numbers before you buy. Equity Foundry. Tap learn more."
+   ]
+  ]
+ },
+ "rate_ad": {
+  "title": [
+   "Rates up 1%.",
+   "What happens",
+   "to cash flow?"
+  ],
+  "lines": [
+   [
+    "s1",
+    "Rates go up one percent. What happens to your cash flow?"
+   ],
+   [
+    "s2",
+    "A two hundred eighty thousand dollar house, with eighty four hundred in closing costs."
+   ],
+   [
+    "s3",
+    "Rent is twenty five hundred a month."
+   ],
+   [
+    "s4",
+    "Twenty percent down at six and a half percent, plus taxes and insurance."
+   ],
+   [
+    "s5",
+    "Today, cash flow is three hundred one dollars a month. A five point six percent cash-on-cash return."
+   ],
+   [
+    "s6",
+    "Rates rise to seven and a half percent. Cash flow is cut in half, to about one hundred fifty dollars a month, and cash-on-cash falls to two point eight percent."
+   ],
+   [
+    "s7",
+    "Stress test your rate. Equity Foundry. Tap learn more."
+   ]
+  ]
+ },
+ "hidden_ad": {
+  "title": [
+   "Most rental math",
+   "forgets this"
+  ],
+  "lines": [
+   [
+    "s1",
+    "Most rental math forgets vacancy and repairs. Here's what that costs."
+   ],
+   [
+    "s2",
+    "A two hundred sixty thousand dollar house renting for twenty three hundred a month."
+   ],
+   [
+    "s3",
+    "Twenty percent down, a six point seven five percent rate, plus taxes and insurance."
+   ],
+   [
+    "s4",
+    "Look at the year one breakdown. Rent is twenty seven thousand six hundred. But vacancy takes thirteen hundred eighty. Repairs take thirteen hundred eighty. And a reserve for big items takes another thirteen hundred eighty."
+   ],
+   [
+    "s5",
+    "Leave those out, and you overestimate cash flow by over four thousand dollars a year. With them, cash-on-cash is four point one percent."
+   ],
+   [
+    "s6",
+    "Run it with everything included. Equity Foundry. Tap learn more."
+   ]
+  ]
  }
 }

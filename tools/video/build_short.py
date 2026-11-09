@@ -46,7 +46,7 @@ for i, ln in enumerate(cfg['title']):
 title.save(f'{V}/title.png')
 end = Image.new('RGBA', (W, H), (5,10,24,255)); logo = Image.open(LOGO).convert('RGBA'); lw = 1000; logo = logo.resize((lw, int(logo.size[1]*lw/logo.size[0])), Image.LANCZOS); end.paste(logo, ((W-lw)//2, 560), logo)
 d = ImageDraw.Draw(end); mid = ImageFont.truetype(FONT, 60)
-for i, ln in enumerate(['Forge better deals.', 'Run your first deal free · Link in bio']):
+for i, ln in enumerate(['Forge better deals.', os.environ.get('END_TEXT', 'Run your first deal free · Link in bio')]):
     d.text(((W - d.textlength(ln, font=mid)) / 2, 1180 + i*90), ln, font=mid, fill=(255,255,255) if i == 0 else GOLD)
 end.save(f'{V}/end.png')
 allitems = [(f'{V}/title.png', 0, sc['s1'][1])] + items + [(f'{V}/end.png', total - 3, total)]
