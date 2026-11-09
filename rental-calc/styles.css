@@ -111,6 +111,15 @@ h2, h3, legend, .current, .hero-label, .ap-name, .card h3 { font-family: var(--f
 .brand-tag { font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); margin-top: 3px; white-space: nowrap; }
 .topbar .tabs { background: rgba(255, 255, 255, .07); }
 .topbar .tab { color: #b9c2d6; }
+/* Ingot tab: "Ingot" plus a one-line description on wide screens, plain "Rentals" on phones. */
+.tab-ingot .tab-wide { display: inline-flex; flex-direction: column; align-items: center; line-height: 1.05; }
+.tab-ingot .tab-wide b { font-weight: 600; }
+.tab-ingot .tab-wide small { font-size: 10px; font-weight: 500; opacity: .8; white-space: nowrap; }
+.tab-ingot .tab-narrow { display: none; }
+@media (max-width: 700px) {
+  .tab-ingot .tab-wide { display: none; }
+  .tab-ingot .tab-narrow { display: inline; }
+}
 .topbar .tab[aria-pressed="true"] { background: #f2eee4; color: var(--navy); }
 .topbar .badge { background: var(--gold); color: var(--navy); }
 .topbar .account-btn { background: transparent; color: #ece9e1; border-color: rgba(236, 233, 225, .28); }

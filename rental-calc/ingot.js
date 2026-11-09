@@ -609,7 +609,7 @@
     el.innerHTML = `
       <div class="ig-head">
         <div>
-          <h2 class="ig-title">${esc(I.NAME)} <small>Your rental portfolio</small></h2>
+          <h2 class="ig-title">${esc(I.NAME)}<span class="sr-only">:</span> <small>Income, expenses and receipts for your rentals</small></h2>
         </div>
       </div>
       <nav class="ig-tabs" aria-label="${esc(I.NAME)} sections">${TABS.map(([k, label]) =>
