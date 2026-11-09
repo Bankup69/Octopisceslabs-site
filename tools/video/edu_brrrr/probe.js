@@ -1,0 +1,14 @@
+const { chromium } = require('playwright'); const fs=require('fs');
+(async()=>{const b=await chromium.launch();const ctx=await b.newContext({viewport:{width:1280,height:720},deviceScaleFactor:1.5});
+await ctx.addInitScript(()=>{try{localStorage.setItem('rental-calc:launch-hidden','1')}catch(e){}});
+const p=await ctx.newPage();await p.goto('http://localhost:8790/');await p.waitForTimeout(1500);
+await p.evaluate(()=>{window.Pro._setForTesting(true);const x=document.getElementById('launch-banner');if(x)x.hidden=true});
+await p.click('[data-strategy=brrrr]');await p.waitForTimeout(300);
+const f=async(n,v)=>{const e=p.locator(`input[name=${n}]`).first();await e.fill(String(v));await e.dispatchEvent('input');await e.dispatchEvent('change')};
+for(const [n,v] of [['purchasePrice',150000],['repairsUpfront',45000],['closingCosts',4500],['arv',260000],['rehabMonths',6],['refiLtv',75],['refiRate',7.2],['refiYears',30],['refiClosingCosts',5000],['downPaymentPct',20],['interestRate',11],['propertyTaxes',2200],['insurance',1300]]) await f(n,v);
+const rr=p.locator('#units [data-k=rent]').first();await rr.fill('2100');await rr.dispatchEvent('input');await rr.dispatchEvent('change');await p.waitForTimeout(500);
+const get=()=>p.evaluate(()=>({hero:document.getElementById('hero').innerText.replace(/\s+/g,' '),tiles:document.getElementById('tiles').innerText.replace(/\s+/g,' ')}));
+console.log('BASE',JSON.stringify(await get()));console.log('BTABLES',(await p.evaluate(()=>document.getElementById('tables')?.innerText.replace(/\s+/g,' ').slice(0,2000)))||'');
+await p.evaluate(()=>window.scrollTo(0,0)); await p.screenshot({path:'app_base.png'});
+const r=await p.$('.results'); if(r) await r.screenshot({path:'results_base.png'});
+await b.close()})();
