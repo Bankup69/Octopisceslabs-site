@@ -3,6 +3,10 @@
 window.APP_CONFIG = {
   freeSaveLimit: 3,
 
+  // Anonymous usage counts (visits, first calculation, Pro screen opened) sent
+  // to Supabase's log_event(). Nothing personal. See stats.js.
+  stats: { enabled: true },
+
   // Accounts (email sign-in) and the app launch list. The publishable key is
   // meant to be public; the database only lets visitors join the list.
   supabase: {

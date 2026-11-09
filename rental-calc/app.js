@@ -581,6 +581,8 @@
   });
 
   form.addEventListener('input', render);
+  // The first number someone changes is their first calculation (counted once per visit).
+  form.addEventListener('input', () => { if (window.Stats) window.Stats.log('first_calc', true); });
 
   // ---- dashboard -------------------------------------------------------------
 
@@ -828,6 +830,20 @@
   updateProButton();
   render();
   history.replaceState({ view: 'calc' }, '', sharedText ? location.pathname : location.href);
+  // Returning users with saved deals don't need the one-line pitch.
+  const pitchEl = $('pitch');
+  if (pitchEl) pitchEl.hidden = Object.keys(loadSaved()).length > 0 && !(window.Stats && window.Stats.fromCampaign());
+  // Opened from an ad or a /deal/ link: show the result first, as in the video.
+  if (params.get('p') && !sharedText) {
+    if (window.matchMedia && window.matchMedia('(max-width: 860px)').matches) {
+      setTimeout(() => {
+        const bar = document.querySelector('.topbar');
+        const y = $('hero').getBoundingClientRect().top + window.scrollY - (bar ? bar.offsetHeight : 0) - 12;
+        window.scrollTo(0, Math.max(0, y));
+      }, 250);
+    }
+    setTimeout(() => toast('This is the example deal. Change any number to run your own.'), 400);
+  }
   if (sharedText) handleShared(sharedText);
 
   Pro.init().then(() => { updateProButton(); render(); });

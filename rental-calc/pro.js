@@ -327,6 +327,7 @@
   }
 
   function paywall(reason) {
+    if (window.Stats) window.Stats.log('pro_open', true);
     if (!dialog) build();
     dialog.querySelector('.pw-reason').textContent = reason || 'Everything you need to size up a deal.';
     renderPlans();

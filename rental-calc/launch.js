@@ -104,7 +104,8 @@
     const slot = document.getElementById('launch-banner');
     if (!slot) return;
     const done = read(DONE_KEY) === '1';
-    slot.hidden = native || read(HIDE_KEY) === '1';
+    // Visitors from an ad or a /deal/ link see the calculator first.
+    slot.hidden = native || read(HIDE_KEY) === '1' || !!(window.Stats && window.Stats.fromCampaign());
     if (slot.hidden) return;
     // Installed from the browser ("Add to home screen"), it can look like the
     // store app, so say plainly which version this is.

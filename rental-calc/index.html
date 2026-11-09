@@ -73,9 +73,10 @@
     </div>
 
     <div class="wrap">
+      <p class="pitch" id="pitch"><strong>See any rental's cash flow in seconds.</strong> Long-term rentals are free, no signup. Airbnb, BRRRR and flips are part of Pro.</p>
       <div class="launch-banner" id="launch-banner" role="region" aria-label="App launch" hidden></div>
       <div class="strategies" role="radiogroup" aria-label="Strategy" id="strategies">
-        <button type="button" role="radio" data-strategy="rental">Long-term rental</button>
+        <button type="button" role="radio" data-strategy="rental">Long-term rental <span class="free">FREE</span></button>
         <button type="button" role="radio" data-strategy="str">Short-term rental <span class="lock">PRO</span></button>
         <button type="button" role="radio" data-strategy="brrrr">BRRRR <span class="lock">PRO</span></button>
         <button type="button" role="radio" data-strategy="flip">Fix &amp; flip <span class="lock">PRO</span></button>
@@ -278,6 +279,7 @@
   <div id="toast" role="status" hidden></div>
 
   <script src="config.js"></script>
+  <script src="stats.js"></script>
   <script src="calc.js"></script>
   <script src="listing.js"></script>
   <script src="account.js"></script>

@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-08 (calculator update)
+- rental-calc/ updated from the Rental-Income-Calculator repo: pitch line, FREE badge, result-first deal links, anonymous usage counts, privacy policy update. /deal/ links now add deal=<name> so the counts show which example a visitor came from.
+
 ## 2026-11-08 (ad landing links)
 - Added /deal/<name>/ short links (maple-loss, maple, oak-1pct, birch-rate, pine-hidden). Each opens the calculator pre-filled with the exact deal from a Short, so an ad click lands on the same numbers the video showed. Extra query text (like utm tags) is passed through. They are noindex redirects, so they are not in sitemap.xml.
 
