@@ -1,0 +1,9 @@
+0:00 Intro
+0:12 1 Cash flow
+0:34 2 Cap rate
+0:51 3 Cash-on-cash
+1:08 4 DSCR
+1:26 5 The 1% rule
+1:44 All five together
+2:00 Run it in EquityFoundry
+2:09 Wrap up

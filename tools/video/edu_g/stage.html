@@ -1,0 +1,72 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1920px;height:1080px;overflow:hidden;background:#0b1530;font-family:Inter,Arial,sans-serif;color:#fff}
+#bg{position:absolute;inset:0;background:radial-gradient(1300px 800px at 25% 15%,#1b2c63 0%,#0b1530 62%)}
+#scene{position:absolute;inset:0}
+#brand{position:absolute;left:64px;top:38px;font-size:34px;font-weight:800;letter-spacing:.5px;color:#f4c45c}
+#brand span{color:#fff;font-weight:600}
+#chips{position:absolute;right:64px;top:34px;display:flex;gap:12px}
+.chip{padding:10px 18px;border-radius:30px;font-size:24px;font-weight:700;background:rgba(255,255,255,.08);color:#8e9ac0;transition:none}
+.chip.on{background:#f4c45c;color:#0b1530}
+#foot{position:absolute;left:0;right:0;bottom:22px;text-align:center;font-size:20px;color:#7d89b3}
+#cap{position:absolute;left:0;right:0;bottom:78px;display:flex;justify-content:center}
+#cap div{background:rgba(5,10,28,.88);padding:16px 34px;border-radius:22px;font-size:46px;font-weight:700;max-width:1700px;text-align:center;line-height:1.2}
+</style></head><body><div id="bg"></div><div id="brand">Equity<span>Foundry</span></div><div id="chips"></div><div id="scene"></div><div id="cap"><div></div></div><div id="foot">Illustrative example. Results are estimates, not financial advice.</div>
+<script>
+const E=(par,tag,css,html)=>{const e=document.createElement(tag);e.style.cssText=css||'';if(html!=null)e.innerHTML=html;par.appendChild(e);return e};
+const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x)),ease=x=>1-Math.pow(1-clamp(x),3),seg=(p,a,b)=>clamp((p-a)/(b-a)),
+back=x=>{x=clamp(x);const c1=1.70158,c3=c1+1;return 1+c3*Math.pow(x-1,3)+c1*Math.pow(x-1,2)};
+const money=n=>(n<0?'-':'')+'$'+Math.round(Math.abs(n)).toLocaleString('en-US');
+const GOLD='#f4c45c',GREEN='#34d399',RED='#f87171',GREY='#3a4670',CARD='#f4f1e8',INK='#0b1530';
+const NAMES=["Cash flow", "Cap rate", "Cash-on-cash", "DSCR", "1% rule"], ACTIVE=[-1, 0, 1, 2, 3, 4, -1, -1, -1];
+const chipsEl=document.getElementById('chips'); NAMES.forEach((n,i)=>E(chipsEl,'div','',(i+1)+' '+n).className='chip');
+const root=document.getElementById('scene'),capEl=document.querySelector('#cap div');
+function chunks(t,n=8){const o=[];let c=[];for(const w of t.split(' ')){c.push(w);if(c.length>=n&&(/[.,?:]$/.test(w)||c.length>=n+3)){o.push(c.join(' '));c=[]}}if(c.length)o.push(c.join(' '));return o}
+function rng(seed){let s=seed;return()=>{s=(s*1664525+1013904223)%4294967296;return s/4294967296}}
+function house(par,x,y,s,color){return E(par,'div',`position:absolute;left:${x}px;top:${y}px;width:${s}px;height:${s}px`,`<svg viewBox="0 0 100 100" width="${s}" height="${s}"><path d="M10 48 L50 14 L90 48 L82 48 L82 88 L18 88 L18 48 Z" fill="${color||'#f4f1e8'}"/><rect x="42" y="60" width="16" height="28" fill="#0b1530"/><rect x="24" y="54" width="12" height="12" fill="#0b1530" opacity=".55"/><rect x="64" y="54" width="12" height="12" fill="#0b1530" opacity=".55"/></svg>`)}
+const label=(par,x,y,txt,sz,col,w,al)=>E(par,'div',`position:absolute;left:${x}px;top:${y}px;font-size:${sz}px;font-weight:800;color:${col||'#fff'};${w?`width:${w}px;`:''}text-align:${al||'left'};line-height:1.1;white-space:nowrap`,txt);
+
+const SC=[];
+const bar=(r,x,y,w,h,col,extra)=>E(r,'div',`position:absolute;left:${x}px;top:${y}px;width:${w}px;height:${h}px;border-radius:14px;background:${col};${extra||''}`);
+const fade=(e,q)=>{e.style.opacity=ease(q);e.style.transform=`translateY(${(1-ease(q))*24}px)`};
+const pop=(e,q)=>{e.style.opacity=ease(q);e.style.transform=`scale(${.9+.1*back(q)})`};
+const ROW=(r,x,y,w,a,b,c)=>E(r,'div',`position:absolute;left:${x}px;top:${y}px;width:${w}px;height:92px;border-radius:18px;background:${CARD};color:${INK};font-size:48px;font-weight:800;padding:22px 34px;display:flex;justify-content:space-between;border-left:18px solid ${c};opacity:0`,`<span>${a}</span><span>${b}</span>`);
+const CARDX=(r,x,y,w,h,html)=>E(r,'div',`position:absolute;left:${x}px;top:${y}px;width:${w}px;height:${h}px;border-radius:30px;background:${CARD};color:${INK};text-align:center;padding-top:40px;opacity:0`,html);
+const big=(t,s,c)=>`<div style="font-size:${s||100}px;font-weight:900;${c?'color:'+c:''}">${t}</div>`,small=(t,s)=>`<div style="font-size:${s||38}px;font-weight:800">${t}</div>`;
+// equation: A op B = C
+function EQ(r,y,A,B,C,op,ca){const mk=(x,w,h)=>CARDX(r,x,y,w,300,h);const a=mk(100,520,small(A[0])+big(A[1],86)),o=label(r,640,y+90,op,110,GOLD,100,'center'),b=mk(760,520,small(B[0])+big(B[1],86)),e=label(r,1300,y+90,'=',110,GOLD,100,'center'),c=E(r,'div',`position:absolute;left:1420px;top:${y}px;width:400px;height:300px;border-radius:30px;background:${GOLD};color:${INK};text-align:center;padding-top:50px;opacity:0`,small(C[0])+big(C[1],110));[o,e].forEach(x=>x.style.opacity=0);return [a,o,b,e,c]}
+const eqUp=(L,p)=>L.forEach((e,i)=>pop(e,seg(p,.06+i*.13,.18+i*.13)));
+
+// 0 hook
+SC.push({init(r){this.h=house(r,120,230,260);this.t=label(r,440,230,'Is this rental a good deal?',92,GOLD);this.s=label(r,440,370,'$250,000 house · $2,400 / month rent',54,'#fff');this.w=['Cash flow','Cap rate','Cash-on-cash','DSCR','1% rule'].map((t,i)=>E(r,'div',`position:absolute;left:${110+i*350}px;top:640px;width:320px;text-align:center;padding:18px 0;border-radius:40px;background:${CARD};color:${INK};font-size:42px;font-weight:800;opacity:0`,t))},
+ up(p){this.h.style.transform=`scale(${back(seg(p,0,.15))})`;fade(this.t,seg(p,.08,.2));fade(this.s,seg(p,.2,.32));this.w.forEach((e,i)=>fade(e,seg(p,.4+i*.1,.52+i*.1)))}});
+// 1 cash flow
+SC.push({init(r){label(r,100,140,'1  Cash flow',80,GOLD);const it=[['Rent per year','$28,800','#60a5fa'],['Vacancy and operating costs','-$8,920',RED],['Net operating income','$19,880',GOLD],['Mortgage payments','-$14,593',RED],['Cash flow','$5,287 / year',GREEN]];this.r=it.map((x,i)=>ROW(r,160,260+i*118,1100,x[0],x[1],x[2]));this.f=CARDX(r,1330,360,500,330,small('Per month',40)+big('$441',130,'#0f9d6e'))},
+ up(p){this.r.forEach((e,i)=>fade(e,seg(p,.06+i*.14,.18+i*.14)));pop(this.f,seg(p,.74,.9))}});
+// 2 cap rate
+SC.push({init(r){label(r,100,140,'2  Cap rate',80,GOLD);this.q=EQ(r,330,['Net operating income','$19,880'],['Purchase price','$250,000'],['Cap rate','7.95%'],'÷');this.n=label(r,0,720,'How the property performs, no matter how you finance it',46,'#c9d2f0',1920,'center');this.n.style.opacity=0},
+ up(p){eqUp(this.q,p);fade(this.n,seg(p,.75,.9))}});
+// 3 cash on cash
+SC.push({init(r){label(r,100,140,'3  Cash-on-cash return',80,GOLD);this.q=EQ(r,330,['Yearly cash flow','$5,287'],['Cash you put in','$70,000'],['Cash-on-cash','7.55%'],'÷');this.n=label(r,0,720,'$62,500 down payment + $7,500 closing costs',46,'#c9d2f0',1920,'center');this.n.style.opacity=0},
+ up(p){eqUp(this.q,p);fade(this.n,seg(p,.75,.9))}});
+// 4 DSCR
+SC.push({init(r){label(r,100,140,'4  DSCR',80,GOLD);this.q=EQ(r,260,['Net operating income','$19,880'],['Mortgage payments','$14,593'],['DSCR','1.36×'],'÷');const W=1400,X=260,mx=2;this.W=W;this.X=X;this.mx=mx;bar(r,X,640,W,50,GREY);this.f=bar(r,X,640,0,50,GREEN);this.m=bar(r,X+W*1.25/mx-3,615,6,100,'#fff');this.ml=label(r,X+W*1.25/mx-250,725,'Many lenders want about 1.25',40,'#c9d2f0',500,'center');this.ml.style.opacity=0},
+ up(p){eqUp(this.q,p);this.f.style.width=(this.W*1.36/this.mx*ease(seg(p,.6,.85)))+'px';fade(this.ml,seg(p,.8,.92))}});
+// 5 1% rule
+SC.push({init(r){label(r,100,140,'5  The 1% rule',80,GOLD);this.q=EQ(r,260,['Monthly rent','$2,400'],['Purchase price','$250,000'],['Rent ÷ price','0.96%'],'÷');const W=1400,X=260;this.W=W;bar(r,X,640,W,50,GREY);this.f=bar(r,X,640,0,50,'#fbbf24');this.m=bar(r,X+W*1/1.5-3,615,6,100,'#fff');this.ml=label(r,X+W/1.5-150,725,'1% target',40,'#c9d2f0',300,'center');this.n=label(r,0,790,'Just under, but this house still cash flows $441 a month',44,GOLD,1920,'center');this.n.style.opacity=0;this.ml.style.opacity=0},
+ up(p){eqUp(this.q,p);this.f.style.width=(this.W*.96/1.5*ease(seg(p,.5,.75)))+'px';fade(this.ml,seg(p,.7,.8));fade(this.n,seg(p,.8,.92))}});
+// 6 scorecard
+SC.push({init(r){label(r,100,140,'All five together',80,GOLD);const it=[['Cash flow','$441 / month',GREEN],['Cap rate','7.95%','#60a5fa'],['Cash-on-cash','7.55%',GOLD],['DSCR','1.36×','#c084fc'],['1% rule','0.96%','#fbbf24']];this.r=it.map((x,i)=>ROW(r,300,260+i*112,1320,x[0],x[1],x[2]))},
+ up(p){this.r.forEach((e,i)=>fade(e,seg(p,.06+i*.14,.18+i*.14)))}});
+// 7 tool
+SC.push({init(r){this.im=E(r,'img',`position:absolute;left:60px;top:170px;height:690px;border-radius:20px;border:4px solid ${GOLD};opacity:0`);this.im.src='app_base.png';this.li=['Price, rent and costs','Cash flow and cap rate','Cash-on-cash and DSCR','The 1% rule'].map((t,i)=>E(r,'div',`position:absolute;left:1300px;top:${300+i*130}px;background:${CARD};color:${INK};font-size:38px;font-weight:800;padding:20px 30px;border-radius:20px;white-space:nowrap;opacity:0`,t))},
+ up(p){this.im.style.opacity=ease(seg(p,.04,.2));this.im.style.transform=`scale(${.95+.05*ease(seg(p,.04,.3))})`;this.li.forEach((c,i)=>{const q=seg(p,.25+i*.15,.38+i*.15);c.style.opacity=ease(q);c.style.transform=`translateX(${(1-back(q))*80}px)`})}});
+// 8 end
+SC.push({init(r){this.lg=E(r,'img',`position:absolute;left:470px;top:70px;width:980px`);this.lg.src='logo_keyed.png';this.a=label(r,0,650,'Forge better deals.',96,'#fff',1920,'center');this.b=label(r,0,775,'octopisceslabs.com/rental-calc',64,GOLD,1920,'center')},
+ up(p){this.lg.style.opacity=ease(seg(p,0,.12));this.a.style.opacity=ease(seg(p,.1,.25));this.b.style.opacity=ease(seg(p,.2,.35))}});
+let cur=-1;
+window.render=function(si,t){const cfg=window.CFG[si];if(cur!==si){root.innerHTML='';SC[si].init(root);cur=si}
+ const p=clamp(t/cfg.dur);SC[si].up(p);[...chipsEl.children].forEach((c,i)=>c.className='chip'+(i===ACTIVE[si]?' on':''));
+ const ch=chunks(cfg.text.replace('octo pie sees labs dot com slash rental calc','octopisceslabs.com/rental-calc').replace('Equity Foundry','EquityFoundry').replace(/cash on cash/g,'cash-on-cash').replace(/D S C R/g,'DSCR')),tw=ch.reduce((a,c)=>a+c.split(' ').length,0);let a=0.2,txt='';const span=Math.max(cfg.voice,0.5);for(const c of ch){const d=span*c.split(' ').length/tw;if(t>=a&&t<a+d){txt=c}a+=d}
+ capEl.parentElement.style.visibility=(txt&&si!==8)?'visible':'hidden';document.getElementById('chips').style.display=si===8?'none':'flex';document.getElementById('brand').style.display=si===8?'none':'block';capEl.textContent=txt.replace(/D S C R/g,'DSCR').replace('octo pie sees labs dot com slash rental calc','octopisceslabs.com/rental-calc').replace('Equity Foundry','EquityFoundry').replace(/cash on cash/g,'cash-on-cash')}
+</script></body></html>

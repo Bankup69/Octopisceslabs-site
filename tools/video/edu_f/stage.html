@@ -1,0 +1,69 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1920px;height:1080px;overflow:hidden;background:#0b1530;font-family:Inter,Arial,sans-serif;color:#fff}
+#bg{position:absolute;inset:0;background:radial-gradient(1300px 800px at 25% 15%,#1b2c63 0%,#0b1530 62%)}
+#scene{position:absolute;inset:0}
+#brand{position:absolute;left:64px;top:38px;font-size:34px;font-weight:800;letter-spacing:.5px;color:#f4c45c}
+#brand span{color:#fff;font-weight:600}
+#chips{position:absolute;right:64px;top:34px;display:flex;gap:12px}
+.chip{padding:10px 18px;border-radius:30px;font-size:24px;font-weight:700;background:rgba(255,255,255,.08);color:#8e9ac0;transition:none}
+.chip.on{background:#f4c45c;color:#0b1530}
+#foot{position:absolute;left:0;right:0;bottom:22px;text-align:center;font-size:20px;color:#7d89b3}
+#cap{position:absolute;left:0;right:0;bottom:78px;display:flex;justify-content:center}
+#cap div{background:rgba(5,10,28,.88);padding:16px 34px;border-radius:22px;font-size:46px;font-weight:700;max-width:1700px;text-align:center;line-height:1.2}
+</style></head><body><div id="bg"></div><div id="brand">Equity<span>Foundry</span></div><div id="chips"></div><div id="scene"></div><div id="cap"><div></div></div><div id="foot">Illustrative example. Results are estimates, not financial advice.</div>
+<script>
+const E=(par,tag,css,html)=>{const e=document.createElement(tag);e.style.cssText=css||'';if(html!=null)e.innerHTML=html;par.appendChild(e);return e};
+const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x)),ease=x=>1-Math.pow(1-clamp(x),3),seg=(p,a,b)=>clamp((p-a)/(b-a)),
+back=x=>{x=clamp(x);const c1=1.70158,c3=c1+1;return 1+c3*Math.pow(x-1,3)+c1*Math.pow(x-1,2)};
+const money=n=>(n<0?'-':'')+'$'+Math.round(Math.abs(n)).toLocaleString('en-US');
+const GOLD='#f4c45c',GREEN='#34d399',RED='#f87171',GREY='#3a4670',CARD='#f4f1e8',INK='#0b1530';
+const NAMES=["Estimate", "The rule", "Hidden costs", "Test offers", "Sale price"], ACTIVE=[-1, 0, 1, 2, 3, 4, -1, -1];
+const chipsEl=document.getElementById('chips'); NAMES.forEach((n,i)=>E(chipsEl,'div','',(i+1)+' '+n).className='chip');
+const root=document.getElementById('scene'),capEl=document.querySelector('#cap div');
+function chunks(t,n=8){const o=[];let c=[];for(const w of t.split(' ')){c.push(w);if(c.length>=n&&(/[.,?:]$/.test(w)||c.length>=n+3)){o.push(c.join(' '));c=[]}}if(c.length)o.push(c.join(' '));return o}
+function rng(seed){let s=seed;return()=>{s=(s*1664525+1013904223)%4294967296;return s/4294967296}}
+function house(par,x,y,s,color){return E(par,'div',`position:absolute;left:${x}px;top:${y}px;width:${s}px;height:${s}px`,`<svg viewBox="0 0 100 100" width="${s}" height="${s}"><path d="M10 48 L50 14 L90 48 L82 48 L82 88 L18 88 L18 48 Z" fill="${color||'#f4f1e8'}"/><rect x="42" y="60" width="16" height="28" fill="#0b1530"/><rect x="24" y="54" width="12" height="12" fill="#0b1530" opacity=".55"/><rect x="64" y="54" width="12" height="12" fill="#0b1530" opacity=".55"/></svg>`)}
+const label=(par,x,y,txt,sz,col,w,al)=>E(par,'div',`position:absolute;left:${x}px;top:${y}px;font-size:${sz}px;font-weight:800;color:${col||'#fff'};${w?`width:${w}px;`:''}text-align:${al||'left'};line-height:1.1;white-space:nowrap`,txt);
+
+const SC=[];
+const bar=(r,x,y,w,h,col,extra)=>E(r,'div',`position:absolute;left:${x}px;top:${y}px;width:${w}px;height:${h}px;border-radius:14px;background:${col};${extra||''}`);
+const fade=(e,q)=>{e.style.opacity=ease(q);e.style.transform=`translateY(${(1-ease(q))*24}px)`};
+const pop=(e,q)=>{e.style.opacity=ease(q);e.style.transform=`scale(${.9+.1*back(q)})`};
+const ROW=(r,x,y,w,a,b,c)=>E(r,'div',`position:absolute;left:${x}px;top:${y}px;width:${w}px;height:92px;border-radius:18px;background:${CARD};color:${INK};font-size:48px;font-weight:800;padding:22px 34px;display:flex;justify-content:space-between;border-left:18px solid ${c};opacity:0`,`<span>${a}</span><span>${b}</span>`);
+const CARDX=(r,x,y,w,h,html)=>E(r,'div',`position:absolute;left:${x}px;top:${y}px;width:${w}px;height:${h}px;border-radius:30px;background:${CARD};color:${INK};text-align:center;padding-top:40px;opacity:0`,html);
+const big=(t,s,c)=>`<div style="font-size:${s||100}px;font-weight:900;${c?'color:'+c:''}">${t}</div>`,small=(t,s)=>`<div style="font-size:${s||38}px;font-weight:800">${t}</div>`;
+// equation: A op B = C
+function EQ(r,y,A,B,C,op,ca){const mk=(x,w,h)=>CARDX(r,x,y,w,300,h);const a=mk(100,520,small(A[0])+big(A[1],86)),o=label(r,640,y+90,op,110,GOLD,100,'center'),b=mk(760,520,small(B[0])+big(B[1],86)),e=label(r,1300,y+90,'=',110,GOLD,100,'center'),c=E(r,'div',`position:absolute;left:1420px;top:${y}px;width:400px;height:300px;border-radius:30px;background:${GOLD};color:${INK};text-align:center;padding-top:50px;opacity:0`,small(C[0])+big(C[1],110));[o,e].forEach(x=>x.style.opacity=0);return [a,o,b,e,c]}
+const eqUp=(L,p)=>L.forEach((e,i)=>pop(e,seg(p,.06+i*.13,.18+i*.13)));
+
+// 0 hook
+SC.push({init(r){this.big=label(r,0,230,'70%',330,GOLD,1920,'center');this.t=label(r,0,590,'The fix-and-flip offer rule',72,'#fff',1920,'center');this.s=label(r,0,700,'and where it can fool you',50,'#9aa7d0',1920,'center');[this.t,this.s].forEach(e=>e.style.opacity=0)},
+ up(p){this.big.style.transform=`scale(${back(seg(p,0,.15))})`;fade(this.t,seg(p,.12,.25));fade(this.s,seg(p,.28,.4))}});
+// 1 ARV and repairs
+SC.push({init(r){label(r,100,140,'1  Estimate the numbers',80,GOLD);this.a=CARDX(r,120,300,800,420,small('After-repair value',44)+big('$285,000',110)+small('what it sells for once fixed',36));this.b=CARDX(r,1000,300,800,420,small('Repairs',44)+big('$40,000',110)+small('your rehab budget',36))},
+ up(p){pop(this.a,seg(p,.05,.2));pop(this.b,seg(p,.4,.55))}});
+// 2 the rule
+SC.push({init(r){label(r,100,140,'2  Apply the rule',80,GOLD);const it=[['After-repair value','$285,000','#60a5fa'],['× 70%','$199,500',GOLD],['− Repairs','-$40,000',RED],['Max offer','$159,500',GREEN]];this.r=it.map((x,i)=>ROW(r,300,290+i*130,1320,x[0],x[1],x[2]))},
+ up(p){this.r.forEach((e,i)=>fade(e,seg(p,.06+i*.18,.2+i*.18)))}});
+// 3 what the rule ignores
+SC.push({init(r){label(r,100,140,'3  What the rule ignores',80,GOLD);this.a=CARDX(r,100,300,560,440,small('Holding costs',44)+big('$11,030',100)+small('6 months of carrying costs',32));this.b=CARDX(r,690,300,560,440,small('Selling costs',44)+big('$19,950',100)+small('7% of the sale price',32));this.c=CARDX(r,1280,300,540,440,small('Cash you need',44)+big('$74,430',100)+small('at a $180,000 offer',32))},
+ up(p){pop(this.a,seg(p,.06,.2));pop(this.b,seg(p,.3,.44));pop(this.c,seg(p,.62,.78))}});
+// 4 test offers
+SC.push({init(r){label(r,100,140,'4  Test your offer',80,GOLD);const col=(x,o,pr,roi,c)=>CARDX(r,x,290,540,470,small('Offer',42)+big(o,92)+small('Profit',42)+big(pr,100,c)+small(roi+' return',38));this.a=col(100,'$159,500','$50,481','70.7%','#0f9d6e');this.b=col(690,'$180,000','$29,059','39.0%','#0f9d6e');this.c=col(1280,'$200,000','$8,160','10.6%','#dc2626');this.n=label(r,0,790,'Closing costs held at $5,400 in each case',38,'#9aa7d0',1920,'center');this.n.style.opacity=0},
+ up(p){pop(this.a,seg(p,.06,.2));pop(this.b,seg(p,.3,.44));pop(this.c,seg(p,.55,.7));fade(this.n,seg(p,.75,.88))}});
+// 5 value risk
+SC.push({init(r){label(r,100,140,'5  Test the sale price',80,GOLD);this.a=CARDX(r,120,290,800,480,small('Sells for',44)+big('$285,000',100)+small('Profit at a $180,000 offer',40)+big('$29,059',100,'#0f9d6e'));this.b=CARDX(r,1000,290,800,480,small('Sells for',44)+big('$255,000',100)+small('Profit at a $180,000 offer',40)+big('$1,159',100,'#dc2626'));this.n=label(r,0,800,'The 70% rule max offer drops to $138,500',46,GOLD,1920,'center');this.n.style.opacity=0},
+ up(p){pop(this.a,seg(p,.05,.2));pop(this.b,seg(p,.4,.55));fade(this.n,seg(p,.75,.9))}});
+// 6 tool
+SC.push({init(r){this.im=E(r,'img',`position:absolute;left:60px;top:170px;height:690px;border-radius:20px;border:4px solid ${GOLD};opacity:0`);this.im.src='app_base.png';this.li=['Price, repairs, sale value','70% rule max offer','Holding and selling costs','Profit and return'].map((t,i)=>E(r,'div',`position:absolute;left:1300px;top:${300+i*130}px;background:${CARD};color:${INK};font-size:38px;font-weight:800;padding:20px 30px;border-radius:20px;white-space:nowrap;opacity:0`,t))},
+ up(p){this.im.style.opacity=ease(seg(p,.04,.2));this.im.style.transform=`scale(${.95+.05*ease(seg(p,.04,.3))})`;this.li.forEach((c,i)=>{const q=seg(p,.25+i*.15,.38+i*.15);c.style.opacity=ease(q);c.style.transform=`translateX(${(1-back(q))*80}px)`})}});
+// 7 end
+SC.push({init(r){this.lg=E(r,'img',`position:absolute;left:470px;top:70px;width:980px`);this.lg.src='logo_keyed.png';this.a=label(r,0,650,'Forge better deals.',96,'#fff',1920,'center');this.b=label(r,0,775,'octopisceslabs.com/rental-calc',64,GOLD,1920,'center')},
+ up(p){this.lg.style.opacity=ease(seg(p,0,.12));this.a.style.opacity=ease(seg(p,.1,.25));this.b.style.opacity=ease(seg(p,.2,.35))}});
+let cur=-1;
+window.render=function(si,t){const cfg=window.CFG[si];if(cur!==si){root.innerHTML='';SC[si].init(root);cur=si}
+ const p=clamp(t/cfg.dur);SC[si].up(p);[...chipsEl.children].forEach((c,i)=>c.className='chip'+(i===ACTIVE[si]?' on':''));
+ const ch=chunks(cfg.text.replace('octo pie sees labs dot com slash rental calc','octopisceslabs.com/rental-calc').replace('Equity Foundry','EquityFoundry').replace(/cash on cash/g,'cash-on-cash').replace(/D S C R/g,'DSCR')),tw=ch.reduce((a,c)=>a+c.split(' ').length,0);let a=0.2,txt='';const span=Math.max(cfg.voice,0.5);for(const c of ch){const d=span*c.split(' ').length/tw;if(t>=a&&t<a+d){txt=c}a+=d}
+ capEl.parentElement.style.visibility=(txt&&si!==7)?'visible':'hidden';document.getElementById('chips').style.display=si===7?'none':'flex';document.getElementById('brand').style.display=si===7?'none':'block';capEl.textContent=txt.replace(/D S C R/g,'DSCR').replace('octo pie sees labs dot com slash rental calc','octopisceslabs.com/rental-calc').replace('Equity Foundry','EquityFoundry').replace(/cash on cash/g,'cash-on-cash')}
+</script></body></html>

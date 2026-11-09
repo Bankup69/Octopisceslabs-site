@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-08 (two more educational videos)
+- Added media/edu/equityfoundry-edu-good-deal-5-numbers.mp4 (cash flow, cap rate, cash-on-cash, DSCR, 1% rule on a $250k rental) and media/edu/equityfoundry-edu-70-percent-rule.mp4 (fix-and-flip 70% rule, tested at three offers and a lower sale price). All numbers come from the calculator. Sources in tools/video/edu_g, edu_f and gen_edu.py.
+
 ## 2026-11-08 (BRRRR video)
 - BRRRR video refinance scene redrawn (one stacked bar plus three rows; the small closing-cost bar was unreadable). File is now media/edu/equityfoundry-edu-brrrr-explained-v2.mp4.
 - Added educational video "BRRRR Explained" (media/edu/equityfoundry-edu-brrrr-explained-v2.mp4); sources in tools/video/edu_brrrr/. Numbers come from the calculator (150k buy, 45k rehab, 260k value, 75% refi: cash left $17,844). Voice says BRRRR as the plain word "burr".

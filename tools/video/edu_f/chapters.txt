@@ -1,0 +1,8 @@
+0:00 Intro
+0:10 1 Estimate the numbers
+0:22 2 Apply the rule
+0:39 3 What the rule ignores
+0:57 4 Test your offer
+1:16 5 Test the sale price
+1:36 Run it in EquityFoundry
+1:47 Wrap up
