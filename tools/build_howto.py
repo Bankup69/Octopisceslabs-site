@@ -50,7 +50,7 @@ for vi, v in enumerate(manifest):
       <ol class="steps">{"".join(cards)}</ol>
     </div>''')
     ld.append({"@type": "VideoObject", "name": v['heading'], "description": v['blurb'], "thumbnailUrl": f"https://octopisceslabs.com/how-to/img/{k}-poster.jpg",
-               "uploadDate": "2026-11-04", "duration": f"PT{int(dur//60)}M{int(dur%60)}S", "contentUrl": f"https://octopisceslabs.com/media/equityfoundry-howto-{k}.mp4"})
+               "uploadDate": "2026-11-04T09:00:00-08:00", "duration": f"PT{int(dur//60)}M{int(dur%60)}S", "contentUrl": f"https://octopisceslabs.com/media/equityfoundry-howto-{k}.mp4"})
 page = f'''<!doctype html>
 <html lang="en">
 <head>
