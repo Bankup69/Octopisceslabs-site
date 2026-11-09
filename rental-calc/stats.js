@@ -1,6 +1,6 @@
 // Anonymous usage counts, stored in Supabase through the log_event() database
-// function: a page visit, the first calculation someone runs, and opening the
-// Pro screen. Nothing personal is sent: no names, emails, account IDs,
+// function: a page visit, the first calculation someone runs, opening the
+// Pro screen, opening Ingot and the first Ingot property or entry. Nothing personal is sent: no names, emails, account IDs,
 // property numbers or cookies. Just the event name and, when the visit came
 // from one of our links, which ad or post it was (utm_source, utm_content and
 // the /deal/ example name).
