@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-09 (brand pass)
+- New link previews. Home page: `img/og-home.jpg` (logo, "Hobbies, engineered.", EquityFoundry and Next Set). Calculator and the three calculator guides: `rental-calc/icons/og-preview.png` (promise plus a real result). New file names so social sites fetch them fresh. Next Set pages keep `img/og-image.jpg`.
+- Published EquityFoundry cache v30 (new preview, brand files).
+
 ## 2026-11-09 (calculator first screen)
 - Published EquityFoundry update: example deal for new visitors, quick start, verdict line, More menu. All upcoming social posts are paused as drafts until Ben's voice recordings are in.
 

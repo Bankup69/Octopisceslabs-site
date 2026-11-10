@@ -281,7 +281,7 @@ def build(p):
 <link rel="canonical" href="{url}">
 <meta property="og:type" content="article"><meta property="og:site_name" content="OctoPisces Labs">
 <meta property="og:title" content="{html.escape(p["h1"])}"><meta property="og:description" content="{html.escape(p["desc"])}">
-<meta property="og:url" content="{url}"><meta property="og:image" content="{SITE}/rental-calc/icons/og-image.png">
+<meta property="og:url" content="{url}"><meta property="og:image" content="{SITE}/rental-calc/icons/og-preview.png">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/rental-calc/icons/favicon-32.png" sizes="32x32"><link rel="apple-touch-icon" href="/rental-calc/icons/apple-touch-icon.png">
 {HEAD_FONTS}
