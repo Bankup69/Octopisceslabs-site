@@ -104,6 +104,8 @@
     setUnits(normalizeUnits(input || {}));
     showStrategy(i.strategy);
     updateListingLink();
+    form.querySelectorAll('[data-auto]').forEach((el) => { delete el.dataset.auto; });
+    syncQuick();
   }
 
   // Some fields appear in more than one section; keep the copies in step.
@@ -115,6 +117,109 @@
     });
   });
 
+  // ---- quick start ---------------------------------------------------------
+  // New visitors get four boxes (price, rent, down payment, rate) with the
+  // rest estimated, so they see a result in seconds. "Fine-tune every number"
+  // opens the full form; the choice is remembered on this device.
+
+  const QUICK_KEY = 'rental-calc:quick-mode';
+  // Typical figures used until the person types their own (same as Ingot's
+  // watchlist estimates). Fields filled this way are marked data-auto.
+  const ESTIMATES = {
+    propertyTaxes: (price) => Math.round(price * 0.011),
+    insurance: (price) => Math.round(price * 0.005),
+    closingCosts: (price) => Math.round(price * 0.03),
+  };
+  const quickPref = () => { try { return localStorage.getItem(QUICK_KEY) !== 'full'; } catch (_) { return true; } };
+
+  function applyQuickMode() {
+    const rental = form.elements.strategy.value === 'rental';
+    const on = quickPref() && rental;
+    form.classList.toggle('quick-mode', on);
+    $('btn-quick-back').hidden = on || !rental;
+  }
+
+  function setQuickPref(full) {
+    try { localStorage.setItem(QUICK_KEY, full ? 'full' : 'quick'); } catch (_) {}
+    applyQuickMode();
+  }
+
+  function setField(name, value) {
+    form.querySelectorAll(`[name="${name}"], [data-mirror="${name}"]`).forEach((el) => { el.value = value; });
+  }
+
+  function syncQuick() {
+    const q = (k) => form.querySelector(`[data-quick="${k}"]`);
+    ['purchasePrice', 'downPaymentPct', 'interestRate'].forEach((k) => {
+      const v = form.elements[k].value;
+      q(k).value = v === '0' || v === 0 ? '' : v;
+    });
+    const units = readUnits();
+    const single = units.length === 1 && units[0].count === 1;
+    const rent = q('rent');
+    const total = units.reduce((t, u) => t + u.count * u.rent, 0);
+    rent.disabled = !single;
+    rent.value = total ? total : '';
+    $('quick-rent-note').textContent = single ? '' : 'Total of all units. Change units under Fine-tune.';
+  }
+
+  form.addEventListener('input', (ev) => {
+    const el = ev.target;
+    if (el.dataset.quick) {
+      const k = el.dataset.quick;
+      const v = parseFloat(el.value) || 0;
+      if (k === 'rent') setUnits([{ label: 'Unit 1', count: 1, rent: v }]);
+      else setField(k, el.value);
+      // Fill typical taxes, insurance, closing and financing the person
+      // hasn't entered, so the first result isn't an all-cash fantasy.
+      const price = parseFloat(form.elements.purchasePrice.value) || 0;
+      if (price > 0) {
+        Object.entries(ESTIMATES).forEach(([name, fn]) => {
+          const f = form.elements[name];
+          if (!(parseFloat(f.value) > 0) || f.dataset.auto) { setField(name, fn(price)); f.dataset.auto = '1'; }
+        });
+        [['downPaymentPct', 25], ['interestRate', 7]].forEach(([name, d]) => {
+          const f = form.elements[name];
+          if (!(parseFloat(f.value) > 0)) { setField(name, d); f.dataset.auto = '1'; syncQuick(); }
+        });
+      }
+      return;
+    }
+    if (el.name && el.dataset.auto) delete el.dataset.auto;
+    if (el.name === 'purchasePrice' || el.name === 'downPaymentPct' || el.name === 'interestRate' || el.closest('#units')) syncQuick();
+  });
+
+  $('btn-fine-tune').addEventListener('click', () => {
+    setQuickPref(true);
+    const first = form.querySelector('fieldset:not(.quick-fs):not([hidden])');
+    if (first) first.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+  $('btn-quick-back').addEventListener('click', () => {
+    setQuickPref(false);
+    form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  // ---- example deal --------------------------------------------------------
+  // First-time visitors open on a filled-in deal so they see what the tool
+  // does before typing anything (the same deal as /deal/maple).
+
+  const EXAMPLE = {
+    strategy: 'rental', propertyName: 'Maple St Rental', purchasePrice: 250000, closingCosts: 7500,
+    downPaymentPct: 0.25, interestRate: 0.0675, propertyTaxes: 3000, insurance: 1600,
+    units: [{ label: 'Unit 1', count: 1, rent: 2400 }],
+  };
+  let exampleMode = false;
+  function setExample(on) {
+    exampleMode = on;
+    $('example-strip').hidden = !on;
+  }
+
+  // ---- the "More" menu ------------------------------------------------------
+
+  const moreMenu = $('more-menu');
+  moreMenu.addEventListener('click', (ev) => { if (ev.target.closest('.more-list button')) moreMenu.open = false; });
+  document.addEventListener('click', (ev) => { if (moreMenu.open && !moreMenu.contains(ev.target)) moreMenu.open = false; });
+
   // ---- strategies --------------------------------------------------------
 
   function showStrategy(s) {
@@ -124,6 +229,7 @@
     document.querySelectorAll('#view-calc [data-strategies]').forEach((el) => {
       el.hidden = !el.dataset.strategies.split(' ').includes(s);
     });
+    applyQuickMode();
   }
 
   $('strategies').addEventListener('click', (ev) => {
@@ -366,6 +472,27 @@
       `<tr class="${cls || ''}"><th scope="row">${esc(label)}${helpBtn(label)}</th><td>${esc(value)}</td></tr>`).join('');
   }
 
+  // One plain-English line above the numbers: the thing people scan for.
+  function verdict(input, r) {
+    const pct1 = (n) => (isFinite(n) ? (n * 100).toFixed(1) + '%' : null);
+    if (input.strategy === 'flip') {
+      if (!input.purchasePrice || !r.arv) return { tone: '', text: 'Enter the price and the after-repair value to see the profit.' };
+      const p = r.profit;
+      if (p < 0) return { tone: 'bad', text: `This flip loses ${money(-p)}.` };
+      if (!(r.roi >= 0.1)) return { tone: 'ok', text: `Thin: ${money(p)} profit, a ${pct1(r.roi)} return.` };
+      return { tone: 'good', text: `${money(p)} profit, a ${pct1(r.roi)} return.` };
+    }
+    if (!input.purchasePrice || !r.grossRent) return { tone: '', text: 'Enter a price and rent to see what this deal makes.' };
+    const cf = r.monthlyCashFlow;
+    const coc = pct1(r.cashOnCash);
+    const left = r.brrrr && r.brrrr.cashLeftInDeal > 0 ? `, with ${money(r.brrrr.cashLeftInDeal)} left in the deal` : '';
+    if (cf < 0) return { tone: 'bad', text: `This deal loses ${money(-cf)} a month${left}.` };
+    if (cf < 100 || (isFinite(r.cashOnCash) && r.cashOnCash < 0.04)) {
+      return { tone: 'ok', text: `Thin: ${money(cf)} a month${coc ? `, ${coc} on your cash` : ''}${left}.` };
+    }
+    return { tone: 'good', text: `Cash flows ${money(cf)} a month${coc ? `, ${coc} on your cash` : ''}${left}.` };
+  }
+
   const openTables = new Set(['Year 1 breakdown', 'Flip breakdown', 'Buy, rehab & refinance']);
 
   function render() {
@@ -379,6 +506,9 @@
     $('hero-unit').textContent = m.hero.unit;
     $('hero-sub').textContent = m.hero.sub;
     $('hero').classList.toggle('negative', m.hero.negative);
+    const v = verdict(input, r);
+    $('verdict').hidden = locked || !v;
+    if (v) { $('verdict').className = 'verdict ' + v.tone; $('verdict').textContent = v.text; }
     $('units-total').textContent = `${r.doors.toLocaleString()} ${r.doors === 1 ? 'unit' : 'units'} · ${money(r.monthlyRent)}/mo`;
     if (input.strategy === 'str') {
       $('str-summary').textContent = `≈ ${Math.round(r.nightsBooked)} nights and ${Math.round(r.bookings)} stays a year · ${money(r.grossRent / 12)}/mo gross`;
@@ -413,7 +543,7 @@
     renderProjection(m.projection);
     $('btn-report').querySelector('.lock').hidden = Pro.isPro();
 
-    try { localStorage.setItem(DRAFT_KEY, JSON.stringify({ name: currentName, input })); } catch (_) {}
+    try { localStorage.setItem(DRAFT_KEY, JSON.stringify({ name: currentName, input, example: exampleMode })); } catch (_) {}
   }
 
   function renderProjection(p) {
@@ -444,6 +574,7 @@
 
   function setCurrent(name) {
     currentName = name;
+    if (name) setExample(false);
     $('current-name').textContent = name || 'New property';
     $('btn-delete').disabled = !name;
   }
@@ -536,6 +667,7 @@
   });
 
   function newProperty() {
+    setExample(false);
     const keep = form.elements.strategy.value;
     // The person's own starting numbers (Account → Settings), keeping the
     // strategy they're on.
@@ -582,7 +714,17 @@
 
   form.addEventListener('input', render);
   // The first number someone changes is their first calculation (counted once per visit).
-  form.addEventListener('input', () => { if (window.Stats) window.Stats.log('first_calc', true); });
+  form.addEventListener('input', () => {
+    if (window.Stats) window.Stats.log('first_calc', true);
+    if (exampleMode) { setExample(false); $('current-name').textContent = 'New property'; }
+    try {
+      if (localStorage.getItem('rental-calc:calc-done') !== '1') {
+        localStorage.setItem('rental-calc:calc-done', '1');
+        if (window.Launch && window.Launch.refresh) window.Launch.refresh();
+      }
+    } catch (_) {}
+  });
+  $('btn-start-blank').addEventListener('click', () => { setExample(false); newProperty(); });
 
   // ---- dashboard -------------------------------------------------------------
 
@@ -821,12 +963,18 @@
       if (draft) {
         initial = draft.input || draft;
         initialName = draft.name && loadSaved()[draft.name] ? draft.name : null;
+        if (draft.example) exampleMode = true;
+      } else if (!sharedText && !Object.keys(loadSaved()).length) {
+        initial = Object.assign({}, DEFAULTS, EXAMPLE);
+        exampleMode = true;
       }
     }
   } catch (_) { initial = Object.assign({}, DEFAULTS, window.Settings.newPropertyDefaults()); }
 
   fillForm(initial);
   setCurrent(initialName);
+  setExample(exampleMode);
+  if (exampleMode) $('current-name').textContent = 'Example deal';
   updateSavedCount();
   updateProButton();
   render();

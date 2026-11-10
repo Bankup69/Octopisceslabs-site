@@ -652,6 +652,63 @@ dialog.paywall h2 { margin: 10px 0 4px; font-size: 22px; }
   #toast { top: auto; bottom: calc(84px + env(safe-area-inset-bottom)); }
 }
 
+/* "More" menu: the rarely used tools, out of the way */
+.actions { align-items: center; }
+details.more-menu { position: relative; margin: 0; padding: 0; border: 0; background: none; box-shadow: none; }
+.more-menu > summary {
+  list-style: none; cursor: pointer; font-size: 14px; padding: 6px 12px; border-radius: 8px;
+  border: 1px solid var(--border); background: var(--surface); color: var(--text); user-select: none;
+}
+.more-menu > summary::-webkit-details-marker { display: none; }
+.more-menu[open] > summary { border-color: var(--accent); }
+.more-list {
+  position: absolute; right: 0; top: calc(100% + 6px); z-index: 30; min-width: 190px;
+  display: flex; flex-direction: column; padding: 6px; gap: 2px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,.18);
+}
+.more-list button { border: 0; text-align: left; padding: 9px 10px; background: transparent; }
+.more-list button:hover:not(:disabled) { background: var(--accent-soft); }
+
+/* Example deal notice */
+.example-strip {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 12px;
+  margin-bottom: 12px; padding: 10px 14px; border-radius: var(--radius);
+  background: #fbf4e2; border: 1px solid #ecd9a6; color: #4a3b12; font-size: 14px;
+}
+.example-strip .link { padding: 0; font-weight: 600; }
+
+/* Quick start: four boxes, everything else estimated */
+.inputs.quick-mode > fieldset:not(.quick-fs) { display: none; }
+.inputs:not(.quick-mode) > .quick-fs { display: none; }
+.quick-fs { border-color: var(--accent); }
+.quick-fs .fine-tune { margin-top: 4px; padding: 10px; font-weight: 600; color: var(--accent); background: var(--accent-soft); border-color: transparent; }
+.quick-back { margin: 0 0 12px; font-weight: 600; color: var(--accent); }
+/* On phones, quick start comes first: the long strategy description waits for the full form. */
+@media (max-width: 860px) {
+  body:has(#form.quick-mode) .strategy-help { display: none; }
+  .pitch strong { font-size: 18px; }
+}
+
+/* Plain-English verdict above the hero number */
+.verdict {
+  margin: -2px 0 8px; padding: 6px 10px; border-radius: 8px; font-weight: 600; font-size: 15px; line-height: 1.35;
+  background: var(--surface); color: var(--muted);
+}
+.verdict.good { background: #e3f4ea; color: #146c3a; }
+.verdict.ok { background: #fbf1d9; color: #7a5a07; }
+.verdict.bad { background: #fbe6e6; color: #9b2222; }
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .verdict.good { background: rgba(46,204,113,.14); color: #6fdc9b; }
+  :root:not([data-theme="light"]) .verdict.ok { background: rgba(244,196,92,.14); color: #f0cd7a; }
+  :root:not([data-theme="light"]) .verdict.bad { background: rgba(255,92,92,.14); color: #ff9a9a; }
+  :root:not([data-theme="light"]) .example-strip { background: rgba(244,196,92,.10); border-color: rgba(244,196,92,.35); color: #f0dfb0; }
+}
+:root[data-theme="dark"] .verdict.good { background: rgba(46,204,113,.14); color: #6fdc9b; }
+:root[data-theme="dark"] .verdict.ok { background: rgba(244,196,92,.14); color: #f0cd7a; }
+:root[data-theme="dark"] .verdict.bad { background: rgba(255,92,92,.14); color: #ff9a9a; }
+:root[data-theme="dark"] .example-strip { background: rgba(244,196,92,.10); border-color: rgba(244,196,92,.35); color: #f0dfb0; }
+
 [hidden] { display: none !important; }
 
 @media print {

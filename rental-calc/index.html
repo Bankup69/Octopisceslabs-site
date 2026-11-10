@@ -64,11 +64,16 @@
     <div class="wrap toolbar">
       <div class="current" id="current-name">New property</div>
       <div class="actions">
-        <button type="button" id="btn-new">New</button>
         <button type="button" id="btn-save" class="primary">Save</button>
-        <button type="button" id="btn-delete">Delete</button>
-        <button type="button" id="btn-report">PDF report <span class="lock">PRO</span></button>
-        <button type="button" id="btn-share">Copy link</button>
+        <details class="more-menu" id="more-menu">
+          <summary aria-label="More actions">More <span aria-hidden="true">▾</span></summary>
+          <div class="more-list">
+            <button type="button" id="btn-new">New property</button>
+            <button type="button" id="btn-report">PDF report <span class="lock">PRO</span></button>
+            <button type="button" id="btn-share">Copy link</button>
+            <button type="button" id="btn-delete">Delete</button>
+          </div>
+        </details>
       </div>
     </div>
 
@@ -86,6 +91,22 @@
     <main class="wrap layout">
       <form id="form" class="inputs" autocomplete="off">
         <input type="hidden" name="strategy" value="rental">
+
+        <div class="example-strip" id="example-strip" hidden>
+          <span><strong>This is an example deal.</strong> Change any number to run yours.</span>
+          <button type="button" class="link" id="btn-start-blank">Start blank</button>
+        </div>
+
+        <fieldset class="quick-fs" id="quick" data-strategies="rental">
+          <legend>Quick start</legend>
+          <label>Purchase price <span class="money"><input data-quick="purchasePrice" type="number" min="0" step="1000" inputmode="decimal"></span></label>
+          <label>Monthly rent <span class="money"><input data-quick="rent" type="number" min="0" step="50" inputmode="decimal"></span><small id="quick-rent-note"></small></label>
+          <label>Down payment <span class="pct"><input data-quick="downPaymentPct" type="number" min="0" max="100" step="1" inputmode="decimal"></span></label>
+          <label>Interest rate <span class="pct"><input data-quick="interestRate" type="number" min="0" max="30" step="0.125" inputmode="decimal"></span></label>
+          <p class="hint span-all" id="quick-note">Taxes, insurance, closing, vacancy and repairs use typical estimates. Fine-tune them any time.</p>
+          <button type="button" class="span-all fine-tune" id="btn-fine-tune">Fine-tune every number</button>
+        </fieldset>
+        <button type="button" class="quick-back" id="btn-quick-back" data-strategies="rental" hidden>Back to quick start</button>
 
         <fieldset>
           <legend>Property</legend>
@@ -186,6 +207,7 @@
 
       <section class="results" aria-live="polite">
         <div class="hero" id="hero">
+          <div class="verdict" id="verdict" hidden></div>
           <div class="hero-label" id="hero-label">Your cash flow</div>
           <div class="hero-value"><span id="hero-value">$0</span><small id="hero-unit">/ month</small></div>
           <div class="hero-sub" id="hero-sub"></div>

@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-09 (calculator first screen)
+- Published EquityFoundry update: example deal for new visitors, quick start, verdict line, More menu. All upcoming social posts are paused as drafts until Ben's voice recordings are in.
+
 ## 2026-11-09
 - How-to page video data: uploadDate now includes time and timezone (Search Console flagged "missing a timezone").
 

@@ -104,8 +104,10 @@
     const slot = document.getElementById('launch-banner');
     if (!slot) return;
     const done = read(DONE_KEY) === '1';
-    // Visitors from an ad or a /deal/ link see the calculator first.
-    slot.hidden = native || read(HIDE_KEY) === '1' || !!(window.Stats && window.Stats.fromCampaign());
+    // Visitors from an ad or a /deal/ link, and anyone who hasn't run a number
+    // yet, see the calculator first.
+    slot.hidden = native || read(HIDE_KEY) === '1' || !!(window.Stats && window.Stats.fromCampaign()) ||
+      read('rental-calc:calc-done') !== '1';
     if (slot.hidden) return;
     // Installed from the browser ("Add to home screen"), it can look like the
     // store app, so say plainly which version this is.
@@ -130,5 +132,5 @@
   // octopisceslabs.com links here with ?notify=1
   if (!native && new URLSearchParams(location.search).get('notify') === '1') open();
 
-  window.Launch = { open, join };
+  window.Launch = { open, join, refresh: renderBanner };
 })();
