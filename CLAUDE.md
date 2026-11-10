@@ -20,6 +20,8 @@ Read this first. Keep it short: it loads every session.
 
 One line per fixed mistake, newest first.
 
+- 2026-11-09: To pause a Metricool post, update it with draft:true (TikTok updates fail without tiktokData.title). All posts from 11/9 on are paused until Ben's voice recordings replace the AI voice (owner decision); original post text is saved in the session scratchpad posts_backup_2026-11-09.json.
+
 - 2026-11-08: Metricool copies media when a post is scheduled. Replacing a file on the site does not change scheduled posts: give the new file a new name and update every post with updateScheduledPost.
 - 2026-11-08: The AI voice said "air-binb". In narration write "Air B N B" (captions show "Airbnb"). Logos on video end cards must be keyed (no navy box): use `tools/video/edu/logo_keyed.png`.
 - 2026-11-06: The AI voice said "octo-puss-ees". Brand is said octo-pie-sees. In any narration write it "octo pie sees labs" and check the phonemes (kokoro_onnx Tokenizer.phonemize) before building.
